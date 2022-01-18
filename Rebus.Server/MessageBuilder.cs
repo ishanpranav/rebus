@@ -1,4 +1,4 @@
-﻿// Ishan Pranav's REBUS: WriterTemplate.cs
+﻿// Ishan Pranav's REBUS: MessageBuilder.cs
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 

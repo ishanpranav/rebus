@@ -13,7 +13,7 @@ namespace Rebus.Commands.System
         {
             await this.Executor.UndoAsync();
 
-            return null; 
+            return null;
         }
     }
 }

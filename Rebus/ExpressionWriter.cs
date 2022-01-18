@@ -1,4 +1,8 @@
-﻿using Rebus.WritingStates;
+﻿// Ishan Pranav's REBUS: ExpressionWriter.cs
+// Copyright (c) Ishan Pranav. All Rights Reserved.
+// Licensed under the MIT License.
+
+using Rebus.WritingStates;
 using System.Collections.Generic;
 using System.Linq;
 

@@ -1,4 +1,4 @@
-﻿// Ishan Pranav's REBUS: Repository.cs
+﻿// Ishan Pranav's REBUS: DbRepository.cs
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
@@ -108,7 +108,7 @@ namespace Rebus.Server
 
                         throw new RebusException(this._messageBuilder.Build());
                     }
-                    
+
                     this._messageBuilder.Begin(2, 2);
                     this._messageBuilder.Append(new SubjectExpression(adjectives, substantive));
                     this._messageBuilder.Append(characteristics);

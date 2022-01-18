@@ -1,4 +1,4 @@
-﻿// Ishan Pranav's REBUS: UniverseInitializer.cs
+﻿// Ishan Pranav's REBUS: Initializer.cs
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 

@@ -1,4 +1,4 @@
-﻿// Ishan Pranav's REBUS: RebusCommand.cs
+﻿// Ishan Pranav's REBUS: RebusCommandAttribute.cs
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 

@@ -1,4 +1,4 @@
-﻿// Ishan Pranav's REBUS: RepositoryContext.cs
+﻿// Ishan Pranav's REBUS: UniverseContext.cs
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
@@ -21,7 +21,7 @@ namespace Rebus.Server
 
         public UniverseContext(DbContextOptions options) : base(options) { }
 
-        public IIncludableQueryable<Concept, ICollection<Token>> IncludeUniverse() 
+        public IIncludableQueryable<Concept, ICollection<Token>> IncludeUniverse()
         {
             return this.Concepts
                 .Include(x => x.Signatures)

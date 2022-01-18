@@ -38,7 +38,7 @@ namespace Rebus.Expressions
         public override void WriteXml(XmlWriter writer)
         {
             writer.WriteElementString(localName: "Verb", this._verb.Value);
-         
+
             if (this._adverb is not null)
             {
                 writer.WriteElementString(localName: "Adverb", this._adverb.Value);

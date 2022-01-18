@@ -1,6 +1,6 @@
-﻿//// Ishan Pranav's REBUS: Senses.cs
-//// Copyright (c) Ishan Pranav. All Rights Reserved.
-//// Licensed under the MIT License.
+﻿// Ishan Pranav's REBUS: Senses.cs
+// Copyright (c) Ishan Pranav. All Rights Reserved.
+// Licensed under the MIT License.
 
 //namespace Rebus.Server
 //{
