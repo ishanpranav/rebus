@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31808.319
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C954C44A-2275-4403-BDAA-E1C33345DDF5}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+		README.md = README.md
+		System.Collections.Generic.ConceptReadOnlyCollection.json = System.Collections.Generic.ConceptReadOnlyCollection.json
+		System.Collections.Generic.TokenReadOnlyCollection.json = System.Collections.Generic.TokenReadOnlyCollection.json
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rebus.Server", "Rebus.Server\Rebus.Server.csproj", "{E27B1D67-8EAE-4E33-B5A9-3980431C8ACD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rebus.Server.Discord", "Rebus.Server.Discord\Rebus.Server.Discord.csproj", "{E167AD20-9E81-4A67-82D2-C18014DBC95E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rebus.Server.Console", "Rebus.Server.Console\Rebus.Server.Console.csproj", "{E9036224-555B-47A7-B26B-DA3384D59CFA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rebus", "Rebus\Rebus.csproj", "{A641EEEC-27C6-4EF2-AF83-F167288E0597}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E27B1D67-8EAE-4E33-B5A9-3980431C8ACD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E27B1D67-8EAE-4E33-B5A9-3980431C8ACD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E27B1D67-8EAE-4E33-B5A9-3980431C8ACD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E27B1D67-8EAE-4E33-B5A9-3980431C8ACD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E167AD20-9E81-4A67-82D2-C18014DBC95E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E167AD20-9E81-4A67-82D2-C18014DBC95E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E167AD20-9E81-4A67-82D2-C18014DBC95E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E167AD20-9E81-4A67-82D2-C18014DBC95E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9036224-555B-47A7-B26B-DA3384D59CFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9036224-555B-47A7-B26B-DA3384D59CFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9036224-555B-47A7-B26B-DA3384D59CFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9036224-555B-47A7-B26B-DA3384D59CFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A641EEEC-27C6-4EF2-AF83-F167288E0597}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A641EEEC-27C6-4EF2-AF83-F167288E0597}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A641EEEC-27C6-4EF2-AF83-F167288E0597}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A641EEEC-27C6-4EF2-AF83-F167288E0597}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E9E1DBB5-DE96-4DBF-B540-3EDADB504EDD}
+	EndGlobalSection
+EndGlobal

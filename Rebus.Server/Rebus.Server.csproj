@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Library</OutputType>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Remove="Commands\VisionCommand.restext" />
+	  <None Remove="DbRepository.restext" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Commands\VisionCommand.restext" />
+	  <EmbeddedResource Include="DbRepository.restext" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="EFCore.CheckConstraints" Version="6.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <ProjectReference Include="..\Rebus\Rebus.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="Rebus.Server.ConceptCollection.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Rebus.Server.InitializerOptions.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Rebus.Server.PlayerConceptCollection.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+	
+</Project>

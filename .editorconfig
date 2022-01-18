@@ -1,0 +1,14 @@
+﻿[*.{cs,vb}]
+dotnet_style_predefined_type_for_member_access=false
+file_header_template=Ishan Pranav's REBUS: {fileName}\nCopyright (c) Ishan Pranav. All Rights Reserved.\nLicensed under the MIT License.
+dotnet_style_qualification_for_event=true
+dotnet_style_qualification_for_field=true
+dotnet_style_qualification_for_property=true
+dotnet_style_qualification_for_method=true
+csharp_style_implicit_object_creation_when_type_is_apparent = false
+csharp_prefer_simple_using_statement = false
+[*.cs]
+csharp_style_expression_bodied_properties=false:silent
+csharp_style_expression_bodied_indexers=false:silent
+csharp_style_expression_bodied_accessors=false:silent
+csharp_style_expression_bodied_lambdas=false:silent
