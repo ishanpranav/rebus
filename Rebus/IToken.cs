@@ -6,7 +6,7 @@ namespace Rebus
 {
     public interface IToken : IWritable
     {
-        string Value { get; }
         TokenTypes Type { get; }
+        string Value { get; }
     }
 }

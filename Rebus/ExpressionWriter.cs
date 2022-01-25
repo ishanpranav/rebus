@@ -2,33 +2,32 @@
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
+using System.Collections;
 using Rebus.WritingStates;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Rebus
 {
     public abstract class ExpressionWriter : IWritingContext
     {
-        private IWritingState _state = new InitialWritingState();
+        private IWritingState _state;
+
+        protected ExpressionWriter() : this(new SentenceWritingState()) { }
+
+        private protected ExpressionWriter(IWritingState state)
+        {
+            _state = state;
+        }
 
         IWritingState IWritingContext.State
         {
             get
             {
-                return this._state;
+                return _state;
             }
             set
             {
-                this._state = value;
+                _state = value;
             }
-        }
-
-        protected ExpressionWriter() : this(new InitialWritingState()) { }
-
-        protected ExpressionWriter(IWritingState state)
-        {
-            this._state = state;
         }
 
         public void Write(object? value)
@@ -39,15 +38,23 @@ namespace Rebus
             }
             else if (value is char @char)
             {
-                this.Write(@char);
+                Write(@char);
             }
             else if (value is string @string)
             {
-                this.Write(@string);
+                Write(@string);
             }
-            else if (value is IEnumerable<IToken> tokens)
+            else if (value is int int32)
             {
-                this.Write(tokens);
+                Write(int32);
+            }
+            else if (value is IList values)
+            {
+                Write(values);
+            }
+            else if (value is Argument argument)
+            {
+                Write(argument);
             }
             else if (value is not null)
             {
@@ -55,47 +62,61 @@ namespace Rebus
 
                 if (valueToString is not null)
                 {
-                    this.Write(valueToString);
+                    Write(valueToString);
                 }
-            }
-        }
-
-        public void Write(IEnumerable<IToken> tokens)
-        {
-            foreach (IGrouping<TokenTypes, IToken> grouping in tokens
-                .GroupBy(x => x.Type)
-                .OrderBy(x => x.Key))
-            {
-                IToken[] array = grouping.ToArray();
-
-                for (int i = 0; i < array.Length - 1; i++)
-                {
-                    array[i].Write(this);
-
-                    this.Write(',');
-                }
-
-                array[array.Length - 1].Write(this);
-
-                this.Write(' ');
             }
         }
 
         public void Write(char value)
         {
-            this._state.Write(context: this, value);
+            _state.Write(context: this, value);
         }
+
+        public void Write(int value)
+        {
+            Write(value.ToString("n"));
+        }
+
+        public void Write(IList values)
+        {
+            int count = values.Count;
+
+            for (int i = count; i > 0; i--)
+            {
+                Write(values[count - i]);
+
+                switch (i)
+                {
+                    case 1: break;
+
+                    case 2:
+                        if (count > 2)
+                        {
+                            Write(',');
+                        }
+
+                        Write(" and ");
+                        break;
+
+                    default:
+                        Write(',');
+                        break;
+                }
+            }
+        }
+
+        public void Write(Argument value) { }
 
         void IWritingContext.Write(char value)
         {
-            this.WriteCore(value);
+            WriteCore(value);
         }
 
         public void Write(string value)
         {
             foreach (char item in value)
             {
-                this._state.Write(context: this, item);
+                _state.Write(context: this, item);
             }
         }
 
@@ -103,9 +124,9 @@ namespace Rebus
 
         public void WriteLine()
         {
-            this.WriteLineCore();
+            WriteLineCore();
 
-            this._state = new InitialWritingState();
+            _state = new InitialWritingState();
         }
 
         protected abstract void WriteLineCore();

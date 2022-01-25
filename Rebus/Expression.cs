@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Rebus.ExpressionWriters;
 
 namespace Rebus
 {
@@ -24,16 +25,16 @@ namespace Rebus
 
         public void WriteLine(ExpressionWriter writer)
         {
-            this.Write(writer);
+            Write(writer);
 
-            writer.Write(this.Punctuation);
+            writer.Write(Punctuation);
         }
 
         public override string ToString()
         {
             StringExpressionWriter result = new StringExpressionWriter();
 
-            this.WriteLine(result);
+            WriteLine(result);
 
             return result.ToString();
         }

@@ -2,60 +2,89 @@
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Query;
-using System.Collections.Generic;
 
 namespace Rebus.Server
 {
-    internal class UniverseContext : DbContext
+    internal sealed class UniverseContext : DbContext
     {
-        private const string SqliteIgnoreCaseCollation = "NOCASE";
-
 #nullable disable
-        public DbSet<Token> Tokens { get; set; }
         public DbSet<ConceptSignature> ConceptSignatures { get; set; }
         public DbSet<Concept> Concepts { get; set; }
+        public DbSet<Player> Players { get; internal set; }
+        public DbSet<Token> Tokens { get; set; }
 #nullable enable
 
         public UniverseContext(DbContextOptions options) : base(options) { }
 
-        public IIncludableQueryable<Concept, ICollection<Token>> IncludeUniverse()
+        public async Task UpdateTokenAsync(TokenTypes type, string value)
         {
-            return this.Concepts
+            Token? token = await Tokens.SingleOrDefaultAsync(x => x.Value == value);
+
+            if (token is null)
+            {
+                await Tokens.AddAsync(new Token()
+                {
+                    Type = type,
+                    Value = value
+                });
+            }
+            else
+            {
+                token.Type |= type;
+            }
+
+            await SaveChangesAsync();
+        }
+
+        public IOrderedQueryable<Concept> IncludeUniverse()
+        {
+            return Concepts
+                .Include(x => x.Signatures)
+                .ThenInclude(x => x.Article)
                 .Include(x => x.Signatures)
                 .ThenInclude(x => x.Substantive)
                 .AsSplitQuery()
                 .Include(x => x.Signatures)
-                .ThenInclude(x => x.Adjectives);
+                .ThenInclude(x => x.Adjectives)
+                .OrderBy(x => x.Characteristics);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<ConceptSignature>(entityTypeBuilder =>
+            modelBuilder
+                .Entity<Concept>()
+                .HasOne<Concept>()
+                .WithMany()
+                .HasForeignKey(x => x.ContainerId);
+
+            modelBuilder.Entity<ConceptSignature>(coceptSignature =>
             {
-                entityTypeBuilder
+                coceptSignature.HasOne(x => x.Article);
+                coceptSignature.HasOne(x => x.Substantive);
+
+                coceptSignature
                     .HasMany(x => x.Adjectives)
                     .WithMany(x => x.Signatures);
-
-                entityTypeBuilder.HasOne(x => x.Substantive);
             });
 
-            EntityTypeBuilder<Token> tokenEntityType = modelBuilder.Entity<Token>();
-            EntityTypeBuilder<Concept> conceptEntityType = modelBuilder.Entity<Concept>();
+            EntityTypeBuilder<Token> token = modelBuilder.Entity<Token>();
+            EntityTypeBuilder<Player> player = modelBuilder.Entity<Player>();
 
-            if (this.Database.IsSqlite())
+            if (Database.IsSqlite())
             {
-                conceptEntityType
-                    .Property(x => x.Tag)
-                    .UseCollation(SqliteIgnoreCaseCollation);
+                player
+                    .Property(x => x.UserId)
+                    .UseCollation(Collations.SqliteIgnoreCase);
 
-                tokenEntityType
+                token
                     .Property(x => x.Value)
-                    .UseCollation(SqliteIgnoreCaseCollation);
+                    .UseCollation(Collations.SqliteIgnoreCase);
             }
         }
     }

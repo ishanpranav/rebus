@@ -2,17 +2,15 @@
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
-using System;
-
 namespace Rebus.WritingStates
 {
-    internal class InitialWritingState : IWritingState
+    internal sealed class InitialWritingState : IWritingState
     {
         public void Write(IWritingContext context, char value)
         {
-            if (!Char.IsWhiteSpace(value))
+            if (!char.IsWhiteSpace(value))
             {
-                context.Write(Char.ToUpper(value));
+                context.Write(char.ToUpper(value));
 
                 context.State = new SentenceWritingState();
             }

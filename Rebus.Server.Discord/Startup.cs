@@ -2,29 +2,31 @@
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
+using System.Globalization;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Rebus.ExpressionWriters;
 
 namespace Rebus.Server.Discord
 {
-    internal class Startup
+    internal sealed class Startup
     {
         private readonly StartupOptions _options;
         private readonly ILogger<Startup> _logger;
         private readonly DiscordSocketClient _discordSocketClient;
-        private readonly CommandService _commandService;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IPlayerRepository _playerRepository;
+        private readonly IEngineFactory _engineFactory;
 
-        public Startup(IOptions<StartupOptions> options, ILogger<Startup> logger, DiscordSocketClient discordSocketClient, CommandService commandService, IServiceProvider serviceProvider)
+        public Startup(IOptions<StartupOptions> options, ILogger<Startup> logger, DiscordSocketClient discordSocketClient, IPlayerRepository playerRepository, IEngineFactory engineFactory)
         {
-            this._options = options.Value;
-            this._logger = logger;
-            this._discordSocketClient = discordSocketClient;
-            this._commandService = commandService;
-            this._serviceProvider = serviceProvider;
+            _options = options.Value;
+            _logger = logger;
+            _discordSocketClient = discordSocketClient;
+            _playerRepository = playerRepository;
+            _engineFactory = engineFactory;
         }
 
         private static LogLevel GetLogLevel(LogSeverity logSeverity)
@@ -41,10 +43,8 @@ namespace Rebus.Server.Discord
                     return LogLevel.Warning;
 
                 case LogSeverity.Info:
-                    return LogLevel.Information;
-
                 case LogSeverity.Verbose:
-                    return LogLevel.Trace;
+                    return LogLevel.Information;
 
                 case LogSeverity.Debug:
                     return LogLevel.Debug;
@@ -54,34 +54,67 @@ namespace Rebus.Server.Discord
             }
         }
 
+        private async Task OnMessageReceivedAsync(IEngine engine, SocketUserMessage socketUserMessage)
+        {
+            SocketSelfUser currentUser = _discordSocketClient.CurrentUser;
+            string content = socketUserMessage.Content;
+
+            if (socketUserMessage.Author.Id != currentUser.Id && !socketUserMessage.Author.IsBot && (content.StartsWith(currentUser.Mention) || content.StartsWith('~')))
+            {
+                int start;
+
+                if (content.StartsWith(currentUser.Mention))
+                {
+                    start = currentUser.Mention.Length;
+                }
+                else if (content.StartsWith('~'))
+                {
+                    start = 1;
+                }
+                else
+                {
+                    return;
+                }
+
+                SocketCommandContext context = new SocketCommandContext(_discordSocketClient, socketUserMessage);
+                SocketUser user = context.User;
+                StringExpressionWriter writer = new StringExpressionWriter();
+
+                IPlayer player = await _playerRepository.GetPlayerAsync(user.Username, user.Id.ToString(CultureInfo.InvariantCulture));
+
+                await engine.InterpretAsync(player, content.Substring(start), writer);
+                await user.SendMessageAsync(writer.ToString());
+            }
+        }
+
         public async Task StartAsync()
         {
-            this._discordSocketClient.MessageReceived += async (socketMessage) =>
+            IEngine engine = await _engineFactory.CreateEngineAsync();
+
+            _discordSocketClient.MessageReceived += (socketMessage) =>
             {
-                if (socketMessage is SocketUserMessage socketUserMessage && socketUserMessage.Author.Id != this._discordSocketClient.CurrentUser.Id && !socketUserMessage.Author.IsBot)
+                if (socketMessage is SocketUserMessage socketUserMessage)
                 {
-                    SocketCommandContext context = new SocketCommandContext(this._discordSocketClient, socketUserMessage);
-
-                    IResult result = await this._commandService.ExecuteAsync(context, argPos: 0, this._serviceProvider);
-
-                    if (!result.IsSuccess)
+                    Task.Run(async () =>
                     {
-                        await context.Channel.SendMessageAsync(result.ToString());
-                    }
+                        await
+                            OnMessageReceivedAsync(engine, socketUserMessage)
+                            .ConfigureAwait(false);
+                    });
                 }
-            };
-
-            this._discordSocketClient.Log += (logMessage) =>
-            {
-                this._logger.Log(GetLogLevel(logMessage.Severity), "Discord: {Message}", logMessage.Message);
 
                 return Task.CompletedTask;
             };
 
-            await this._discordSocketClient.LoginAsync(TokenType.Bot, this._options.Token);
-            await this._discordSocketClient.StartAsync();
+            _discordSocketClient.Log += (logMessage) =>
+            {
+                _logger.Log(GetLogLevel(logMessage.Severity), "Discord: {Message}", logMessage.Message);
 
-            await this._commandService.AddModuleAsync<SocketCommandModule>(this._serviceProvider);
+                return Task.CompletedTask;
+            };
+
+            await _discordSocketClient.LoginAsync(TokenType.Bot, _options.Token);
+            await _discordSocketClient.StartAsync();
 
             await Task.Delay(Timeout.Infinite);
         }

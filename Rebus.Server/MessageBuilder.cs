@@ -2,64 +2,59 @@
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
-using Microsoft.Extensions.Localization;
-using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Rebus.Server
 {
-    internal class MessageBuilder<T>
+    internal sealed class MessageBuilder
     {
-        private readonly Random _random;
-        private readonly IStringLocalizer<T> _stringLocalizer;
+        private readonly List<object> _arguments = new List<object>();
+        private readonly IDbContextFactory<ResourceContext> _contextFactory;
 
-        private int _index;
-        private object[]? _arguments;
-        private LocalizedString? _localizedString;
+        private IConcept? _player;
+        private IConcept? _subject;
 
-        public MessageBuilder(Random random, IStringLocalizer<T> stringLocalizer)
+        public MessageBuilder(IDbContextFactory<ResourceContext> contextFactory)
         {
-            this._random = random;
-            this._stringLocalizer = stringLocalizer;
+            _contextFactory = contextFactory;
         }
 
-        public void Begin(int id, int argumentCount)
+        public void SetPrompt(IConcept player, IConcept subject)
         {
-            this._index = 0;
-            this._arguments = new object[argumentCount];
-
-            string prefix = $"{id}f{argumentCount}";
-            LocalizedString[] localizedStrings = this._stringLocalizer
-                .GetAllStrings()
-                .Where(x => x.Name.StartsWith(prefix))
-                .ToArray();
-
-            this._localizedString = localizedStrings[this._random.Next(localizedStrings.Length)];
+            _player = player;
+            _subject = subject;
         }
 
         public void Append(object argument)
         {
-            if (this._arguments is null)
-            {
-                throw new InvalidOperationException();
-            }
-            else
-            {
-                this._arguments[this._index] = argument;
-
-                this._index++;
-            }
+            _arguments.Add(argument);
         }
 
-        public IWritable Build()
+        public async Task<IWritable?> BuildAsync(ResourceIndex index)
         {
-            if (this._arguments is null || this._localizedString is null)
+            await using (ResourceContext context = await _contextFactory.CreateDbContextAsync())
             {
-                throw new InvalidOperationException();
-            }
-            else
-            {
-                return new Message(this._localizedString, this._arguments);
+                Message? result = null;
+                string? resource = await context.Resources
+                    .Where(x => x.Index == index)
+                    .Select(x => x.Value)
+                    .OrderBy(x => EF.Functions.Random())
+                    .FirstOrDefaultAsync();
+
+                if (resource is not null)
+                {
+                    result = new Message(_player, _subject, resource, _arguments.ToArray());
+                }
+
+                _player = null;
+                _subject = null;
+
+                _arguments.Clear();
+
+                return result;
             }
         }
     }

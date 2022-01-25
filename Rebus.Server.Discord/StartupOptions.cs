@@ -4,7 +4,7 @@
 
 namespace Rebus.Server.Discord
 {
-    internal class StartupOptions
+    internal sealed class StartupOptions
     {
 #nullable disable
         public string Token { get; set; }

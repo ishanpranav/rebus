@@ -3,7 +3,6 @@
 // Licensed under the MIT License.
 
 using Discord;
-using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,12 +26,8 @@ namespace Rebus.Server.Discord
                 .AddRebus()
                 .AddSingleton(new DiscordSocketClient(new DiscordSocketConfig()
                 {
-                    LogLevel = LogSeverity.Debug,
+                    LogLevel = LogSeverity.Verbose,
                     MessageCacheSize = 1000
-                }))
-                .AddSingleton(new CommandService(new CommandServiceConfig()
-                {
-                    DefaultRunMode = RunMode.Async
                 }))
                 .AddSingleton<Startup>()
                 .BuildServiceProvider())

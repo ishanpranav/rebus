@@ -2,18 +2,17 @@
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace Rebus.Commands.System
 {
-    [RebusCommand("undo")]
+    [Guid("86EEE5CE-5FFF-4420-9B3F-5A4DC96B54A0")]
     public class UndoSystemCommand : SystemCommand
     {
-        protected internal override async Task<IWritable> ExecuteAsync()
+        protected internal override Task<IWritable?> ExecuteAsync()
         {
-            await this.Executor.UndoAsync();
-
-            return null;
+            return Executor.UndoAsync();
         }
     }
 }

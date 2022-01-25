@@ -3,35 +3,58 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Rebus
 {
     public abstract class Command
     {
-#nullable disable
-        public IConcept Player { get; private set; }
-        public IConcept Subject { get; private set; }
-#nullable enable
+        private readonly Dictionary<Argument, object> _valuesByArgument = new Dictionary<Argument, object>();
 
-        public IConcept? DirectObject { get; private set; }
-
-        protected internal abstract Task<IWritable> ExecuteAsync();
-
-        public Command Clone(IConcept player, IConcept subject, IConcept? directObject)
+        public Guid Guid
         {
-            Command command = (Command)this.MemberwiseClone();
-
-            command.Player = player;
-            command.Subject = subject;
-            command.DirectObject = directObject;
-
-            return command;
+            get
+            {
+                return GetType().GUID;
+            }
         }
 
-        public RebusCommandAttribute[] GetAttributes()
+#nullable disable
+        public IConcept Player { get; private set; }
+#nullable enable
+
+        protected internal abstract Task<IWritable?> ExecuteAsync();
+
+        public void Set(Argument argument, object value)
         {
-            return Array.ConvertAll(Attribute.GetCustomAttributes(this.GetType(), typeof(RebusCommandAttribute)), x => (RebusCommandAttribute)x);
+            _valuesByArgument[argument] = value;
+        }
+
+        public IConcept GetConcept(Argument argument)
+        {
+            return (IConcept)_valuesByArgument[argument];
+        }
+
+        public int GetNumber(Argument argument)
+        {
+            return (int)_valuesByArgument[argument];
+        }
+
+        public string GetQuotation(Argument argument)
+        {
+            return (string)_valuesByArgument[argument];
+        }
+
+        public Command Clone(IConcept player)
+        {
+            Command command = (Command)MemberwiseClone();
+
+            command.Player = player;
+
+            command._valuesByArgument.Clear();
+
+            return command;
         }
     }
 }

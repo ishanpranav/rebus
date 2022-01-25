@@ -4,7 +4,7 @@
 
 namespace Rebus.Server.Console
 {
-    internal class ConsoleExpressionWriter : ExpressionWriter
+    internal sealed class ConsoleExpressionWriter : ExpressionWriter
     {
         protected override void WriteCore(char value)
         {

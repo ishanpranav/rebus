@@ -2,9 +2,9 @@
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
-using Rebus.Commands;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Rebus.Commands;
 
 namespace Rebus
 {
@@ -15,7 +15,7 @@ namespace Rebus
 
         private Command? _command;
 
-        public Task<IWritable> ExecuteAsync(Command command)
+        public Task<IWritable?> ExecuteAsync(Command command)
         {
             if (command is SystemCommand systemCommand)
             {
@@ -25,67 +25,61 @@ namespace Rebus
             {
                 if (command is OperationCommand operationCommand)
                 {
-                    this._operationCommands.Push(operationCommand);
+                    _operationCommands.Push(operationCommand);
                 }
 
-                this._commands.Clear();
+                _commands.Clear();
 
-                this._command = command;
+                _command = command;
             }
 
             return command.ExecuteAsync();
         }
 
-        public async Task<bool> UndoAsync()
+        public Task<IWritable?> UndoAsync()
         {
-            if (this._operationCommands.Count > 0)
+            if (_operationCommands.Count > 0)
             {
-                OperationCommand operationCommand = this._operationCommands.Pop();
+                OperationCommand operationCommand = _operationCommands.Pop();
 
-                await operationCommand.UnexecuteAsync();
+                _commands.Push(operationCommand);
 
-                this._commands.Push(operationCommand);
-
-                return true;
+                return operationCommand.UnexecuteAsync();
             }
             else
             {
-                return false;
+                return Task.FromResult<IWritable?>(null);
             }
         }
 
-        public async Task<bool> RedoAsync()
+        public Task<IWritable?> RedoAsync()
         {
-            if (this._commands.Count > 0)
+            if (_commands.Count > 0)
             {
-                Command command = this._commands.Pop();
-
-                await command.ExecuteAsync();
+                Command command = _commands.Pop();
 
                 if (command is OperationCommand operationCommand)
                 {
-                    this._operationCommands.Push(operationCommand);
+                    _operationCommands.Push(operationCommand);
                 }
 
-                return true;
+                return command.ExecuteAsync();
             }
             else
             {
-                return false;
+                return Task.FromResult<IWritable?>(null);
             }
         }
 
-        public async Task<bool> ReexecuteAsync()
+        public Task<IWritable?> ReexecuteAsync()
         {
-            if (this._command is null)
+            if (_command is null)
             {
-                return false;
+                return Task.FromResult<IWritable?>(null);
             }
             else
             {
-                await this.ExecuteAsync(this._command);
-
-                return true;
+                return ExecuteAsync(_command);
             }
         }
     }

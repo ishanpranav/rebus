@@ -9,9 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		LICENSE = LICENSE
-		README.md = README.md
-		System.Collections.Generic.ConceptReadOnlyCollection.json = System.Collections.Generic.ConceptReadOnlyCollection.json
-		System.Collections.Generic.TokenReadOnlyCollection.json = System.Collections.Generic.TokenReadOnlyCollection.json
+		Rebus.Server.Seed.json = Rebus.Server.Seed.json
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rebus.Server", "Rebus.Server\Rebus.Server.csproj", "{E27B1D67-8EAE-4E33-B5A9-3980431C8ACD}"

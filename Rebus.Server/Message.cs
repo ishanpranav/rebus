@@ -2,58 +2,31 @@
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
-using Rebus.WritingStates;
 using System;
-using System.Collections;
+using Rebus.ExpressionWriters;
 
 namespace Rebus.Server
 {
-    internal class Message : Writable, ICustomFormatter, IFormatProvider
+    internal sealed class Message : Writable, ICustomFormatter, IFormatProvider
     {
+        private readonly IConcept? _player;
+        private readonly IConcept? _subject;
         private readonly string _format;
         private readonly object[] _arguments;
 
-        public Message(string format, object[] arguments)
+        public Message(IConcept? player, IConcept? subject, string format, object[] arguments)
         {
-            this._format = format;
-            this._arguments = arguments;
+            _player = player;
+            _subject = subject;
+            _format = format;
+            _arguments = arguments;
         }
 
         public string Format(string? format, object? arg, IFormatProvider? formatProvider)
         {
-            StringExpressionWriter writer = new StringExpressionWriter(new SentenceWritingState());
+            FragmentExpressionWriter writer = new FragmentExpressionWriter();
 
-            if (arg is IList argList)
-            {
-                int count = argList.Count;
-
-                if (count > 0)
-                {
-                    writer.Write(argList[0]);
-
-                    if (count > 1)
-                    {
-                        writer.Write(' ');
-
-                        for (int i = 1; i < count - 1; i++)
-                        {
-                            writer.Write(argList[i]);
-                            writer.Write(',');
-                        }
-
-                        writer.Write("and ");
-                        writer.Write(argList[count - 1]);
-                    }
-                }
-            }
-            else if (arg is IEnumerable argEnumerable)
-            {
-                writer.Write(String.Join(',', argEnumerable));
-            }
-            else
-            {
-                writer.Write(arg);
-            }
+            writer.Write(arg);
 
             return writer.ToString();
         }
@@ -72,7 +45,14 @@ namespace Rebus.Server
 
         public override void Write(ExpressionWriter writer)
         {
-            writer.Write(String.Format(provider: this, this._format, this._arguments));
+            if (_subject is not null && _subject != _player)
+            {
+                _subject.Write(writer);
+
+                writer.Write(':');
+            }
+
+            writer.Write(string.Format(provider: this, _format, _arguments));
         }
     }
 }

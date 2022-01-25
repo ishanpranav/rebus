@@ -1,0 +1,111 @@
+{
+  "concepts": [
+    {
+      "id": 1,
+      "visualDescription": "ornate and grand",
+      "signatures": [
+        {
+          "article": {
+            "$id": "1",
+            "type": "article",
+            "value": "a"
+          },
+          "substantive": {
+            "type": "substantive",
+            "value": "Room"
+          },
+          "adjectives": [
+            {
+              "type": "adjective",
+              "value": "Living"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "containerId": 1,
+      "visualDescription": "enticing in its coloration",
+      "signatures": [
+        {
+          "article": {
+            "$ref": "1"
+          },
+          "substantive": {
+            "type": "substantive",
+            "value": "apple"
+          },
+          "adjectives": [
+            {
+              "type": "adjective, color",
+              "value": "red"
+            },
+            {
+              "type": "adjective, opinion",
+              "value": "delicious"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tokens": [
+    {
+      "type": "article",
+      "value": "an"
+    },
+    {
+      "type": "conjunction",
+      "value": "and"
+    },
+    {
+      "type": "interjection",
+      "value": "hello"
+    },
+    {
+      "type": "subject",
+      "value": "I"
+    },
+    {
+      "type": "object",
+      "value": "me"
+    },
+    {
+      "type": "object",
+      "value": "myself"
+    },
+    {
+      "type": "object",
+      "value": "self"
+    },
+    {
+      "type": "determiner",
+      "value": "that"
+    },
+    {
+      "type": "article, determiner",
+      "value": "the"
+    },
+    {
+      "type": "determiner",
+      "value": "those"
+    },
+    {
+      "type": "object",
+      "value": "us"
+    },
+    {
+      "type": "subject",
+      "value": "we"
+    },
+    {
+      "type": "subject, object",
+      "value": "you"
+    },
+    {
+      "type": "determiner",
+      "value": "my"
+    }
+  ]
+}

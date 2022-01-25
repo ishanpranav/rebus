@@ -2,17 +2,15 @@
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
-using System;
-
 namespace Rebus.WritingStates
 {
-    public class SentenceWritingState : IWritingState
+    internal sealed class SentenceWritingState : IWritingState
     {
         public void Write(IWritingContext context, char value)
         {
             context.Write(value);
 
-            if (Char.IsWhiteSpace(value))
+            if (char.IsWhiteSpace(value))
             {
                 context.State = new WhiteSpaceWritingState();
             }
@@ -20,13 +18,13 @@ namespace Rebus.WritingStates
             {
                 switch (value)
                 {
-                    case ':':
                     case ',':
                         context.Write(' ');
 
                         context.State = new WhiteSpaceWritingState();
                         break;
 
+                    case ':':
                     case '.':
                     case '!':
                         context.Write(' ');

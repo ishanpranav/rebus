@@ -21,7 +21,7 @@ namespace Rebus
         Material = 512,
         Number = 4,
         Object = 16384,
-        Observation = 8,
+        Opinion = 8,
         Origin = 256,
         Quotation = 32768,
         Shape = 64,

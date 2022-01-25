@@ -4,23 +4,28 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Rebus.Server
 {
-    internal class Concept : Writable, IConcept
+    [Table(nameof(Concept))]
+    [Index(nameof(Characteristics))]
+    internal sealed class Concept : Writable, IConcept
     {
         public int Id { get; set; }
         public int? ContainerId { get; set; }
-        public string Tag { get; set; } = String.Empty;
+        public string VisualDescription { get; set; } = string.Empty;
         public bool Reflective { get; set; }
+
         public Characteristics Characteristics { get; set; }
 
         public ICollection<ConceptSignature> Signatures { get; set; } = new HashSet<ConceptSignature>();
 
         public override void Write(ExpressionWriter writer)
         {
-            ConceptSignature? signature = this.Signatures
+            ConceptSignature? signature = Signatures
                 .OrderByDescending(x => x.Substantive.Value.Length)
                 .ThenByDescending(x => x.Adjectives.Count)
                 .FirstOrDefault();

@@ -14,34 +14,34 @@ namespace Rebus.Expressions
 
         public VerbPhraseExpression(IToken verb, IToken? adverb)
         {
-            this._verb = verb;
-            this._adverb = adverb;
+            _verb = verb;
+            _adverb = adverb;
         }
 
         public override Task InterpretAsync(ICommandBuilder context)
         {
-            return context.SetVerbPhraseAsync(this._verb, this._adverb);
+            return context.SetVerbPhraseAsync(_verb, _adverb);
         }
 
         public override void Write(ExpressionWriter writer)
         {
-            this._verb.Write(writer);
+            _verb.Write(writer);
 
-            if (this._adverb is not null)
+            if (_adverb is not null)
             {
                 writer.Write(' ');
 
-                this._adverb.Write(writer);
+                _adverb.Write(writer);
             }
         }
 
         public override void WriteXml(XmlWriter writer)
         {
-            writer.WriteElementString(localName: "Verb", this._verb.Value);
+            writer.WriteElementString(localName: "Verb", _verb.Value);
 
-            if (this._adverb is not null)
+            if (_adverb is not null)
             {
-                writer.WriteElementString(localName: "Adverb", this._adverb.Value);
+                writer.WriteElementString(localName: "Adverb", _adverb.Value);
             }
         }
     }

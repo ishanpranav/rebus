@@ -2,18 +2,19 @@
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
+using System.Xml;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Rebus.Commands.System;
 using Rebus.Server.Commands;
-using System;
-using System.IO;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Text.RegularExpressions;
-using System.Xml;
 
 namespace Rebus.Server
 {
@@ -21,21 +22,25 @@ namespace Rebus.Server
     {
         public static IServiceCollection AddRebus(this IServiceCollection source)
         {
-            PathProvider pathProvider = new PathProvider(Path.GetFullPath(@"..\..\..\..\"));
+            FileRepository repository = new FileRepository(Path.GetFullPath(@"..\..\..\..\"));
 
             return source
-                .AddLocalization()
-                .AddLogging(x => x.AddConsole())
+                .AddLogging(x => x
+                    .AddConsole()
+                    .SetMinimumLevel(LogLevel.Information))
                 .AddDbContextFactory<UniverseContext>(x => x
                     .UseSqlite(new SqliteConnectionStringBuilder()
                     {
-                        DataSource = pathProvider.GetPath(typeof(UniverseContext), "db")
-                    }.ConnectionString)
-                    .UseAllCheckConstraints())
-                .AddSingleton(typeof(MessageBuilder<>))
-                .AddSingleton(pathProvider)
-                .AddSingleton(new Random(0))
-                .AddSingleton(new XmlWriterSettings()
+                        DataSource = repository.GetPath(typeof(UniverseContext), "db")
+                    }.ConnectionString))
+                .AddDbContextFactory<ResourceContext>(x => x
+                    .UseSqlite(new SqliteConnectionStringBuilder()
+                    {
+                        DataSource = repository.GetPath(typeof(ResourceContext), "db"),
+                        Mode = SqliteOpenMode.ReadOnly
+                    }.ConnectionString))
+                .AddSingleton(repository)
+                .AddSingleton(x => new XmlWriterSettings()
                 {
                     Async = true,
                     Indent = true,
@@ -49,6 +54,7 @@ namespace Rebus.Server
                         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
                         PropertyNamingPolicy = jsonNamingPolicy,
                         PropertyNameCaseInsensitive = true,
+                        ReferenceHandler = ReferenceHandler.Preserve,
                         WriteIndented = true
                     };
 
@@ -56,15 +62,18 @@ namespace Rebus.Server
 
                     return result;
                 })
-                .AddSingleton(new Regex(@"(\w+)|\""([\w\s]*)""", RegexOptions.Compiled))
-                .AddSingleton<JsonRepository>()
+                .AddSingleton(x => new Regex(@"(\w+)|\""([\w\s]*)""", RegexOptions.Compiled))
+                .AddSingleton<IReadOnlyCollection<Argument>>(Enum.GetValues<Argument>())
+                .AddSingleton<MessageBuilder>()
                 .AddSingleton<DbRepository>()
-                .AddSingleton<CommandRepository>()
-                .AddSingleton<IAsyncSupportInitialize, Initializer>()
-                .AddSingleton<ITokenizer, Tokenizer>()
+                .AddSingleton<CommandBuilder>()
+                .AddSingleton<IEngineFactory, EngineFactory>()
                 .AddSingleton<Parser>()
+                .AddSingleton<Tokenizer>()
                 .AddSingleton<IEngine, Engine>()
+                .AddSingleton<IPlayerRepository, PlayerRepository>()
                 .AddSingleton<Command, VisionCommand>()
+                .AddSingleton<Command, TransitiveVisionCommand>()
                 .AddSingleton<Command, RedoSystemCommand>()
                 .AddSingleton<Command, ReexecuteSystemCommand>()
                 .AddSingleton<Command, UndoSystemCommand>();

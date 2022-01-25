@@ -2,24 +2,26 @@
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Rebus.Server
 {
+    [Table(nameof(Token))]
     [Index(nameof(Value), IsUnique = true)]
-    internal class Token : Writable, IToken
+    internal sealed class Token : Writable, IToken
     {
         public int Id { get; set; }
         public TokenTypes Type { get; set; }
-        public string Value { get; set; } = String.Empty;
+        public string Value { get; set; } = string.Empty;
 
         public ICollection<ConceptSignature> Signatures { get; set; } = new HashSet<ConceptSignature>();
 
         public override void Write(ExpressionWriter writer)
         {
-            writer.Write(this.Value);
+            writer.Write(Value);
         }
     }
 }

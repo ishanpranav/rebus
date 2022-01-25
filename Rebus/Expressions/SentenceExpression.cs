@@ -17,7 +17,7 @@ namespace Rebus.Expressions
         {
             get
             {
-                if (this._subject is null)
+                if (_subject is null)
                 {
                     return '.';
                 }
@@ -30,73 +30,73 @@ namespace Rebus.Expressions
 
         public SentenceExpression(Expression? subject, Expression verbPhrase, Expression? directObject)
         {
-            this._subject = subject;
-            this._verbPhrase = verbPhrase;
-            this._directObject = directObject;
+            _subject = subject;
+            _verbPhrase = verbPhrase;
+            _directObject = directObject;
         }
 
         public override async Task InterpretAsync(ICommandBuilder context)
         {
-            await this._verbPhrase.InterpretAsync(context);
+            await _verbPhrase.InterpretAsync(context);
 
-            if (this._subject is not null)
+            if (_subject is not null)
             {
-                await this._subject.InterpretAsync(context);
+                await _subject.InterpretAsync(context);
             }
 
-            if (this._directObject is not null)
+            if (_directObject is not null)
             {
-                await this._directObject.InterpretAsync(context);
+                await _directObject.InterpretAsync(context);
             }
 
-            context.MoveNext();
+            await context.SaveChangesAsync();
         }
 
         public override void Write(ExpressionWriter writer)
         {
-            if (this._subject is null)
+            if (_subject is null)
             {
                 writer.Write("I ");
             }
             else
             {
-                this._subject.Write(writer);
+                _subject.Write(writer);
 
                 writer.Write(',');
             }
 
-            this._verbPhrase.Write(writer);
+            _verbPhrase.Write(writer);
 
-            if (this._directObject is not null)
+            if (_directObject is not null)
             {
                 writer.Write(' ');
 
-                this._directObject.Write(writer);
+                _directObject.Write(writer);
             }
         }
 
         public override void WriteXml(XmlWriter writer)
         {
-            if (this._subject is not null)
+            if (_subject is not null)
             {
                 writer.WriteStartElement("Subject");
 
-                this._subject.WriteXml(writer);
+                _subject.WriteXml(writer);
 
                 writer.WriteEndElement();
             }
 
             writer.WriteStartElement("VerbPhrase");
 
-            this._verbPhrase.WriteXml(writer);
+            _verbPhrase.WriteXml(writer);
 
             writer.WriteEndElement();
 
-            if (this._directObject is not null)
+            if (_directObject is not null)
             {
                 writer.WriteStartElement("DirectObject");
 
-                this._directObject.WriteXml(writer);
+                _directObject.WriteXml(writer);
 
                 writer.WriteEndElement();
             }

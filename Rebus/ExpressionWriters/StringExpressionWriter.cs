@@ -4,28 +4,28 @@
 
 using System.Text;
 
-namespace Rebus
+namespace Rebus.ExpressionWriters
 {
     public class StringExpressionWriter : ExpressionWriter
     {
         private readonly StringBuilder _stringBuilder = new StringBuilder();
 
         public StringExpressionWriter() { }
-        public StringExpressionWriter(IWritingState state) : base(state) { }
+        private protected StringExpressionWriter(IWritingState state) : base(state) { }
 
         protected override void WriteCore(char value)
         {
-            this._stringBuilder.Append(value);
+            _stringBuilder.Append(value);
         }
 
         protected override void WriteLineCore()
         {
-            this._stringBuilder.AppendLine();
+            _stringBuilder.AppendLine();
         }
 
         public override string ToString()
         {
-            return this._stringBuilder.ToString();
+            return _stringBuilder.ToString();
         }
     }
 }

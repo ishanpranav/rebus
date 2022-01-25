@@ -2,37 +2,38 @@
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
-using System;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace Rebus.Server.Console
 {
-    internal class Startup
+    internal sealed class Startup
     {
-        private readonly TextReader _reader;
-        private readonly IEngine _engine;
-        private readonly ConsoleExpressionWriter _writer = new ConsoleExpressionWriter();
+        private readonly ConsoleExpressionWriter _writer;
+        private readonly IPlayerRepository _playerRepository;
+        private readonly IEngineFactory _engineFactory;
 
-        public Startup(TextReader reader, IEngine engine)
+        public Startup(ConsoleExpressionWriter writer, IPlayerRepository playerRepository, IEngineFactory engineFactory)
         {
-            this._reader = reader;
-            this._engine = engine;
+            _writer = writer;
+            _playerRepository = playerRepository;
+            _engineFactory = engineFactory;
         }
 
         public async Task StartAsync()
         {
-            await this._engine.InitializeAsync();
+            IEngine engine = await _engineFactory.CreateEngineAsync();
 
-            string? playerTag = await this._reader.ReadLineAsync();
+            string? name = await System.Console.In.ReadLineAsync();
 
-            if (playerTag is not null)
+            if (name is not null)
             {
+                IPlayer player = await _playerRepository.GetPlayerAsync(name, name);
+
                 string? line;
 
-                while (!String.IsNullOrWhiteSpace(line = await this._reader.ReadLineAsync()))
+                while (!string.IsNullOrWhiteSpace(line = await System.Console.In.ReadLineAsync()))
                 {
-                    await this._engine.InterpretAsync(playerTag, line, this._writer);
+                    await engine.InterpretAsync(player, line, _writer);
                 }
             }
         }

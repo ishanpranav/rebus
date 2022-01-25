@@ -2,74 +2,76 @@
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using Microsoft.Extensions.Logging;
 
 namespace Rebus.Server
 {
-    internal class Engine : IEngine
+    internal sealed class Engine : IEngine
     {
         private readonly ILogger<Engine> _logger;
-        private readonly IAsyncSupportInitialize _initializer;
-        private readonly DbRepository _repository;
-        private readonly CommandRepository _commandRepository;
+        private readonly CommandBuilder _commandBuilder;
         private readonly Parser _parser;
+        private readonly MessageBuilder _messageBuilder;
         private readonly XmlWriterSettings _xmlWriterSettings;
         private readonly XmlSerializer _xmlExpressionSerializer = new XmlSerializer(typeof(Expression));
-        private readonly Dictionary<string, Executor> _executorsByPlayerTag = new Dictionary<string, Executor>();
+        private readonly Dictionary<IPlayer, Executor> _executorsByPlayer = new Dictionary<IPlayer, Executor>();
 
-        public Engine(ILogger<Engine> logger, IAsyncSupportInitialize initializer, DbRepository repository, CommandRepository commandRepository, Parser parser, XmlWriterSettings xmlWriterSettings)
+        public Engine(ILogger<Engine> logger, CommandBuilder commandBuilder, Parser parser, MessageBuilder messageBuilder, XmlWriterSettings xmlWriterSettings)
         {
-            this._logger = logger;
-            this._initializer = initializer;
-            this._repository = repository;
-            this._commandRepository = commandRepository;
-            this._parser = parser;
-            this._xmlWriterSettings = xmlWriterSettings;
+            _logger = logger;
+            _commandBuilder = commandBuilder;
+            _parser = parser;
+            _messageBuilder = messageBuilder;
+            _xmlWriterSettings = xmlWriterSettings;
         }
 
-        public Task InitializeAsync()
-        {
-            return this._initializer.InitializeAsync();
-        }
-
-        public async Task InterpretAsync(string playerTag, string value, ExpressionWriter writer)
+        public async Task InterpretAsync(IPlayer player, string value, ExpressionWriter writer)
         {
             try
             {
-                Expression expression = await this._parser.ParseAsync(value);
+                Expression expression = await _parser.ParseAsync(value);
 
                 expression.WriteLine(writer);
 
-                CommandBuilder commandBuilder = new CommandBuilder(playerTag, this._repository, this._commandRepository);
+                _commandBuilder.SetPlayer(player);
 
-                await expression.InterpretAsync(commandBuilder);
+                _logger.LogInformation("{Sentence}", expression);
 
                 await using (StringWriter stringWriter = new StringWriter())
-                await using (XmlWriter xmlWriter = XmlWriter.Create(stringWriter, this._xmlWriterSettings))
+                await using (XmlWriter xmlWriter = XmlWriter.Create(stringWriter, _xmlWriterSettings))
                 {
-                    this._xmlExpressionSerializer.Serialize(xmlWriter, expression);
+                    _xmlExpressionSerializer.Serialize(xmlWriter, expression);
 
-                    this._logger.LogInformation("{Expression}", stringWriter);
+                    _logger.LogInformation("{Expression}", stringWriter);
                 }
 
-                if (!this._executorsByPlayerTag.TryGetValue(playerTag, out Executor? executor))
+                await expression.InterpretAsync(_commandBuilder);
+
+                if (!_executorsByPlayer.TryGetValue(player, out Executor? executor))
                 {
                     executor = new Executor();
 
-                    this._executorsByPlayerTag[playerTag] = executor;
+                    _executorsByPlayer[player] = executor;
                 }
 
-                foreach (Command command in commandBuilder.Build())
+                foreach (Command command in _commandBuilder.Build())
                 {
-                    IWritable result = await executor.ExecuteAsync(command);
+                    IWritable? result = await executor.ExecuteAsync(command) ?? await _messageBuilder.BuildAsync(ResourceIndex.Failure);
 
-                    result.Write(writer);
+                    if (result is not null)
+                    {
+                        _logger.LogInformation("{Result}", result);
+
+                        result.Write(writer);
+
+                        writer.WriteLine();
+                    }
                 }
             }
             catch (RebusException rebusException)
@@ -78,8 +80,10 @@ namespace Rebus.Server
             }
             catch (Exception exception)
             {
-                this._logger.LogError(exception, "Exception");
+                _logger.LogError(exception, "Exception");
             }
+
+            writer.WriteLine();
         }
     }
 }

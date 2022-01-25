@@ -2,18 +2,17 @@
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace Rebus.Commands.System
 {
-    [RebusCommand("redo")]
+    [Guid("5A0EE5FA-D968-49A2-AA29-8131A6B39AA9")]
     public class RedoSystemCommand : SystemCommand
     {
-        protected internal override async Task<IWritable> ExecuteAsync()
+        protected internal override Task<IWritable?> ExecuteAsync()
         {
-            await this.Executor.RedoAsync();
-
-            return null;
+            return Executor.RedoAsync();
         }
     }
 }

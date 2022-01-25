@@ -10,12 +10,13 @@ namespace Rebus
     public interface ICommandBuilder
     {
         Task SetVerbPhraseAsync(IToken verb, IToken? adverb);
-        Task SetSubjectAsync(IEnumerable<IToken> adjectives, IToken substantive);
-        Task SetDirectObjectAsync(IEnumerable<IToken> adjectives, IToken substantive);
+        Task SetConceptAsync(Argument argument, IEnumerable<IToken> adjectives, IToken substantive);
 
-        void SetReflexive();
+        void SetNumber(Argument argument, int value);
+        void SetQuotation(Argument argument, string value);
+        void SetReflexive(Argument argument);
 
-        void MoveNext();
+        Task SaveChangesAsync();
 
         IEnumerable<Command> Build();
     }

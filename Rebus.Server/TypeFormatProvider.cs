@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Rebus.Server
 {
-    internal class TypeFormatProvider : ICustomFormatter, IFormatProvider
+    internal sealed class TypeFormatProvider : ICustomFormatter, IFormatProvider
     {
         public object? GetFormat(Type? formatType)
         {
@@ -36,7 +36,7 @@ namespace Rebus.Server
             {
                 foreach (Type genericArgument in value.GetGenericArguments())
                 {
-                    this.Format(genericArgument, stringBuilder);
+                    Format(genericArgument, stringBuilder);
                 }
 
                 stringBuilder.Append(name.AsSpan(start, name.IndexOf('`') - start));
@@ -59,7 +59,7 @@ namespace Rebus.Server
                             StringBuilder result = new StringBuilder(type.Namespace)
                                 .Append('.');
 
-                            this.Format(type, result);
+                            Format(type, result);
 
                             return result
                                 .Append("Collection")
@@ -72,7 +72,7 @@ namespace Rebus.Server
                             StringBuilder result = new StringBuilder(type.Namespace)
                                 .Append('.');
 
-                            this.Format(type, result);
+                            Format(type, result);
 
                             return result.ToString();
                         }
@@ -87,7 +87,7 @@ namespace Rebus.Server
             }
             else
             {
-                return arg?.ToString() ?? String.Empty;
+                return arg?.ToString() ?? string.Empty;
             }
         }
     }

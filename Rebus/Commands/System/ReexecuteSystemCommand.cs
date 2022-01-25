@@ -2,20 +2,17 @@
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace Rebus.Commands.System
 {
-    [RebusCommand("g")]
-    [RebusCommand("again")]
-    [RebusCommand("reexecute")]
+    [Guid("AD7EF788-9CE6-4EA0-9A5B-7C3CFF1FB146")]
     public class ReexecuteSystemCommand : SystemCommand
     {
-        protected internal override async Task<IWritable> ExecuteAsync()
+        protected internal override Task<IWritable?> ExecuteAsync()
         {
-            await this.Executor.ReexecuteAsync();
-
-            return null;
+            return Executor.ReexecuteAsync();
         }
     }
 }

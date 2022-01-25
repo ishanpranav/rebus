@@ -22,12 +22,12 @@ namespace Rebus.Expressions
 
         public ParagraphExpression(IEnumerable<Expression> sentences)
         {
-            this._sentences = sentences;
+            _sentences = sentences;
         }
 
         public override async Task InterpretAsync(ICommandBuilder context)
         {
-            foreach (Expression clause in this._sentences)
+            foreach (Expression clause in _sentences)
             {
                 await clause.InterpretAsync(context);
             }
@@ -35,7 +35,7 @@ namespace Rebus.Expressions
 
         public override void Write(ExpressionWriter writer)
         {
-            foreach (Expression sentence in this._sentences)
+            foreach (Expression sentence in _sentences)
             {
                 sentence.WriteLine(writer);
             }
@@ -45,7 +45,7 @@ namespace Rebus.Expressions
 
         public override void WriteXml(XmlWriter writer)
         {
-            foreach (Expression sentence in this._sentences)
+            foreach (Expression sentence in _sentences)
             {
                 writer.WriteStartElement("Sentence");
 

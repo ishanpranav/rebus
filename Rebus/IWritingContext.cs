@@ -4,7 +4,7 @@
 
 namespace Rebus
 {
-    public interface IWritingContext
+    internal interface IWritingContext
     {
         IWritingState State { get; set; }
 

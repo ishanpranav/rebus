@@ -8,6 +8,6 @@ namespace Rebus.Commands
 {
     public abstract class OperationCommand : Command
     {
-        protected internal abstract Task<IWritable> UnexecuteAsync();
+        protected internal abstract Task<IWritable?> UnexecuteAsync();
     }
 }

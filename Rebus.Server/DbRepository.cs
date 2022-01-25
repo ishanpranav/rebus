@@ -2,66 +2,30 @@
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Rebus.Expressions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Rebus.Expressions;
 
 namespace Rebus.Server
 {
-    internal class DbRepository
+    internal sealed class DbRepository
     {
         private readonly IDbContextFactory<UniverseContext> _contextFactory;
-        private readonly MessageBuilder<DbRepository> _messageBuilder;
+        private readonly MessageBuilder _messageBuilder;
 
-        public DbRepository(IDbContextFactory<UniverseContext> contextFactory, MessageBuilder<DbRepository> messageBuilder)
+        public DbRepository(IDbContextFactory<UniverseContext> contextFactory, MessageBuilder messageBuilder)
         {
-            this._contextFactory = contextFactory;
-            this._messageBuilder = messageBuilder;
+            _contextFactory = contextFactory;
+            _messageBuilder = messageBuilder;
         }
 
-        public async Task<IConcept> GetPlayerAsync(string tag)
+        public async Task<IReadOnlyCollection<Concept>> GetVisibleContentsAsync(int containerId, int viewerId)
         {
-            await using (UniverseContext context = await this._contextFactory.CreateDbContextAsync())
-            {
-                Concept? result = await context
-                    .IncludeUniverse()
-                    .SingleOrDefaultAsync(x => x.Tag == tag);
-
-                if (result is null)
-                {
-                    result = new Concept()
-                    {
-                        ContainerId = 1,
-                        Characteristics = Characteristics.Agent,
-                        Tag = tag,
-                        Signatures = new ConceptSignature[]
-                        {
-                            new ConceptSignature()
-                            {
-                                Substantive = new Token()
-                                {
-                                    Type = TokenTypes.Substantive,
-                                    Value = tag
-                                }
-                            }
-                        }
-                    };
-
-                    await context.AddAsync(result);
-                    await context.SaveChangesAsync();
-                }
-
-                return result;
-            }
-        }
-
-        public async Task<IReadOnlyCollection<Concept>> GetVisibleContents(int containerId, int viewerId)
-        {
-            await using (UniverseContext context = await this._contextFactory.CreateDbContextAsync())
+            await using (UniverseContext context = await _contextFactory.CreateDbContextAsync())
             {
                 IQueryable<Concept> contents = context
                     .IncludeUniverse()
@@ -76,58 +40,65 @@ namespace Rebus.Server
             }
         }
 
-        public async Task<Concept> GetConceptAsync(IEnumerable<IToken> adjectives, IToken substantive, Characteristics characteristics)
+        public async Task<Concept> GetConceptAsync(int id)
         {
-            await using (UniverseContext context = await this._contextFactory.CreateDbContextAsync())
+            await using (UniverseContext context = await _contextFactory.CreateDbContextAsync())
+            {
+                return await context
+                    .IncludeUniverse()
+                    .SingleAsync(x => x.Id == id);
+            }
+        }
+
+        public async Task<Concept> GetConceptAsync(IToken? article, IEnumerable<IToken> adjectives, IToken substantive)
+        {
+            await using (UniverseContext context = await _contextFactory.CreateDbContextAsync())
             {
                 ILookup<int, ConceptSignature> signaturesByCount = context.ConceptSignatures
+                    .Include(x => x.Article)
                     .Include(x => x.Substantive)
                     .Where(x => x.Substantive.Value == substantive.Value)
                     .Include(signature => signature.Adjectives)
                     .ToLookup(signature => adjectives.Count(adjective => signature.Adjectives.Any(x => adjective.Value == x.Value)));
                 IEnumerable<int> conceptIds = signaturesByCount[adjectives.Count()].Select(x => x.ConceptId);
-                IQueryable<Concept> results = context
-                    .IncludeUniverse()
-                    .Where(concept => conceptIds.Contains(concept.Id));
+                Concept? result;
 
-                if (await results.AnyAsync())
+                try
                 {
-                    Concept? result;
+                    result = await context
+                        .IncludeUniverse()
+                        .SingleOrDefaultAsync(x => conceptIds.Contains(x.Id));
+                }
+                catch
+                {
+                    appendMessage();
 
-                    try
-                    {
-                        result = await results
-                            .Where(x => x.Characteristics.HasFlag(characteristics))
-                            .SingleOrDefaultAsync();
-                    }
-                    catch
-                    {
-                        this._messageBuilder.Begin(1, 2);
-                        this._messageBuilder.Append(new SubjectExpression(adjectives, substantive));
-                        this._messageBuilder.Append(signaturesByCount[signaturesByCount.Max(x => x.Key)].First());
+                    _messageBuilder.Append(signaturesByCount[signaturesByCount.Max(x => x.Key)].First());
 
-                        throw new RebusException(this._messageBuilder.Build());
-                    }
+                    throw new RebusException(await _messageBuilder.BuildAsync(ResourceIndex.ConceptMultipleMatchesException));
+                }
 
-                    this._messageBuilder.Begin(2, 2);
-                    this._messageBuilder.Append(new SubjectExpression(adjectives, substantive));
-                    this._messageBuilder.Append(characteristics);
+                if (result is null)
+                {
+                    appendMessage();
 
-                    return result ?? throw new RebusException(this._messageBuilder.Build());
+                    throw new RebusException(await _messageBuilder.BuildAsync(ResourceIndex.ConceptNoMatchesException));
                 }
                 else
                 {
-                    this._messageBuilder.Begin(0, 1);
-                    this._messageBuilder.Append(new SubjectExpression(adjectives, substantive));
+                    return result;
+                }
 
-                    throw new RebusException(this._messageBuilder.Build());
+                void appendMessage()
+                {
+                    _messageBuilder.Append(new NounExpression(Argument.Subject, article, adjectives, substantive));
                 }
             }
         }
 
         public async Task<Token> GetTokenAsync(string value)
         {
-            await using (UniverseContext context = await this._contextFactory.CreateDbContextAsync())
+            await using (UniverseContext context = await _contextFactory.CreateDbContextAsync())
             {
                 return (await context.Tokens.SingleOrDefaultAsync(x => x.Value == value)) ?? new Token()
                 {

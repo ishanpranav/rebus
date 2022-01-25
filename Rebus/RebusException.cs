@@ -24,21 +24,21 @@ namespace Rebus
         /// Initializes a new instance of the <see cref="RebusException"/> class.
         /// </summary>
         /// <param name="message">The writable message that describes the error.</param>
-        public RebusException(IWritable message) : base(message.ToString())
+        public RebusException(IWritable? message) : base(message?.ToString())
         {
-            this._message = message;
+            _message = message;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RebusException"/> class.
         /// </summary>
-        /// <inheritdoc cref="Exception(String)"/>
+        /// <inheritdoc cref="Exception(string)"/>
         public RebusException(string? message) : base(message) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RebusException"/> class.
         /// </summary>
-        /// <inheritdoc cref="Exception(String, Exception)"/>
+        /// <inheritdoc cref="Exception(string, Exception)"/>
         public RebusException(string? message, Exception? innerException) : base(message, innerException) { }
 
         /// <summary>
@@ -50,13 +50,13 @@ namespace Rebus
         /// <inheritdoc/>
         public void Write(ExpressionWriter writer)
         {
-            if (this._message is null)
+            if (_message is null)
             {
-                writer.Write(this.Message);
+                writer.Write(Message);
             }
             else
             {
-                this._message.Write(writer);
+                _message.Write(writer);
             }
         }
     }

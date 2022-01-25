@@ -1,0 +1,21 @@
+Id,Index,Value
+1,1,I know about multiple {0}. Did you mean {1}?
+2,2,I do not know about any {0} that is appropriate for that instruction.
+3,3,I know about multiple ways to do that.
+8,5,Please enter an instruction in the form of an imperative sentence.
+9,6,I only understood you as far as: {0}.
+10,7,I expected a noun before one or more noun modifiers.
+11,8,I expected a verb.
+13,11,I cannot.
+14,11,Impossible.
+15,11,I cannot do that.
+16,11,It is impossible for me to do that.
+17,11,It is not possible for me to do that.
+18,10,"It is {0}, {1}."
+19,4,"It is {0}, {1}, containing {2}."
+20,4,"It is {0}, {1}, with {2}."
+21,4,"It is {0}, {1}, that has {2}."
+22,4,"It is {0}, {1}, that contains {2}."
+23,4,"It is {0}, {1}, which contains {2}."
+24,4,"It is {0}, {1}, which has {2}."
+25,12,I do not know any way to appropriately follow that instruction.

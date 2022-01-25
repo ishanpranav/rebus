@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Rebus
 {
-    public interface IEngine : IAsyncSupportInitialize
+    public interface IEngine
     {
-        Task InterpretAsync(string playerTag, string value, ExpressionWriter writer);
+        Task InterpretAsync(IPlayer player, string value, ExpressionWriter writer);
     }
 }
