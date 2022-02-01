@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
@@ -15,19 +16,20 @@ namespace Rebus.Server
     internal sealed class Engine : IEngine
     {
         private readonly ILogger<Engine> _logger;
-        private readonly CommandBuilder _commandBuilder;
+        private readonly Tokenizer _tokenizer;
         private readonly Parser _parser;
-        private readonly MessageBuilder _messageBuilder;
+        private readonly CommandBuilder _commandBuilder;
         private readonly XmlWriterSettings _xmlWriterSettings;
-        private readonly XmlSerializer _xmlExpressionSerializer = new XmlSerializer(typeof(Expression));
+        private readonly XmlSerializer _xmlSerializer;
         private readonly Dictionary<IPlayer, Executor> _executorsByPlayer = new Dictionary<IPlayer, Executor>();
 
-        public Engine(ILogger<Engine> logger, CommandBuilder commandBuilder, Parser parser, MessageBuilder messageBuilder, XmlWriterSettings xmlWriterSettings)
+        public Engine(ILogger<Engine> logger, Tokenizer tokenizer, Parser parser, CommandBuilder commandBuilder, XmlSerializer xmlSerializer, XmlWriterSettings xmlWriterSettings)
         {
             _logger = logger;
-            _commandBuilder = commandBuilder;
+            _tokenizer = tokenizer;
             _parser = parser;
-            _messageBuilder = messageBuilder;
+            _commandBuilder = commandBuilder;
+            _xmlSerializer = xmlSerializer;
             _xmlWriterSettings = xmlWriterSettings;
         }
 
@@ -35,7 +37,24 @@ namespace Rebus.Server
         {
             try
             {
-                Expression expression = await _parser.ParseAsync(value);
+                IAsyncEnumerable<Token> tokens = _tokenizer.TokenizeAsync(value);
+                StringBuilder stringBuilder = new StringBuilder();
+
+                await foreach (Token token in tokens)
+                {
+                    stringBuilder
+                        .Append('(')
+                        .Append(token.Type
+                            .ToString()
+                            .ToUpper())
+                        .Append(' ')
+                        .Append(token.Value)
+                        .Append(") ");
+                }
+
+                _logger.LogInformation("{Tokens}", stringBuilder);
+
+                Expression expression = await _parser.ParseAsync(tokens);
 
                 expression.WriteLine(writer);
 
@@ -44,9 +63,11 @@ namespace Rebus.Server
                 _logger.LogInformation("{Sentence}", expression);
 
                 await using (StringWriter stringWriter = new StringWriter())
-                await using (XmlWriter xmlWriter = XmlWriter.Create(stringWriter, _xmlWriterSettings))
                 {
-                    _xmlExpressionSerializer.Serialize(xmlWriter, expression);
+                    await using (XmlWriter xmlWriter = XmlWriter.Create(stringWriter, _xmlWriterSettings))
+                    {
+                        _xmlSerializer.Serialize(xmlWriter, expression);
+                    }
 
                     _logger.LogInformation("{Expression}", stringWriter);
                 }
@@ -62,7 +83,7 @@ namespace Rebus.Server
 
                 foreach (Command command in _commandBuilder.Build())
                 {
-                    IWritable? result = await executor.ExecuteAsync(command) ?? await _messageBuilder.BuildAsync(ResourceIndex.Failure);
+                    IWritable? result = await executor.ExecuteAsync(command);
 
                     if (result is not null)
                     {

@@ -13,11 +13,11 @@ namespace Rebus.Server
     internal sealed class ConceptSignature : Writable
     {
         public int Id { get; set; }
-        public int ConceptId { get; set; }
 
         public Token? Article { get; set; }
 
         public ICollection<Token> Adjectives { get; set; } = new HashSet<Token>();
+        public ICollection<Concept> Concepts { get; set; } = new HashSet<Concept>();
 
 #nullable disable
         [Required]

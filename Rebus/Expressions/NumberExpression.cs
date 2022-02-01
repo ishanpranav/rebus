@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace Rebus.Expressions
 {
-    public class NumberExpression : Expression
+    internal sealed class NumberExpression : Expression
     {
         private readonly Argument _argument;
         private readonly int _value;

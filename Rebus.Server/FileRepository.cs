@@ -4,13 +4,13 @@
 
 using System;
 using System.IO;
+using System.Text;
 
 namespace Rebus.Server
 {
     internal sealed class FileRepository
     {
         private readonly string _directory;
-        private readonly TypeFormatProvider _typeFormatProvider = new TypeFormatProvider();
 
         public FileRepository(string directory)
         {
@@ -19,7 +19,41 @@ namespace Rebus.Server
 
         public string GetPath(Type type, string extension)
         {
-            return Path.Combine(_directory, string.Format(_typeFormatProvider, format: "{0:f}.{1}", type, extension));
+            StringBuilder result = new StringBuilder(type.Namespace)
+                .Append('.');
+
+            format(type, result);
+
+            result
+                .Append('.')
+                .Append(extension);
+
+            return Path.Combine(_directory, result.ToString());
+
+            static void format(Type value, StringBuilder stringBuilder)
+            {
+                string name = value.Name;
+                int start = 0;
+
+                if (value.IsInterface && name.StartsWith('I'))
+                {
+                    start = 1;
+                }
+
+                if (value.IsGenericType)
+                {
+                    foreach (Type genericArgument in value.GetGenericArguments())
+                    {
+                        format(genericArgument, stringBuilder);
+                    }
+
+                    stringBuilder.Append(name.AsSpan(start, name.IndexOf('`') - start));
+                }
+                else
+                {
+                    stringBuilder.Append(name);
+                }
+            }
         }
     }
 }

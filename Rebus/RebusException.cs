@@ -8,7 +8,7 @@ using System.Runtime.Serialization;
 namespace Rebus
 {
     /// <summary>
-    /// The exception that is thrown when the a user-provided game instruction contains a syntactical or semantic error.
+    /// The exception that is thrown when the engine discovers a user error.
     /// </summary>
     [Serializable]
     public class RebusException : Exception, IWritable

@@ -5,15 +5,17 @@
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace Rebus.Expressions
+namespace Rebus
 {
-    public class ReflexiveExpression : Expression
+    internal sealed class ReflexiveExpression : Expression
     {
         private readonly Argument _argument;
+        private readonly bool _firstPerson;
 
-        public ReflexiveExpression(Argument argument)
+        public ReflexiveExpression(Argument directObject, bool firstPerson)
         {
-            _argument = argument;
+            _argument = directObject;
+            _firstPerson = firstPerson;
         }
 
         public override Task InterpretAsync(ICommandBuilder context)
@@ -26,7 +28,22 @@ namespace Rebus.Expressions
         public override void Write(ExpressionWriter writer)
         {
             writer.Write(_argument);
-            writer.Write("myself");
+
+            if (_firstPerson)
+            {
+                if (_argument is Argument.Subject)
+                {
+                    writer.Write('I');
+                }
+                else
+                {
+                    writer.Write("myself");
+                }
+            }
+            else
+            {
+                writer.Write("you");
+            }
         }
 
         public override void WriteXml(XmlWriter writer)

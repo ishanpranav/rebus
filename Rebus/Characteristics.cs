@@ -9,7 +9,7 @@ namespace Rebus
     [Flags]
     public enum Characteristics
     {
-        None = 0,
+        None,
         Agent = 1
     }
 }

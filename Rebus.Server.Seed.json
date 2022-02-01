@@ -1,111 +1,245 @@
 {
-  "concepts": [
-    {
-      "id": 1,
-      "visualDescription": "ornate and grand",
-      "signatures": [
+    "formats": [
         {
-          "article": {
-            "$id": "1",
+            "key": "MultipleMatchesCommand",
+            "value": "I know of multiple things that satisfy that description.",
+            "arguments": 0
+        }
+    ],
+    "commands": [
+        {
+            "guid": "6C4E330D-29AD-498B-B6A9-CB45724B0A32",
+            "signatures": [
+                {
+                    "verb": {
+                        "$id": "76",
+                        "type": "symbol, verb",
+                        "value": "l"
+                    },
+                    "arguments": [
+                        {
+                            "$id": "3",
+                            "argument": "subject",
+                            "type": "concept",
+                            "constraint": "none"
+                        }
+                    ]
+                },
+                {
+                    "verb": {
+                        "$id": "2",
+                        "type": "verb",
+                        "value": "look"
+                    },
+                    "arguments": [
+                        { "$ref": "3" }
+                    ]
+                },
+                {
+                    "verb": { "$ref": "2" },
+                    "adverb": {
+                        "$id": "5",
+                        "type": "adverb",
+                        "value": "around"
+                    },
+                    "arguments": [
+                        { "$ref": "3" }
+                    ]
+                },
+                {
+                    "verb": { "$ref": "2" },
+                    "adverb": { "$ref": "5" },
+                    "arguments": [
+                        { "$ref": "3" },
+                        {
+                            "$id": "6",
+                            "argument": "directObject",
+                            "type": "concept",
+                            "constraint": "none"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "guid": "72DEFA85-F66F-4049-A40C-C05C7496985A",
+            "signatures": [
+                {
+                    "verb": { "$ref": "76" },
+                    "arguments": [
+                        { "$ref": "3" },
+                        { "$ref": "6" }
+                    ]
+                },
+                {
+                    "verb": { "$ref": "2" },
+                    "adverb": {
+                        "type": "adverb",
+                        "value": "at"
+                    },
+                    "arguments": [
+                        { "$ref": "3" },
+                        { "$ref": "6" }
+                    ]
+                }
+            ]
+        }
+    ],
+    "concepts": [
+        {
+            "id": 1,
+            "visualDescription": "ornate and grand",
+            "signatures": [
+                {
+                    "article": {
+                        "$id": "65",
+                        "type": "article, symbol",
+                        "value": "a"
+                    },
+                    "substantive": {
+                        "type": "substantive",
+                        "value": "Room"
+                    },
+                    "adjectives": [
+                        {
+                            "type": "adjective",
+                            "value": "Living"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "containerId": 1,
+            "visualDescription": "enticing in its coloration",
+            "signatures": [
+                {
+                    "article": { "$ref": "65" },
+                    "substantive": {
+                        "type": "substantive",
+                        "value": "apple"
+                    },
+                    "adjectives": [
+                        {
+                            "type": "adjective, color",
+                            "value": "red"
+                        },
+                        {
+                            "type": "adjective, opinion",
+                            "value": "delicious"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "tokens": [
+        {
+            "$id": "66",
+            "type": "symbol",
+            "value": "b"
+        },
+        {
+            "$id": "67",
+            "type": "symbol",
+            "value": "c"
+        },
+        {
+            "$id": "68",
+            "type": "symbol",
+            "value": "d"
+        },
+        {
+            "$id": "69",
+            "type": "symbol",
+            "value": "e"
+        },
+        {
+            "$id": "70",
+            "type": "symbol",
+            "value": "f"
+        },
+        {
+            "$id": "71",
+            "type": "symbol",
+            "value": "g"
+        },
+        {
+            "$id": "72",
+            "type": "symbol",
+            "value": "h"
+        },
+        {
+            "$id": "73",
+            "type": "firstPersonSubject, symbol",
+            "value": "I"
+        },
+        {
+            "$id": "74",
+            "type": "symbol",
+            "value": "j"
+        },
+        {
+            "$id": "75",
+            "type": "symbol",
+            "value": "k"
+        },
+        {
             "type": "article",
-            "value": "a"
-          },
-          "substantive": {
-            "type": "substantive",
-            "value": "Room"
-          },
-          "adjectives": [
-            {
-              "type": "adjective",
-              "value": "Living"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": 2,
-      "containerId": 1,
-      "visualDescription": "enticing in its coloration",
-      "signatures": [
+            "value": "an"
+        },
         {
-          "article": {
-            "$ref": "1"
-          },
-          "substantive": {
-            "type": "substantive",
-            "value": "apple"
-          },
-          "adjectives": [
-            {
-              "type": "adjective, color",
-              "value": "red"
-            },
-            {
-              "type": "adjective, opinion",
-              "value": "delicious"
-            }
-          ]
+            "type": "conjunction",
+            "value": "and"
+        },
+        {
+            "type": "interjection",
+            "value": "hello"
+        },
+        {
+            "type": "firstPersonObject",
+            "value": "me"
+        },
+        {
+            "type": "firstPersonObject",
+            "value": "myself"
+        },
+        {
+            "type": "object",
+            "value": "self"
+        },
+        {
+            "type": "determiner",
+            "value": "that"
+        },
+        {
+            "type": "article, determiner",
+            "value": "the"
+        },
+        {
+            "type": "determiner",
+            "value": "those"
+        },
+        {
+            "type": "firstPersonObject",
+            "value": "us"
+        },
+        {
+            "type": "firstPersonSubject",
+            "value": "we"
+        },
+        {
+            "type": "secondPersonObject",
+            "value": "you"
+        },
+        {
+            "type": "secondPersonObject",
+            "value": "yourself"
+        },
+        {
+            "type": "determiner",
+            "value": "my"
         }
-      ]
-    }
-  ],
-  "tokens": [
-    {
-      "type": "article",
-      "value": "an"
-    },
-    {
-      "type": "conjunction",
-      "value": "and"
-    },
-    {
-      "type": "interjection",
-      "value": "hello"
-    },
-    {
-      "type": "subject",
-      "value": "I"
-    },
-    {
-      "type": "object",
-      "value": "me"
-    },
-    {
-      "type": "object",
-      "value": "myself"
-    },
-    {
-      "type": "object",
-      "value": "self"
-    },
-    {
-      "type": "determiner",
-      "value": "that"
-    },
-    {
-      "type": "article, determiner",
-      "value": "the"
-    },
-    {
-      "type": "determiner",
-      "value": "those"
-    },
-    {
-      "type": "object",
-      "value": "us"
-    },
-    {
-      "type": "subject",
-      "value": "we"
-    },
-    {
-      "type": "subject, object",
-      "value": "you"
-    },
-    {
-      "type": "determiner",
-      "value": "my"
-    }
-  ]
+    ]
 }

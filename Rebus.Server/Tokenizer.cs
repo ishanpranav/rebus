@@ -12,9 +12,9 @@ namespace Rebus.Server
         private const char DoubleQuoteChar = '"';
 
         private readonly Regex _regex;
-        private readonly DbRepository _repository;
+        private readonly Repository _repository;
 
-        public Tokenizer(Regex regex, DbRepository repository)
+        public Tokenizer(Regex regex, Repository repository)
         {
             _regex = regex;
             _repository = repository;

@@ -26,7 +26,7 @@ namespace Rebus.Expressions
                 }
                 else
                 {
-                    return '.';
+                    return base.Punctuation;
                 }
             }
         }
@@ -60,20 +60,26 @@ namespace Rebus.Expressions
                 .OrderBy(x => x.Key))
             {
                 IToken[] array = grouping.ToArray();
+                int lastIndex = array.Length - 1;
 
-                for (int i = 0; i < array.Length - 1; i++)
+                for (int i = 0; i < lastIndex; i++)
                 {
                     array[i].Write(writer);
 
                     writer.Write(',');
                 }
 
-                array[array.Length - 1].Write(writer);
+                array[lastIndex].Write(writer);
 
                 writer.Write(' ');
             }
 
             _substantive.Write(writer);
+
+            if (_argument is Argument.Subject)
+            {
+                writer.Write(',');
+            }
         }
 
         public override void WriteXml(XmlWriter writer)

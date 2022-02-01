@@ -6,32 +6,27 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace Rebus.Server
 {
     internal sealed class CommandBuilder : ICommandBuilder
     {
         private readonly Dictionary<Guid, Command> _prototypesByGuid;
-        private readonly IDbContextFactory<ResourceContext> _contextFactory;
-        private readonly DbRepository _repository;
-        private readonly MessageBuilder _messageBuilder;
-        private readonly IReadOnlyCollection<Argument> _arguments;
+        private readonly Repository _repository;
         private readonly List<Command> _commands = new List<Command>();
-        private readonly Dictionary<Argument, object> _valuesByArgument = new Dictionary<Argument, object>();
+        private readonly int _argumentCount = Enum.GetValues<Argument>().Length;
 
         private IToken? _verb;
         private IToken? _adverb;
         private IPlayer? _player;
         private IConcept? _playerConcept;
+        private object?[] _arguments;
 
-        public CommandBuilder(IEnumerable<Command> prototypes, IDbContextFactory<ResourceContext> contextFactory, DbRepository repository, MessageBuilder messageBuilder, IReadOnlyCollection<Argument> arguments)
+        public CommandBuilder(IEnumerable<Command> prototypes, Repository repository)
         {
             _prototypesByGuid = prototypes.ToDictionary(x => x.Guid);
-            _contextFactory = contextFactory;
             _repository = repository;
-            _messageBuilder = messageBuilder;
-            _arguments = arguments;
+            _arguments = new object?[_argumentCount];
         }
 
         public void SetPlayer(IPlayer player)
@@ -58,29 +53,29 @@ namespace Rebus.Server
 
         public void SetReflexive(Argument argument)
         {
-            if (_playerConcept is null)
+            if (argument is Argument.Subject)
             {
-                throw new InvalidOperationException();
+                _arguments[(int)Argument.Subject] = _playerConcept;
             }
             else
             {
-                _valuesByArgument[argument] = _playerConcept;
+                _arguments[(int)argument] = _arguments[(int)Argument.Subject];
             }
         }
 
         public async Task SetConceptAsync(Argument argument, IEnumerable<IToken> adjectives, IToken substantive)
         {
-            _valuesByArgument[argument] = await _repository.GetConceptAsync(article: null, adjectives, substantive);
+            _arguments[(int)argument] = await _repository.GetConceptAsync(adjectives, substantive);
         }
 
         public void SetQuotation(Argument argument, string quotation)
         {
-            _valuesByArgument[argument] = quotation;
+            _arguments[(int)argument] = quotation;
         }
 
         public void SetNumber(Argument argument, int number)
         {
-            _valuesByArgument[argument] = number;
+            _arguments[(int)argument] = number;
         }
 
         public async Task SaveChangesAsync()
@@ -91,100 +86,13 @@ namespace Rebus.Server
             }
             else
             {
-                await using (ResourceContext context = await _contextFactory.CreateDbContextAsync())
-                {
-                    string? adverb = _adverb?.Value;
-
-                    try
-                    {
-                        CommandSignature? result = context.CommandSignatures
-                            .Include(signature => signature.Command)
-                            .Include(signature => signature.Arguments)
-                            .Where(signature => signature.Verb == _verb.Value && signature.Adverb == adverb)
-                            .AsEnumerable()
-                            .SingleOrDefault(signature =>
-                            {
-                                Dictionary<Argument, ArgumentSignature> argumentSignaturesByArgument = signature.Arguments.ToDictionary(x => x.Argument);
-
-                                foreach (Argument argument in _arguments)
-                                {
-                                    if (argumentSignaturesByArgument.TryGetValue(argument, out ArgumentSignature? argumentSignature))
-                                    {
-                                        if (_valuesByArgument.TryGetValue(argument, out object? value))
-                                        {
-                                            switch (argumentSignature.Type)
-                                            {
-                                                case ArgumentType.Concept:
-                                                    if (value is not IConcept)
-                                                    {
-                                                        return false;
-                                                    }
-                                                    break;
-
-                                                case ArgumentType.Number:
-                                                    if (value is not int)
-                                                    {
-                                                        return false;
-                                                    }
-                                                    break;
-
-                                                case ArgumentType.Quotation:
-                                                    if (value is not string)
-                                                    {
-                                                        return false;
-                                                    }
-                                                    break;
-
-                                                case ArgumentType.Reflexive:
-                                                    if (value != _playerConcept)
-                                                    {
-                                                        return false;
-                                                    }
-                                                    break;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            return false;
-                                        }
-                                    }
-                                    else if (_valuesByArgument.ContainsKey(argument))
-                                    {
-                                        return false;
-                                    }
-                                }
-
-                                return true;
-                            });
-
-                        if (result is null)
-                        {
-                            throw new RebusException(await _messageBuilder.BuildAsync(ResourceIndex.CommandNoMatchesException));
-                        }
-                        else
-                        {
-                            Command clone = _prototypesByGuid[result.Command.Guid].Clone(_playerConcept);
-
-                            foreach (KeyValuePair<Argument, object> argumentValuePair in _valuesByArgument)
-                            {
-                                clone.Set(argumentValuePair.Key, argumentValuePair.Value);
-                            }
-
-                            _commands.Add(clone);
-                        }
-                    }
-                    catch
-                    {
-                        throw new RebusException(await _messageBuilder.BuildAsync(ResourceIndex.CommandMultipleMatchesException));
-                    }
-                }
-
-                _verb = null;
-                _adverb = null;
-                _playerConcept = null;
-
-                _valuesByArgument.Clear();
+                _commands.Add(_prototypesByGuid[(await _repository.GetCommandAsync(_verb, _adverb, _arguments)).Command.Guid].CreateCommand(_playerConcept, _arguments));
             }
+
+            _verb = null;
+            _adverb = null;
+            _playerConcept = null;
+            _arguments = new object?[_argumentCount];
         }
 
         public IEnumerable<Command> Build()

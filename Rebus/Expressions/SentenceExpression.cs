@@ -7,9 +7,9 @@ using System.Xml;
 
 namespace Rebus.Expressions
 {
-    public class SentenceExpression : Expression
+    internal sealed class SentenceExpression : Expression
     {
-        private readonly Expression? _subject;
+        private readonly Expression _subject;
         private readonly Expression _verbPhrase;
         private readonly Expression? _directObject;
 
@@ -17,18 +17,11 @@ namespace Rebus.Expressions
         {
             get
             {
-                if (_subject is null)
-                {
-                    return '.';
-                }
-                else
-                {
-                    return '!';
-                }
+                return _subject.Punctuation;
             }
         }
 
-        public SentenceExpression(Expression? subject, Expression verbPhrase, Expression? directObject)
+        public SentenceExpression(Expression subject, Expression verbPhrase, Expression? directObject)
         {
             _subject = subject;
             _verbPhrase = verbPhrase;
@@ -38,11 +31,7 @@ namespace Rebus.Expressions
         public override async Task InterpretAsync(ICommandBuilder context)
         {
             await _verbPhrase.InterpretAsync(context);
-
-            if (_subject is not null)
-            {
-                await _subject.InterpretAsync(context);
-            }
+            await _subject.InterpretAsync(context);
 
             if (_directObject is not null)
             {
@@ -54,16 +43,9 @@ namespace Rebus.Expressions
 
         public override void Write(ExpressionWriter writer)
         {
-            if (_subject is null)
-            {
-                writer.Write("I ");
-            }
-            else
-            {
-                _subject.Write(writer);
+            _subject.Write(writer);
 
-                writer.Write(',');
-            }
+            writer.Write(' ');
 
             _verbPhrase.Write(writer);
 
@@ -77,14 +59,11 @@ namespace Rebus.Expressions
 
         public override void WriteXml(XmlWriter writer)
         {
-            if (_subject is not null)
-            {
-                writer.WriteStartElement("Subject");
+            writer.WriteStartElement("Subject");
 
-                _subject.WriteXml(writer);
+            _subject.WriteXml(writer);
 
-                writer.WriteEndElement();
-            }
+            writer.WriteEndElement();
 
             writer.WriteStartElement("VerbPhrase");
 

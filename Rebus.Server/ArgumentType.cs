@@ -6,10 +6,9 @@ namespace Rebus.Server
 {
     internal enum ArgumentType
     {
-        None = 0,
+        None,
         Concept,
         Number,
-        Quotation,
-        Reflexive
+        Quotation
     }
 }

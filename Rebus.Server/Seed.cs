@@ -8,13 +8,17 @@ namespace Rebus.Server
 {
     internal sealed class Seed
     {
-        public IReadOnlyCollection<Token> Tokens { get; } = new HashSet<Token>();
-        public IReadOnlyCollection<Concept> Concepts { get; } = new HashSet<Concept>();
+        public IReadOnlyCollection<CommandPrototype> Commands { get; }
+        public IReadOnlyCollection<Concept> Concepts { get; }
+        public IReadOnlyCollection<Format> Formats { get; }
+        public IReadOnlyCollection<Token> Tokens { get; }
 
-        public Seed(IReadOnlyCollection<Token> tokens, IReadOnlyCollection<Concept> concepts)
+        public Seed(IReadOnlyCollection<CommandPrototype> commands, IReadOnlyCollection<Concept> concepts, IReadOnlyCollection<Format> formats, IReadOnlyCollection<Token> tokens)
         {
-            Tokens = tokens;
+            Commands = commands;
             Concepts = concepts;
+            Formats = formats;
+            Tokens = tokens;
         }
     }
 }

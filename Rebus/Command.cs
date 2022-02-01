@@ -3,14 +3,17 @@
 // Licensed under the MIT License.
 
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Rebus
 {
     public abstract class Command
     {
-        private readonly Dictionary<Argument, object> _valuesByArgument = new Dictionary<Argument, object>();
+#nullable disable
+        private object[] _arguments;
+
+        public IConcept Player { get; private set; }
+#nullable enable
 
         public Guid Guid
         {
@@ -20,41 +23,36 @@ namespace Rebus
             }
         }
 
-#nullable disable
-        public IConcept Player { get; private set; }
-#nullable enable
-
         protected internal abstract Task<IWritable?> ExecuteAsync();
 
         public void Set(Argument argument, object value)
         {
-            _valuesByArgument[argument] = value;
+            _arguments[(int)argument] = value;
         }
 
         public IConcept GetConcept(Argument argument)
         {
-            return (IConcept)_valuesByArgument[argument];
+            return _arguments[(int)argument] as IConcept ?? throw new RebusException("GetConcept");
         }
 
         public int GetNumber(Argument argument)
         {
-            return (int)_valuesByArgument[argument];
+            return _arguments[(int)argument] as int? ?? throw new RebusException("GetNumber");
         }
 
         public string GetQuotation(Argument argument)
         {
-            return (string)_valuesByArgument[argument];
+            return _arguments[(int)argument] as string ?? throw new RebusException("GetQuotation");
         }
 
-        public Command Clone(IConcept player)
+        public Command CreateCommand(IConcept player, object?[] arguments)
         {
-            Command command = (Command)MemberwiseClone();
+            Command result = (Command)MemberwiseClone();
 
-            command.Player = player;
+            result.Player = player;
+            result._arguments = arguments;
 
-            command._valuesByArgument.Clear();
-
-            return command;
+            return result;
         }
     }
 }

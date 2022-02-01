@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace Rebus.Expressions
 {
-    public class VerbPhraseExpression : Expression
+    internal sealed class VerbPhraseExpression : Expression
     {
         private readonly IToken _verb;
         private readonly IToken? _adverb;

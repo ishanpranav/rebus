@@ -22,14 +22,7 @@ namespace Rebus.Server
         {
             await using (UniverseContext context = await _contextFactory.CreateDbContextAsync())
             {
-                IPlayer? result = await context.Players.SingleOrDefaultAsync(x => x.UserId == userId);
-
-                if (result is null)
-                {
-                    result = await CreatePlayerAsync(context, name, userId);
-                }
-
-                return result;
+                return (await context.Players.SingleOrDefaultAsync(x => x.UserId == userId)) ?? (await CreatePlayerAsync(context, name, userId));
             }
         }
 

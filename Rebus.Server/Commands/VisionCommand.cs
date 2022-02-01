@@ -11,33 +11,23 @@ namespace Rebus.Server.Commands
     [Guid("6C4E330D-29AD-498B-B6A9-CB45724B0A32")]
     internal sealed class VisionCommand : Command
     {
-        private readonly MessageBuilder _messageBuilder;
-        private readonly DbRepository _repository;
+        private readonly Repository _repository;
 
-        public VisionCommand(MessageBuilder messageBuilder, DbRepository repository)
+        public VisionCommand(Repository repository)
         {
-            _messageBuilder = messageBuilder;
             _repository = repository;
         }
 
-        public static async Task<IWritable?> ExecuteAsync(MessageBuilder messageBuilder, DbRepository repository, IConcept player, IConcept subject, IConcept target)
+        public static async Task<IWritable?> ExecuteAsync(Repository repository, IConcept player, IConcept subject, IConcept target)
         {
-            messageBuilder.SetPrompt(player, subject);
-            messageBuilder.Append(target);
-            messageBuilder.Append(target.VisualDescription);
-
             IReadOnlyCollection<Concept> visibleContents = await repository.GetVisibleContentsAsync(target.Id, subject.Id);
 
-            if (visibleContents.Count > 0)
+            return new Message(player, subject, "It is {0}, {1}, that contains {2}.", new object[]
             {
-                messageBuilder.Append(visibleContents);
-
-                return await messageBuilder.BuildAsync(ResourceIndex.VisionResponse);
-            }
-            else
-            {
-                return await messageBuilder.BuildAsync(ResourceIndex.VisionEmptyResponse);
-            }
+                target,
+                target.VisualDescription,
+                visibleContents
+            });
         }
 
         protected override async Task<IWritable?> ExecuteAsync()
@@ -46,7 +36,7 @@ namespace Rebus.Server.Commands
 
             if (subject.ContainerId is int containerId)
             {
-                return await ExecuteAsync(_messageBuilder, _repository, Player, subject, await _repository.GetConceptAsync(containerId));
+                return await ExecuteAsync(_repository, Player, subject, await _repository.GetConceptAsync(containerId));
             }
             else
             {

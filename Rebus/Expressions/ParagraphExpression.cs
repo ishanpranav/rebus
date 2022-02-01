@@ -8,7 +8,7 @@ using System.Xml;
 
 namespace Rebus.Expressions
 {
-    public class ParagraphExpression : Expression
+    internal sealed class ParagraphExpression : Expression
     {
         private readonly IEnumerable<Expression> _sentences;
 

@@ -2,13 +2,12 @@
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Xml;
+using System.Xml.Serialization;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,12 +31,6 @@ namespace Rebus.Server
                     .UseSqlite(new SqliteConnectionStringBuilder()
                     {
                         DataSource = repository.GetPath(typeof(UniverseContext), "db")
-                    }.ConnectionString))
-                .AddDbContextFactory<ResourceContext>(x => x
-                    .UseSqlite(new SqliteConnectionStringBuilder()
-                    {
-                        DataSource = repository.GetPath(typeof(ResourceContext), "db"),
-                        Mode = SqliteOpenMode.ReadOnly
                     }.ConnectionString))
                 .AddSingleton(repository)
                 .AddSingleton(x => new XmlWriterSettings()
@@ -63,15 +56,14 @@ namespace Rebus.Server
                     return result;
                 })
                 .AddSingleton(x => new Regex(@"(\w+)|\""([\w\s]*)""", RegexOptions.Compiled))
-                .AddSingleton<IReadOnlyCollection<Argument>>(Enum.GetValues<Argument>())
-                .AddSingleton<MessageBuilder>()
-                .AddSingleton<DbRepository>()
-                .AddSingleton<CommandBuilder>()
-                .AddSingleton<IEngineFactory, EngineFactory>()
-                .AddSingleton<Parser>()
-                .AddSingleton<Tokenizer>()
-                .AddSingleton<IEngine, Engine>()
+                .AddSingleton(x => new XmlSerializer(typeof(Expression)))
+                .AddSingleton<Repository>()
                 .AddSingleton<IPlayerRepository, PlayerRepository>()
+                .AddSingleton<IEngineFactory, EngineFactory>()
+                .AddSingleton<Tokenizer>()
+                .AddSingleton<Parser>()
+                .AddSingleton<CommandBuilder>()
+                .AddSingleton<MessageFactory, FormatMessageFactory>()
                 .AddSingleton<Command, VisionCommand>()
                 .AddSingleton<Command, TransitiveVisionCommand>()
                 .AddSingleton<Command, RedoSystemCommand>()

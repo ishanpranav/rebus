@@ -11,18 +11,16 @@ namespace Rebus.Server.Commands
     [Guid("72DEFA85-F66F-4049-A40C-C05C7496985A")]
     internal sealed class TransitiveVisionCommand : Command
     {
-        private readonly MessageBuilder _messageBuilder;
-        private readonly DbRepository _repository;
+        private readonly Repository _repository;
 
-        public TransitiveVisionCommand(MessageBuilder messageBuilder, DbRepository repository)
+        public TransitiveVisionCommand(Repository repository)
         {
-            _messageBuilder = messageBuilder;
             _repository = repository;
         }
 
         protected override Task<IWritable?> ExecuteAsync()
         {
-            return VisionCommand.ExecuteAsync(_messageBuilder, _repository, Player, GetConcept(Argument.Subject), GetConcept(Argument.DirectObject));
+            return VisionCommand.ExecuteAsync(_repository, Player, GetConcept(Argument.Subject), GetConcept(Argument.DirectObject));
         }
     }
 }

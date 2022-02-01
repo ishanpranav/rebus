@@ -3,7 +3,6 @@
 // Licensed under the MIT License.
 
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -12,35 +11,17 @@ namespace Rebus.Server
     internal sealed class UniverseContext : DbContext
     {
 #nullable disable
-        public DbSet<ConceptSignature> ConceptSignatures { get; set; }
+        public DbSet<CommandSignature> CommandSignatures { get; set; }
         public DbSet<Concept> Concepts { get; set; }
-        public DbSet<Player> Players { get; internal set; }
+        public DbSet<ConceptSignature> ConceptSignatures { get; set; }
+        public DbSet<Format> Formats { get; set; }
+        public DbSet<Player> Players { get; set; }
         public DbSet<Token> Tokens { get; set; }
 #nullable enable
 
         public UniverseContext(DbContextOptions options) : base(options) { }
 
-        public async Task UpdateTokenAsync(TokenTypes type, string value)
-        {
-            Token? token = await Tokens.SingleOrDefaultAsync(x => x.Value == value);
-
-            if (token is null)
-            {
-                await Tokens.AddAsync(new Token()
-                {
-                    Type = type,
-                    Value = value
-                });
-            }
-            else
-            {
-                token.Type |= type;
-            }
-
-            await SaveChangesAsync();
-        }
-
-        public IOrderedQueryable<Concept> IncludeUniverse()
+        public IQueryable<Concept> IncludeUniverse()
         {
             return Concepts
                 .Include(x => x.Signatures)
@@ -49,8 +30,7 @@ namespace Rebus.Server
                 .ThenInclude(x => x.Substantive)
                 .AsSplitQuery()
                 .Include(x => x.Signatures)
-                .ThenInclude(x => x.Adjectives)
-                .OrderBy(x => x.Characteristics);
+                .ThenInclude(x => x.Adjectives);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

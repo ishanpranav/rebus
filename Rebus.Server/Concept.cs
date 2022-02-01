@@ -2,16 +2,13 @@
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 
 namespace Rebus.Server
 {
     [Table(nameof(Concept))]
-    [Index(nameof(Characteristics))]
     internal sealed class Concept : Writable, IConcept
     {
         public int Id { get; set; }
