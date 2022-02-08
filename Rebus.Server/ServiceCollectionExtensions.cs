@@ -2,6 +2,7 @@
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
+using System;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -13,7 +14,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Rebus.Commands.System;
+using Rebus.Generators.Markov;
 using Rebus.Server.Commands;
+using Rebus.Server.Factories;
 
 namespace Rebus.Server
 {
@@ -57,9 +60,11 @@ namespace Rebus.Server
                 })
                 .AddSingleton(x => new Regex(@"(\w+)|\""([\w\s]*)""", RegexOptions.Compiled))
                 .AddSingleton(x => new XmlSerializer(typeof(Expression)))
-                .AddSingleton<Repository>()
-                .AddSingleton<IPlayerRepository, PlayerRepository>()
+                .AddSingleton(Random.Shared)
                 .AddSingleton<IEngineFactory, EngineFactory>()
+                .AddSingleton<IPlayerRepository, PlayerRepository>()
+                .AddSingleton<IConceptRepository, ConceptRepository>()
+                .AddSingleton<IGenerator, MarkovGenerator>()
                 .AddSingleton<Tokenizer>()
                 .AddSingleton<Parser>()
                 .AddSingleton<CommandBuilder>()

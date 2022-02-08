@@ -6,14 +6,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Rebus.Server
 {
     internal sealed class CommandBuilder : ICommandBuilder
     {
+        private readonly IDbContextFactory<UniverseContext> _contextFactory;
+        private readonly IConceptRepository _repository;
         private readonly Dictionary<Guid, Command> _prototypesByGuid;
-        private readonly Repository _repository;
         private readonly List<Command> _commands = new List<Command>();
+        private readonly MessageFactory _messageFactory;
         private readonly int _argumentCount = Enum.GetValues<Argument>().Length;
 
         private IToken? _verb;
@@ -22,10 +25,12 @@ namespace Rebus.Server
         private IConcept? _playerConcept;
         private object?[] _arguments;
 
-        public CommandBuilder(IEnumerable<Command> prototypes, Repository repository)
+        public CommandBuilder(IDbContextFactory<UniverseContext> contextFactory, IEnumerable<Command> prototypes, IConceptRepository repository, MessageFactory messageFactory)
         {
-            _prototypesByGuid = prototypes.ToDictionary(x => x.Guid);
+            _contextFactory = contextFactory;
             _repository = repository;
+            _prototypesByGuid = prototypes.ToDictionary(x => x.Guid);
+            _messageFactory = messageFactory;
             _arguments = new object?[_argumentCount];
         }
 
@@ -65,7 +70,7 @@ namespace Rebus.Server
 
         public async Task SetConceptAsync(Argument argument, IEnumerable<IToken> adjectives, IToken substantive)
         {
-            _arguments[(int)argument] = await _repository.GetConceptAsync(adjectives, substantive);
+            _arguments[(int)argument] = await GetConceptAsync(adjectives, substantive);
         }
 
         public void SetQuotation(Argument argument, string quotation)
@@ -78,6 +83,43 @@ namespace Rebus.Server
             _arguments[(int)argument] = number;
         }
 
+        private async Task<Concept> GetConceptAsync(IEnumerable<IToken> adjectives, IToken substantive)
+        {
+            await using (UniverseContext context = await _contextFactory.CreateDbContextAsync())
+            {
+                ILookup<int, ConceptSignature> signaturesByCount = context.ConceptSignatures
+                    .Include(signature => signature.Substantive)
+                    .Where(signature => signature.Substantive.Value == substantive.Value)
+                    .Include(signature => signature.Article)
+                    .Include(signature => signature.Adjectives)
+                    .AsSplitQuery()
+                    .Include(signature => signature.Concepts)
+                    .ToLookup(signature => adjectives.Count(adjective => signature.Adjectives.Any(x => adjective.Value == x.Value)));
+
+                ConceptSignature? signature;
+
+                try
+                {
+                    signature = signaturesByCount[adjectives.Count()].SingleOrDefault();
+                }
+                catch
+                {
+                    throw await _messageFactory.CreateExceptionAsync("MultipleMatchesConcept");
+                }
+
+                if (signature is null)
+                {
+                    throw await _messageFactory.CreateExceptionAsync("NoMatchesConcept");
+                }
+                else
+                {
+                    return await context
+                        .IncludeUniverse()
+                        .SingleAsync(x => x.Id == signature.Concepts.First().Id);
+                }
+            }
+        }
+
         public async Task SaveChangesAsync()
         {
             if (_verb is null || _playerConcept is null)
@@ -86,7 +128,79 @@ namespace Rebus.Server
             }
             else
             {
-                _commands.Add(_prototypesByGuid[(await _repository.GetCommandAsync(_verb, _adverb, _arguments)).Command.Guid].CreateCommand(_playerConcept, _arguments));
+                CommandSignature? result;
+
+                try
+                {
+                    await using (UniverseContext context = await _contextFactory.CreateDbContextAsync())
+                    {
+                        result = context.CommandSignatures
+                            .Where(signature => signature.Verb.Value == _verb.Value && signature.Adverb == _adverb)
+                            .Include(signature => signature.Command)
+                            .Include(signature => signature.Arguments)
+                            .AsEnumerable()
+                            .SingleOrDefault(signature =>
+                            {
+                                ArgumentSignature?[] argumentSignatures = new ArgumentSignature?[_argumentCount];
+
+                                foreach (ArgumentSignature argumentSignature in signature.Arguments)
+                                {
+                                    argumentSignatures[(int)argumentSignature.Argument] = argumentSignature;
+                                }
+
+                                for (int i = 0; i < _argumentCount; i++)
+                                {
+                                    object? argument = _arguments[i];
+
+                                    if (argumentSignatures[i] is ArgumentSignature argumentSignature)
+                                    {
+                                        if (argument is null)
+                                        {
+                                            return false;
+                                        }
+                                        else
+                                        {
+                                            switch (argumentSignature.Type)
+                                            {
+                                                case ArgumentType.Concept:
+                                                    if (argument is not IConcept concept || !concept.Characteristics.HasFlag(argumentSignature.Constraint))
+                                                    {
+                                                        return false;
+                                                    }
+                                                    break;
+
+                                                case ArgumentType.Number:
+                                                    if (argument is not int)
+                                                    {
+                                                        return false;
+                                                    }
+                                                    break;
+
+                                                case ArgumentType.Quotation:
+                                                    if (argument is not string)
+                                                    {
+                                                        return false;
+                                                    }
+                                                    break;
+                                            }
+                                        }
+                                    }
+                                    else if (argument is not null)
+                                    {
+                                        return false;
+                                    }
+                                };
+
+                                return true;
+                            });
+                    }
+                }
+                catch
+                {
+                    throw await _messageFactory.CreateExceptionAsync("MultipleMatchesCommand");
+                }
+
+                _commands.Add(_prototypesByGuid[(result ?? throw await _messageFactory.CreateExceptionAsync("NoMatchesCommand")).Command.Guid].CreateCommand(_playerConcept, _arguments));
             }
 
             _verb = null;

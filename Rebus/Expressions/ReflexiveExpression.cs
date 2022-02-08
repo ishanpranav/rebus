@@ -5,7 +5,7 @@
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace Rebus
+namespace Rebus.Expressions
 {
     internal sealed class ReflexiveExpression : Expression
     {

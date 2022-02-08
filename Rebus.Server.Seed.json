@@ -83,6 +83,24 @@
                     ]
                 }
             ]
+        },
+        {
+            "guid": "63F9D2B5-E73B-4AFF-98F8-1D37701589AF",
+            "signatures": [
+                {
+                    "verb": {
+                        "type": "verb",
+                        "value": "debug"
+                    },
+                    "arguments": [
+                        { "$ref": "3" },
+                        {
+                            "argument": "directObject",
+                            "type": "quotation"
+                        }
+                    ]
+                }
+            ]
         }
     ],
     "concepts": [

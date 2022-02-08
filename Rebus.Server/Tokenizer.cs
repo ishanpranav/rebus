@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Rebus.Server
 {
@@ -12,40 +13,50 @@ namespace Rebus.Server
         private const char DoubleQuoteChar = '"';
 
         private readonly Regex _regex;
-        private readonly Repository _repository;
+        private readonly IDbContextFactory<UniverseContext> _contextFactory;
 
-        public Tokenizer(Regex regex, Repository repository)
+        public Tokenizer(Regex regex, IDbContextFactory<UniverseContext> contextFactory)
         {
             _regex = regex;
-            _repository = repository;
+            _contextFactory = contextFactory;
         }
 
         public async IAsyncEnumerable<Token> TokenizeAsync(string value)
         {
             foreach (Match match in _regex.Matches(value))
             {
-                string lexeme = match.Groups[0].Value;
-                int lastIndex = lexeme.Length - 1;
+                Group quotationGroup = match.Groups[2];
 
-                if (lexeme.Length > 2 && lexeme[0] == DoubleQuoteChar && lexeme[lastIndex] == DoubleQuoteChar)
+                if (quotationGroup.Length > 0)
                 {
                     yield return new Token()
                     {
                         Type = TokenTypes.Quotation,
-                        Value = lexeme.Substring(1, lastIndex - 1)
-                    };
-                }
-                else if (int.TryParse(lexeme, out _))
-                {
-                    yield return new Token()
-                    {
-                        Type = TokenTypes.Number,
-                        Value = lexeme
+                        Value = quotationGroup.Value
                     };
                 }
                 else
                 {
-                    yield return await _repository.GetTokenAsync(lexeme);
+                    string lexeme = match.Groups[1].Value;
+
+                    if (int.TryParse(lexeme, out int number))
+                    {
+                        yield return new Token()
+                        {
+                            Type = TokenTypes.Number,
+                            Value = number.ToString("n")
+                        };
+                    }
+                    else
+                    {
+                        await using (UniverseContext context = await _contextFactory.CreateDbContextAsync())
+                        {
+                            yield return (await context.Tokens.SingleOrDefaultAsync(x => x.Value == lexeme)) ?? new Token()
+                            {
+                                Value = lexeme
+                            };
+                        }
+                    }
                 }
             }
         }

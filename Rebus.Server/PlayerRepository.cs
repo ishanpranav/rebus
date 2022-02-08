@@ -22,27 +22,25 @@ namespace Rebus.Server
         {
             await using (UniverseContext context = await _contextFactory.CreateDbContextAsync())
             {
-                return (await context.Players.SingleOrDefaultAsync(x => x.UserId == userId)) ?? (await CreatePlayerAsync(context, name, userId));
-            }
-        }
+                Player? result = await context.Players.SingleOrDefaultAsync(x => x.UserId == userId);
 
-        private static async Task<Player> CreatePlayerAsync(UniverseContext context, string name, string userId)
-        {
-            StringExpressionWriter nameWriter = new StringExpressionWriter();
-
-            nameWriter.Write(new string(name
-                .Where(x => char.IsLetterOrDigit(x) || char.IsWhiteSpace(x))
-                .ToArray()));
-
-            Player result = new Player()
-            {
-                UserId = userId,
-                Concept = new Concept()
+                if (result is null)
                 {
-                    ContainerId = 1,
-                    Characteristics = Characteristics.Agent,
-                    Signatures = new ConceptSignature[]
+                    StringExpressionWriter nameWriter = new StringExpressionWriter();
+
+                    nameWriter.Write(new string(name
+                        .Where(x => char.IsLetterOrDigit(x) || char.IsWhiteSpace(x))
+                        .ToArray()));
+
+                    result = new Player()
                     {
+                        UserId = userId,
+                        Concept = new Concept()
+                        {
+                            ContainerId = 1,
+                            Characteristics = Characteristics.Agent,
+                            Signatures = new ConceptSignature[]
+                           {
                         new ConceptSignature()
                         {
                             Substantive = new Token()
@@ -51,14 +49,16 @@ namespace Rebus.Server
                                 Value = nameWriter.ToString()
                             }
                         }
-                    }
+                           }
+                        }
+                    };
+
+                    await context.AddAsync(result);
+                    await context.SaveChangesAsync();
                 }
-            };
 
-            await context.AddAsync(result);
-            await context.SaveChangesAsync();
-
-            return result;
+                return result;
+            }
         }
     }
 }

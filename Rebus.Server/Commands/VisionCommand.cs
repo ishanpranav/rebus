@@ -11,22 +11,20 @@ namespace Rebus.Server.Commands
     [Guid("6C4E330D-29AD-498B-B6A9-CB45724B0A32")]
     internal sealed class VisionCommand : Command
     {
-        private readonly Repository _repository;
+        private readonly IConceptRepository _repository;
 
-        public VisionCommand(Repository repository)
+        public VisionCommand(IConceptRepository repository)
         {
             _repository = repository;
         }
 
-        public static async Task<IWritable?> ExecuteAsync(Repository repository, IConcept player, IConcept subject, IConcept target)
+        public static async Task<IWritable?> ExecuteAsync(IConceptRepository repository, IConcept player, IConcept subject, IConcept target)
         {
-            IReadOnlyCollection<Concept> visibleContents = await repository.GetVisibleContentsAsync(target.Id, subject.Id);
-
             return new Message(player, subject, "It is {0}, {1}, that contains {2}.", new object[]
             {
                 target,
                 target.VisualDescription,
-                visibleContents
+                await repository.GetVisibleContentsAsync(target.Id, subject.Id)
             });
         }
 

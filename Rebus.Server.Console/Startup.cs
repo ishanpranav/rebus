@@ -22,7 +22,6 @@ namespace Rebus.Server.Console
         public async Task StartAsync()
         {
             IEngine engine = await _engineFactory.CreateEngineAsync();
-
             string? name = await System.Console.In.ReadLineAsync();
 
             if (name is not null)

@@ -11,9 +11,9 @@ namespace Rebus.Server.Commands
     [Guid("72DEFA85-F66F-4049-A40C-C05C7496985A")]
     internal sealed class TransitiveVisionCommand : Command
     {
-        private readonly Repository _repository;
+        private readonly IConceptRepository _repository;
 
-        public TransitiveVisionCommand(Repository repository)
+        public TransitiveVisionCommand(IConceptRepository repository)
         {
             _repository = repository;
         }
