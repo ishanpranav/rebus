@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 namespace Rebus.Server
 {
     [Table(nameof(Format))]
-    [Index(nameof(Key), nameof(Arguments))]
+    [Index(nameof(Resource), nameof(Arguments))]
     internal sealed class Format
     {
         public int Id { get; set; }
-        public string Key { get; set; } = string.Empty;
+        public int Resource { get; set; }
         public int Arguments { get; set; }
         public string Value { get; set; } = string.Empty;
     }

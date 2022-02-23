@@ -3,7 +3,7 @@
 // Licensed under the MIT License.
 
 using System;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Rebus
 {
@@ -23,7 +23,7 @@ namespace Rebus
             }
         }
 
-        protected internal abstract Task<IWritable?> ExecuteAsync();
+        protected internal abstract IAsyncEnumerable<IWritable> ExecuteAsync();
 
         public void Set(Argument argument, object value)
         {

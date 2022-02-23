@@ -3,24 +3,24 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 
 namespace Rebus.Server.Commands
 {
     [Guid("72DEFA85-F66F-4049-A40C-C05C7496985A")]
     internal sealed class TransitiveVisionCommand : Command
     {
-        private readonly IConceptRepository _repository;
+        private readonly VisionController _controller;
 
-        public TransitiveVisionCommand(IConceptRepository repository)
+        public TransitiveVisionCommand(VisionController controller)
         {
-            _repository = repository;
+            _controller = controller;
         }
 
-        protected override Task<IWritable?> ExecuteAsync()
+        protected override IAsyncEnumerable<IWritable> ExecuteAsync()
         {
-            return VisionCommand.ExecuteAsync(_repository, Player, GetConcept(Argument.Subject), GetConcept(Argument.DirectObject));
+            return _controller.ViewAsync(Player, GetConcept(Argument.Subject), GetConcept(Argument.DirectObject));
         }
     }
 }

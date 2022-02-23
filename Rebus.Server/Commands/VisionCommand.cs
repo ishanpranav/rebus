@@ -4,7 +4,6 @@
 
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 
 namespace Rebus.Server.Commands
 {
@@ -12,33 +11,24 @@ namespace Rebus.Server.Commands
     internal sealed class VisionCommand : Command
     {
         private readonly IConceptRepository _repository;
+        private readonly VisionController _controller;
 
-        public VisionCommand(IConceptRepository repository)
+        public VisionCommand(IConceptRepository repository, VisionController controller)
         {
             _repository = repository;
+            _controller = controller;
         }
 
-        public static async Task<IWritable?> ExecuteAsync(IConceptRepository repository, IConcept player, IConcept subject, IConcept target)
-        {
-            return new Message(player, subject, "It is {0}, {1}, that contains {2}.", new object[]
-            {
-                target,
-                target.VisualDescription,
-                await repository.GetVisibleContentsAsync(target.Id, subject.Id)
-            });
-        }
-
-        protected override async Task<IWritable?> ExecuteAsync()
+        protected override async IAsyncEnumerable<IWritable> ExecuteAsync()
         {
             IConcept subject = GetConcept(Argument.Subject);
 
             if (subject.ContainerId is int containerId)
             {
-                return await ExecuteAsync(_repository, Player, subject, await _repository.GetConceptAsync(containerId));
-            }
-            else
-            {
-                return null;
+                await foreach (IWritable result in _controller.ViewAsync(Player, subject, await _repository.GetConceptAsync(containerId)))
+                {
+                    yield return result;
+                }
             }
         }
     }

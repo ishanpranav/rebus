@@ -1,18 +1,22 @@
-﻿// Ishan Pranav's REBUS: ReexecuteSystemCommand.cs
+﻿// Ishan Pranav's REBUS: QuitSystemCommand.cs
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace Rebus.Commands.System
 {
-    [Guid("AD7EF788-9CE6-4EA0-9A5B-7C3CFF1FB146")]
-    public class ReexecuteSystemCommand : SystemCommand
+    [Guid("C11C8380-546C-457A-8D58-1721CA154320")]
+    public class TerminateSystemCommand : SystemCommand
     {
         protected internal override IAsyncEnumerable<IWritable> ExecuteAsync()
         {
-            return Executor.ReexecuteAsync();
+            Executor.Terminate();
+
+            return AsyncEnumerable.Empty<IWritable>();
         }
     }
 }

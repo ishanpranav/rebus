@@ -3,11 +3,11 @@
 // Licensed under the MIT License.
 
 using System;
-using Rebus.ExpressionWriters;
+using System.Text;
 
 namespace Rebus.Server
 {
-    internal sealed class Message : Writable, ICustomFormatter, IFormatProvider
+    internal sealed class Message : Writable
     {
         private readonly IConcept? _player;
         private readonly IConcept? _subject;
@@ -22,27 +22,6 @@ namespace Rebus.Server
             _arguments = arguments;
         }
 
-        public string Format(string? format, object? arg, IFormatProvider? formatProvider)
-        {
-            FragmentExpressionWriter writer = new FragmentExpressionWriter();
-
-            writer.Write(arg);
-
-            return writer.ToString();
-        }
-
-        public object? GetFormat(Type? formatType)
-        {
-            if (formatType == typeof(ICustomFormatter))
-            {
-                return this;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
         public override void Write(ExpressionWriter writer)
         {
             if (_subject is not null && _subject != _player)
@@ -52,7 +31,10 @@ namespace Rebus.Server
                 writer.Write(':');
             }
 
-            writer.Write(string.Format(provider: this, _format, _arguments));
+            writer.Write(new StringBuilder()
+                .AppendFormat(new MessageFormatProvider(writer), _format, _arguments)
+                .Replace("\r", "")
+                .Replace("\n", Environment.NewLine));
         }
     }
 }

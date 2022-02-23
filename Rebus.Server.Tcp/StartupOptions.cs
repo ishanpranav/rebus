@@ -1,11 +1,11 @@
-﻿// Ishan Pranav's REBUS: StartupOptions.cs
+﻿// Ishan Pranav's REBUS: 
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
-namespace Rebus.Server.Discord
+namespace Rebus.Server.Tcp
 {
     internal sealed class StartupOptions
     {
-        public string Token { get; set; } = string.Empty;
+        public int Port { get; set; }
     }
 }

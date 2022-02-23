@@ -28,9 +28,11 @@ namespace Rebus.Expressions
         public override void Write(ExpressionWriter writer)
         {
             writer.Write(_argument);
-            writer.Write('"');
-            writer.Write(_value);
-            writer.Write('"');
+
+            using (writer.BeginScope(ScopeTypes.DoubleQuotation))
+            {
+                writer.Write(_value);
+            }
         }
 
         public override void WriteXml(XmlWriter writer)

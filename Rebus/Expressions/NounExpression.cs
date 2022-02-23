@@ -46,35 +46,41 @@ namespace Rebus.Expressions
 
         public override void Write(ExpressionWriter writer)
         {
-            writer.Write(_argument);
-
-            if (_article is not null)
+            using (writer.BeginScope(ScopeTypes.Noun))
             {
-                _article.Write(writer);
+                writer.Write(_argument);
 
-                writer.Write(' ');
-            }
-
-            foreach (IGrouping<TokenTypes, IToken> grouping in _adjectives
-                .GroupBy(x => x.Type)
-                .OrderBy(x => x.Key))
-            {
-                IToken[] array = grouping.ToArray();
-                int lastIndex = array.Length - 1;
-
-                for (int i = 0; i < lastIndex; i++)
+                if (_article is not null)
                 {
-                    array[i].Write(writer);
+                    _article.Write(writer);
 
-                    writer.Write(',');
+                    writer.Write(' ');
                 }
 
-                array[lastIndex].Write(writer);
+                foreach (IGrouping<TokenTypes, IToken> grouping in _adjectives
+                    .GroupBy(x => x.Type)
+                    .OrderBy(x => x.Key))
+                {
+                    IToken[] array = grouping.ToArray();
+                    int lastIndex = array.Length - 1;
 
-                writer.Write(' ');
+                    for (int i = 0; i < lastIndex; i++)
+                    {
+                        array[i].Write(writer);
+
+                        writer.Write(',');
+                    }
+
+                    array[lastIndex].Write(writer);
+
+                    writer.Write(' ');
+                }
+
+                using (writer.BeginScope(ScopeTypes.Keyword))
+                {
+                    _substantive.Write(writer);
+                }
             }
-
-            _substantive.Write(writer);
 
             if (_argument is Argument.Subject)
             {

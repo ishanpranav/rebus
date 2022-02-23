@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 
 namespace Rebus.Server
@@ -19,19 +20,19 @@ namespace Rebus.Server
         private readonly Tokenizer _tokenizer;
         private readonly Parser _parser;
         private readonly CommandBuilder _commandBuilder;
-        private readonly FileRepository _fileRepository;
+        private readonly IFileProvider _fileProvider;
         private readonly XmlSerializer _xmlSerializer;
         private readonly XmlWriterSettings _xmlWriterSettings;
         private readonly JsonSerializerOptions _jsonSerializerOptions;
 
-        public EngineFactory(ILogger<Engine> logger, IDbContextFactory<UniverseContext> contextFactory, Tokenizer tokenizer, Parser parser, CommandBuilder commandBuilder, FileRepository fileRepository, XmlSerializer xmlSerializer, XmlWriterSettings xmlWriterSettings, JsonSerializerOptions jsonSerializerOptions)
+        public EngineFactory(ILogger<Engine> logger, IDbContextFactory<UniverseContext> contextFactory, Tokenizer tokenizer, Parser parser, CommandBuilder commandBuilder, IFileProvider fileProvider, XmlSerializer xmlSerializer, XmlWriterSettings xmlWriterSettings, JsonSerializerOptions jsonSerializerOptions)
         {
             _logger = logger;
             _contextFactory = contextFactory;
             _tokenizer = tokenizer;
             _parser = parser;
             _commandBuilder = commandBuilder;
-            _fileRepository = fileRepository;
+            _fileProvider = fileProvider;
             _xmlSerializer = xmlSerializer;
             _xmlWriterSettings = xmlWriterSettings;
             _jsonSerializerOptions = jsonSerializerOptions;
@@ -43,29 +44,29 @@ namespace Rebus.Server
             {
                 if (await context.Database.EnsureCreatedAsync())
                 {
+                    IFileInfo fileInfo = _fileProvider.GetFileInfo("Rebus.json");
+
                     try
                     {
-                        Seed? seed;
-
-                        await using (FileStream fileStream = File.OpenRead(_fileRepository.GetPath(typeof(Seed), "json")))
+                        await using (Stream stream = fileInfo.CreateReadStream())
                         {
-                            seed = await JsonSerializer.DeserializeAsync<Seed>(fileStream, _jsonSerializerOptions);
-                        }
+                            Seed? seed = await JsonSerializer.DeserializeAsync<Seed>(stream, _jsonSerializerOptions);
 
-                        if (seed is not null)
-                        {
-                            await context.Formats.AddRangeAsync(seed.Formats);
-                            await context.Concepts.AddRangeAsync(seed.Concepts);
-                            await context.SaveChangesAsync();
+                            if (seed is not null)
+                            {
+                                await context.Formats.AddRangeAsync(seed.Formats);
+                                await context.Concepts.AddRangeAsync(seed.Concepts);
+                                await context.SaveChangesAsync();
 
-                            await context
-                                .Set<CommandPrototype>()
-                                .AddRangeAsync(seed.Commands);
+                                await context
+                                    .Set<CommandPrototype>()
+                                    .AddRangeAsync(seed.Commands);
 
-                            await context.SaveChangesAsync();
+                                await context.SaveChangesAsync();
 
-                            await context.Tokens.AddRangeAsync(seed.Tokens);
-                            await context.SaveChangesAsync();
+                                await context.Tokens.AddRangeAsync(seed.Tokens);
+                                await context.SaveChangesAsync();
+                            }
                         }
                     }
                     catch

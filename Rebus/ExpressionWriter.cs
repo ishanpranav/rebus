@@ -2,6 +2,7 @@
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
+using System;
 using System.Collections;
 using Rebus.WritingStates;
 
@@ -130,5 +131,10 @@ namespace Rebus
         }
 
         protected abstract void WriteLineCore();
+
+        public abstract IDisposable BeginScope(ScopeTypes type);
+        public abstract ExpressionWriter BeginFragment();
+
+        public abstract override string ToString();
     }
 }

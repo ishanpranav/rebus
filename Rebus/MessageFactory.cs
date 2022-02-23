@@ -8,11 +8,16 @@ namespace Rebus
 {
     public abstract class MessageFactory
     {
-        public async Task<RebusException> CreateExceptionAsync(string resource, params object[] arguments)
+        public async Task<RebusException> CreateExceptionAsync(int resource, params object[] arguments)
         {
             return new RebusException(await CreateMessageAsync(resource, arguments));
         }
 
-        public abstract Task<IWritable> CreateMessageAsync(string resource, params object[] arguments);
+        public Task<IWritable> CreateMessageAsync(int resource, params object[] arguments)
+        {
+            return CreateMessageAsync(player: null, subject: null, resource, arguments);
+        }
+
+        public abstract Task<IWritable> CreateMessageAsync(IConcept? player, IConcept? subject, int resource, params object[] arguments);
     }
 }

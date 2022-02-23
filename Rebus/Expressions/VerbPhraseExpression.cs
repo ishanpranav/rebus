@@ -25,13 +25,19 @@ namespace Rebus.Expressions
 
         public override void Write(ExpressionWriter writer)
         {
-            _verb.Write(writer);
-
-            if (_adverb is not null)
+            using (writer.BeginScope(ScopeTypes.VerbPhrase))
             {
-                writer.Write(' ');
+                using (writer.BeginScope(ScopeTypes.Keyword))
+                {
+                    _verb.Write(writer);
+                }
 
-                _adverb.Write(writer);
+                if (_adverb is not null)
+                {
+                    writer.Write(' ');
+
+                    _adverb.Write(writer);
+                }
             }
         }
 

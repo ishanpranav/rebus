@@ -2,35 +2,29 @@
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
-using Discord;
-using Discord.WebSocket;
+using System.IO;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Rebus.Server.Discord
+namespace Rebus.Server.Tcp
 {
     internal static class Program
     {
         private static async Task Main()
         {
             IConfigurationRoot configurationRoot = new ConfigurationBuilder()
-                .AddUserSecrets(typeof(Program).Assembly)
                 .AddJsonFile("AppSettings.json")
                 .Build();
             ServiceCollection services = new ServiceCollection();
 
             await using (ServiceProvider serviceProvider = services
-                .AddRebus(configurationRoot)
-                .AddSingleton(new DiscordSocketClient(new DiscordSocketConfig()
-                {
-                    LogLevel = LogSeverity.Verbose,
-                    MessageCacheSize = 1000
-                }))
-                .AddSingleton(configurationRoot
+                 .AddRebus(configurationRoot)
+                 .AddSingleton<Startup>()
+                 .AddSingleton(configurationRoot
                     .GetRequiredSection(nameof(StartupOptions))
                     .Get<StartupOptions>())
-                .AddSingleton<Startup>()
-                .BuildServiceProvider())
+                 .BuildServiceProvider())
             {
                 await serviceProvider
                     .GetRequiredService<Startup>()

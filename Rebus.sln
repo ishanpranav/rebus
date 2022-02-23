@@ -10,18 +10,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 		LICENSE = LICENSE
 		README.md = README.md
-		Rebus.Server.Seed.json = Rebus.Server.Seed.json
+		Rebus.json = Rebus.json
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rebus.Server", "Rebus.Server\Rebus.Server.csproj", "{E27B1D67-8EAE-4E33-B5A9-3980431C8ACD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rebus.Server.Discord", "Rebus.Server.Discord\Rebus.Server.Discord.csproj", "{E167AD20-9E81-4A67-82D2-C18014DBC95E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rebus.Server.Console", "Rebus.Server.Console\Rebus.Server.Console.csproj", "{E9036224-555B-47A7-B26B-DA3384D59CFA}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rebus", "Rebus\Rebus.csproj", "{A641EEEC-27C6-4EF2-AF83-F167288E0597}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rebus.Generators.Markov", "Rebus.Generators.Markov\Rebus.Generators.Markov.csproj", "{29B270F3-A51E-4BAA-A63F-DF1EE83263ED}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rebus.Server.Tcp", "Rebus.Server.Tcp\Rebus.Server.Tcp.csproj", "{A4C3D085-11DD-4DB9-9C61-2F814031DADF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,10 +37,6 @@ Global
 		{E167AD20-9E81-4A67-82D2-C18014DBC95E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E167AD20-9E81-4A67-82D2-C18014DBC95E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E167AD20-9E81-4A67-82D2-C18014DBC95E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E9036224-555B-47A7-B26B-DA3384D59CFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E9036224-555B-47A7-B26B-DA3384D59CFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E9036224-555B-47A7-B26B-DA3384D59CFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E9036224-555B-47A7-B26B-DA3384D59CFA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A641EEEC-27C6-4EF2-AF83-F167288E0597}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A641EEEC-27C6-4EF2-AF83-F167288E0597}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A641EEEC-27C6-4EF2-AF83-F167288E0597}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -49,6 +45,10 @@ Global
 		{29B270F3-A51E-4BAA-A63F-DF1EE83263ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29B270F3-A51E-4BAA-A63F-DF1EE83263ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29B270F3-A51E-4BAA-A63F-DF1EE83263ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4C3D085-11DD-4DB9-9C61-2F814031DADF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4C3D085-11DD-4DB9-9C61-2F814031DADF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4C3D085-11DD-4DB9-9C61-2F814031DADF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4C3D085-11DD-4DB9-9C61-2F814031DADF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

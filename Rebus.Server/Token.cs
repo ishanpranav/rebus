@@ -21,7 +21,15 @@ namespace Rebus.Server
 
         public override void Write(ExpressionWriter writer)
         {
-            writer.Write(Value);
+            if (Type.HasFlag(TokenTypes.Symbol))
+            {
+                writer.Write(Value.ToUpper());
+                writer.Write(" (shortcut)");
+            }
+            else
+            {
+                writer.Write(Value);
+            }
         }
     }
 }

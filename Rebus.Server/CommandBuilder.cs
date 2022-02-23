@@ -104,12 +104,12 @@ namespace Rebus.Server
                 }
                 catch
                 {
-                    throw await _messageFactory.CreateExceptionAsync("MultipleMatchesConcept");
+                    throw await _messageFactory.CreateExceptionAsync(Resources.MultipleMatchesConcept);
                 }
 
                 if (signature is null)
                 {
-                    throw await _messageFactory.CreateExceptionAsync("NoMatchesConcept");
+                    throw await _messageFactory.CreateExceptionAsync(Resources.NoMatchesConcept);
                 }
                 else
                 {
@@ -182,6 +182,13 @@ namespace Rebus.Server
                                                         return false;
                                                     }
                                                     break;
+
+                                                case ArgumentType.ReflexiveOnly:
+                                                    if (argument != _playerConcept)
+                                                    {
+                                                        return false;
+                                                    }
+                                                    break;
                                             }
                                         }
                                     }
@@ -197,10 +204,10 @@ namespace Rebus.Server
                 }
                 catch
                 {
-                    throw await _messageFactory.CreateExceptionAsync("MultipleMatchesCommand");
+                    throw await _messageFactory.CreateExceptionAsync(Resources.MultipleMatchesCommand);
                 }
 
-                _commands.Add(_prototypesByGuid[(result ?? throw await _messageFactory.CreateExceptionAsync("NoMatchesCommand")).Command.Guid].CreateCommand(_playerConcept, _arguments));
+                _commands.Add(_prototypesByGuid[(result ?? throw await _messageFactory.CreateExceptionAsync(Resources.NoMatchesCommand)).Command.Guid].CreateCommand(_playerConcept, _arguments));
             }
 
             _verb = null;

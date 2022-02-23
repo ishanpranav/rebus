@@ -2,12 +2,12 @@
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
-using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Rebus.Commands
 {
     public abstract class OperationCommand : Command
     {
-        protected internal abstract Task<IWritable?> UnexecuteAsync();
+        protected internal abstract IAsyncEnumerable<IWritable> UnexecuteAsync();
     }
 }

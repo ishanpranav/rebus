@@ -11,7 +11,7 @@ namespace Rebus.Generators.Markov
     {
         private static void Main()
         {
-            Console.WriteLine("Enter a random seed or nothing for the shared random: ");
+            Console.Write("Random seed (or nothing for the shared random): ");
 
             Random random;
 
@@ -26,9 +26,9 @@ namespace Rebus.Generators.Markov
 
             MarkovGenerator generator = new MarkovGenerator(random);
 
-            string file = Console.ReadLine();
+            Console.Write("Path to sources: ");
 
-            using (StreamReader streamReader = File.OpenText(file))
+            using (StreamReader streamReader = File.OpenText(Console.ReadLine() ?? string.Empty))
             {
                 string? line;
 

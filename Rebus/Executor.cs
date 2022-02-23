@@ -3,7 +3,7 @@
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Linq;
 using Rebus.Commands;
 
 namespace Rebus
@@ -14,31 +14,45 @@ namespace Rebus
         private readonly Stack<Command> _commands = new Stack<Command>();
 
         private Command? _command;
+        
+        public  bool Terminated { get; private set; }
 
-        public Task<IWritable?> ExecuteAsync(Command command)
+        public void Terminate()
         {
-            if (command is SystemCommand systemCommand)
+            Terminated = true;
+        }
+
+        public IAsyncEnumerable<IWritable> ExecuteAsync(Command command)
+        {
+            if (Terminated)
             {
-                systemCommand.Executor = this;
+                return AsyncEnumerable.Empty<IWritable>();
             }
             else
             {
-                if (command is OperationCommand operationCommand)
+                if (command is SystemCommand systemCommand)
                 {
-                    _operationCommands.Push(operationCommand);
+                    systemCommand.Executor = this;
+                }
+                else
+                {
+                    if (command is OperationCommand operationCommand)
+                    {
+                        _operationCommands.Push(operationCommand);
+                    }
+
+                    _commands.Clear();
+
+                    _command = command;
                 }
 
-                _commands.Clear();
-
-                _command = command;
+                return command.ExecuteAsync();
             }
-
-            return command.ExecuteAsync();
         }
 
-        public Task<IWritable?> UndoAsync()
+        public IAsyncEnumerable<IWritable> UndoAsync()
         {
-            if (_operationCommands.Count > 0)
+            if (!Terminated && _operationCommands.Count > 0)
             {
                 OperationCommand operationCommand = _operationCommands.Pop();
 
@@ -48,13 +62,13 @@ namespace Rebus
             }
             else
             {
-                return Task.FromResult<IWritable?>(null);
+                return AsyncEnumerable.Empty<IWritable>();
             }
         }
 
-        public Task<IWritable?> RedoAsync()
+        public IAsyncEnumerable<IWritable> RedoAsync()
         {
-            if (_commands.Count > 0)
+            if (!Terminated && _commands.Count > 0)
             {
                 Command command = _commands.Pop();
 
@@ -67,15 +81,15 @@ namespace Rebus
             }
             else
             {
-                return Task.FromResult<IWritable?>(null);
+                return AsyncEnumerable.Empty<IWritable>();
             }
         }
 
-        public Task<IWritable?> ReexecuteAsync()
+        public IAsyncEnumerable<IWritable> ReexecuteAsync()
         {
-            if (_command is null)
+            if (Terminated || _command is null)
             {
-                return Task.FromResult<IWritable?>(null);
+                return AsyncEnumerable.Empty<IWritable>();
             }
             else
             {

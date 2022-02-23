@@ -48,7 +48,12 @@ namespace Rebus
                 }
                 else
                 {
-                    throw await _messageBuilder.CreateExceptionAsync("Remainder");
+                    throw await _messageBuilder.CreateExceptionAsync(1);
+                }
+
+                Task<RebusException> createSubstantiveExceptionAsync()
+                {
+                    return _messageBuilder.CreateExceptionAsync(resource: 4);
                 }
 
                 async Task<IToken?> acceptAsync(TokenTypes tokenType)
@@ -59,7 +64,7 @@ namespace Rebus
 
                         if (result is null)
                         {
-                            throw await _messageBuilder.CreateExceptionAsync("ParserEmpty");
+                            throw await _messageBuilder.CreateExceptionAsync(resource: 2);
                         }
                         else if (result.Type.HasFlag(tokenType))
                         {
@@ -79,7 +84,7 @@ namespace Rebus
                 {
                     Expression subject = await parseSubjectAsync();
 
-                    IToken verb = await acceptAsync(TokenTypes.Verb) ?? throw await _messageBuilder.CreateExceptionAsync("Verb");
+                    IToken verb = await acceptAsync(TokenTypes.Verb) ?? throw await _messageBuilder.CreateExceptionAsync(resource: 3);
                     IToken? adverb = await acceptAsync(TokenTypes.Adverb);
 
                     Expression? directObject = await parseDirectObjectAsync();
@@ -107,7 +112,7 @@ namespace Rebus
                         {
                             if (adjectives.Count > 0)
                             {
-                                throw await _messageBuilder.CreateExceptionAsync("Noun");
+                                throw await createSubstantiveExceptionAsync();
                             }
                         }
                         else
@@ -148,7 +153,7 @@ namespace Rebus
                                     {
                                         if (adjectives.Count > 0)
                                         {
-                                            throw await _messageBuilder.CreateExceptionAsync("Noun");
+                                            throw await createSubstantiveExceptionAsync();
                                         }
                                         else
                                         {

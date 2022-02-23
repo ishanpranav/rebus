@@ -11,21 +11,19 @@ using System.Xml;
 using System.Xml.Serialization;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Rebus.Commands.System;
-using Rebus.Generators.Markov;
 using Rebus.Server.Commands;
-using Rebus.Server.Factories;
 
 namespace Rebus.Server
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddRebus(this IServiceCollection source)
+        public static IServiceCollection AddRebus(this IServiceCollection source, IConfiguration configuration)
         {
-            FileRepository repository = new FileRepository(Path.GetFullPath(@"..\..\..\..\"));
-
             return source
                 .AddLogging(x => x
                     .AddConsole()
@@ -33,9 +31,8 @@ namespace Rebus.Server
                 .AddDbContextFactory<UniverseContext>(x => x
                     .UseSqlite(new SqliteConnectionStringBuilder()
                     {
-                        DataSource = repository.GetPath(typeof(UniverseContext), "db")
+                        DataSource = configuration.GetConnectionString(nameof(UniverseContext))
                     }.ConnectionString))
-                .AddSingleton(repository)
                 .AddSingleton(x => new XmlWriterSettings()
                 {
                     Async = true,
@@ -58,22 +55,24 @@ namespace Rebus.Server
 
                     return result;
                 })
+                .AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.GetFullPath(configuration.GetValue<string>(nameof(PhysicalFileProvider)))))
                 .AddSingleton(x => new Regex(@"(\w+)|\""([\w\s]*)""", RegexOptions.Compiled))
                 .AddSingleton(x => new XmlSerializer(typeof(Expression)))
                 .AddSingleton(Random.Shared)
                 .AddSingleton<IEngineFactory, EngineFactory>()
                 .AddSingleton<IPlayerRepository, PlayerRepository>()
                 .AddSingleton<IConceptRepository, ConceptRepository>()
-                .AddSingleton<IGenerator, MarkovGenerator>()
                 .AddSingleton<Tokenizer>()
                 .AddSingleton<Parser>()
                 .AddSingleton<CommandBuilder>()
                 .AddSingleton<MessageFactory, FormatMessageFactory>()
+                .AddSingleton<VisionController>()
                 .AddSingleton<Command, VisionCommand>()
                 .AddSingleton<Command, TransitiveVisionCommand>()
                 .AddSingleton<Command, RedoSystemCommand>()
                 .AddSingleton<Command, ReexecuteSystemCommand>()
-                .AddSingleton<Command, UndoSystemCommand>();
+                .AddSingleton<Command, UndoSystemCommand>()
+                .AddSingleton<Command, TerminateSystemCommand>();
         }
     }
 }

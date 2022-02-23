@@ -33,7 +33,7 @@ namespace Rebus.Server
             _xmlWriterSettings = xmlWriterSettings;
         }
 
-        public async Task InterpretAsync(IPlayer player, string value, ExpressionWriter writer)
+        public async Task<bool> InterpretAsync(IPlayer player, string value, ExpressionWriter writer)
         {
             try
             {
@@ -83,9 +83,7 @@ namespace Rebus.Server
 
                 foreach (Command command in _commandBuilder.Build())
                 {
-                    IWritable? result = await executor.ExecuteAsync(command);
-
-                    if (result is not null)
+                    await foreach (IWritable result in executor.ExecuteAsync(command))
                     {
                         _logger.LogInformation("{Result}", result);
 
@@ -93,6 +91,8 @@ namespace Rebus.Server
 
                         writer.WriteLine();
                     }
+
+                    writer.WriteLine();
                 }
             }
             catch (RebusException rebusException)
@@ -105,6 +105,8 @@ namespace Rebus.Server
             }
 
             writer.WriteLine();
+
+            return !_executorsByPlayer[player].Terminated;
         }
     }
 }

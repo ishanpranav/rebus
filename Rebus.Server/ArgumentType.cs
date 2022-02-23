@@ -9,6 +9,7 @@ namespace Rebus.Server
         None,
         Concept,
         Number,
-        Quotation
+        Quotation,
+        ReflexiveOnly
     }
 }
