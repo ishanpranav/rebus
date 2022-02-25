@@ -5,14 +5,16 @@ All spacecraft are functionally identical.
 
 Each may carry at most one unit of _cargo_ (<!-- either -->a physical _commodity_<!-- or a group of _passengers_ -->) at any moment. <!--Non-passenger cargo--> A player may order a spacecraft to _jettison_ its cargo at any time. Although each type of cargo is uniquely identified by its _weight_, this property does not affect a spacecraft\'s ability to carry it.
 ## Navigation
-The game universe is a grid of _region of space_ which may be
+The game universe is a grid of _regions of space_ which may be
 - _empty_, containing no permanent features;
 - _stellar_, each containing one or more _stars_; or
 - _planetary_, each containing one or more _planets_.
 
-Stars are impassible; spacecraft may not enter stellar regions. All other celestial bodies are categorized as planets. Within the context of the game and its codebase, the term \"planet\" broadly refers to astronomical planets, as well as moons, satellites, and asteroids.
+Stars are impassible; spacecraft may not enter stellar regions.
 
-The regions immediately
+All other celestial bodies are categorized as planets. Within the context of the game and its codebase, the term \"planet\" broadly refers to astronomical planets, as well as moons, satellites, and asteroids.
+
+The regions to the immediate
 - _north_,
 - _south_,
 - _east_, and
@@ -20,31 +22,39 @@ The regions immediately
 
 of a region are considered _adjacent_ to it.
 ### Exploration
-To explore, a player instructs a spacecraft to travel into an adjacent region. Exploration is blind: Any prior information about a destination and its contents may be incomplete, unreliable, or outdated until a spacecraft enters and observes the reality of the situation.
+To explore, a player instructs a spacecraft to travel into an adjacent region.
+
+Exploration is blind: Any prior information about a destination and its contents may be incomplete, unreliable, or outdated until a spacecraft enters and observes the current situation.
 ### Autopilot
-Once a player\'s spacecraft encounters a planet for the first time, the microcomputer memorizes its location and may chart a course and travel to it upon request using _autopilot_ technology.
+When a player\'s spacecraft encounters a planet for the first time, the microcomputer memorizes its location and may chart a course to travel to it upon request using _autopilot_ technology.
 
 Even while autopilot is enabled, a spacecraft must enter and exit each intermediate region along the course before reaching its intended destination.
 ## Interception
 If a player\'s spacecraft enters a region occupied by an _enemy_ spacecraft (not controlled by that player), then the enemy _intercepts_ the player, whose spacecraft must stop. The autopilot is immediately disabled.
 ## Conflict
 A player may order a stationary spacecraft to adopt a
-- _passive_ stance, requiring it to take no action after intercepting an enemy, or a
-- _defensive_ stance, requiring it to initate a conflict against every enemy spacecraft in the region.
+- _passive_ stance, requiring it to take no action upon intercepting an enemy, or a
+- _defensive_ stance, requiring it to initiate a conflict upon intercepting an enemy.
 
-If a player enters a region containing only passive spacecraft, they may order their spacecraft to undertake an _offensive_, initiating a conflict against the passive enemy.
+If a player\' spacecraft enters a region containing only passive enemy spacecraft, the player may order their spacecraft to undertake an _offensive_, initiating a conflict against the passive enemy.
 
-During a state of conflict, a player _fleet_ is said to include all spacecraft belonging to the player currently within the region of conflict; all other spacecraft unite into the _opposing_ fleet. The _size_ of each fleet is the number of spacecraft it contains; the fleet with fewer is the _minor fleet_ and the other is the _major fleet_. If the player fleet and the opposing fleet are of the same size, a _standoff_ occurs: Neither a retreat nor a state combat commences.
+During a conflict, the player _fleet_ includes all the player\'s spacecraft currently in the region of the conflict; all other spacecraft unite to become the _opposing_ fleet. Thus, the opposing fleet can include spacecraft controlled by different enemy players.
+
+The _size_ of each fleet is the number of spacecraft it contains; the fleet with fewer is the _minor fleet_ and the other is the _major fleet_.
+
+If the player fleet and the opposing fleet are of the same size, a _standoff_ occurs: Neither a retreat nor a state of combat commences.
 ### Retreat
 The microcomputers of the spacecraft in the minor fleet will automatically attempt a retreat maneuver.
 
-Beginning with north and searching south, east, and west, in that order, the microcomputer examines each adjacent region and retreats into the first non-stellar region that is either empty or occupied only by other spacecraft controlled by the same player (that is, the first passable region where no enemy is present).
+Beginning with the northern region and searching the southern, eastern, and western, in that order, the microcomputer examines each adjacent region and retreats into the first non-stellar region that is either empty or occupied only by other spacecraft controlled by the same player (that is, the first passable region where no enemy is present).
 
 If no satisfactory adjacent region exists, the minor fleet fails to retreat and combat commences. Otherwise, combat is avoided.
 ### Combat
-During an invasion, each fleet loses a number of spacecraft equivalent to three-fourths of the minor fleet\'s size. The heaviest spacecraft from each fleet are destroyed first. The remaining spacecraft in the minor fleet are captured and join the major fleet.
+During an invasion, each fleet loses a number of spacecraft equivalent to three-fourths of the minor fleet\'s size.
 
-Let`m`be the initial size of the minor fleet; let`M`be the initial size of the major fleet. The final size of the major fleet,`N` is given by the following formula:
+The heaviest spacecraft from each fleet are destroyed first; the remains of the minor fleet are captured and join the major fleet.
+
+Let `m` be the initial size of the minor fleet; let `M` be the initial size of the major fleet. The final size of the major fleet, `N` is given by the following formula:
 ```python
 N = M - (0.75 * min(M, m))
 ```
@@ -60,7 +70,7 @@ At an _inhabited_ planet, a player may
 - _deposit_ groups of passengers of the planet\'s primary species.
 -->
 
-Each purchase increases the unit _selling_ price that the exporting planet requests in exchange for the commodity; each sale increases the unit purchasing price that the importing planet is willing to pay for the commodity.
+Each purchase increases the unit _selling price_ that the exporting planet requests in exchange for the commodity; each sale increases the unit _purchasing price_ that the importing planet is willing to pay for the commodity.
 
 The quantities supplied and demanded by each planet are unlimited. The amount that a player sells is limited only by their cargo; the amount that a player purchases is limited only by their wealth and the total capacity of all spacecraft in the region.
 
@@ -78,11 +88,11 @@ Aside from out-of-game communication, players may broadcast information to all s
 - navigational information enabling recipients to autopilot to a planet or star.
 
 ## Future considerations
-It is my intention to keep the software and game design as simple as possible in order to craft a polished prototype. However, I am currently evaluating certain additional features which, while entertaining, are not essential to the game\'s functioning.
+I intend to keep the software and game design as simple as possible to craft a polished prototype. However, I am currently evaluating certain additional features which, while entertaining, are not essential to the game\'s functioning.
 
-While each inhabited planets is planned to contain zero or one cargo port, extra buildings under consideration include
-- **terminals** offering passengers as an alternative form of cargo (this facilitates colonization -- players may accept passengers from inhabited planets and deposit them onto uninhabited ones to inhabit them or evacuate one planet and migrate its population to planet; population size may have an impact on the economy, and passengers would not be able to be jettisoned; passengers would be considered heavier commodities)
-- **banks** allowing a player to accept or deposit wealth into a common pool for any player to collect (this facilitates contracts, transfers of wealth between players, and races between players to arrive at the bank and withdraw first),
+While each inhabited planet is planned to contain zero or one cargo port, extra buildings under consideration include
+- **terminals** offering passengers as an alternative form of cargo (this facilitates colonization - players may accept passengers from inhabited planets and deposit them onto uninhabited ones to inhabit them or evacuate one planet and migrate its population to another; population size may have an impact on the economy, and passengers would not be able to be jettisoned; passengers would be considered heavier than all commodities)
+- **banks** allowing a player to accept or deposit wealth into a common pool for any player to collect (this facilitates contracts, transfers of wealth between players, and races between players to arrive at the bank to withdraw first),
 - **shipyards** allowing players to purchase ships,
 - **fuel stations** allowing players to purchase fuel required for movement, and
-- **embassies**: allowing players to negotiate government intervention in the planet\'s economic system (price floors and ceilings).
+- **embassies** allowing players to negotiate government intervention in the planet\'s economic system (via price floors and ceilings).
