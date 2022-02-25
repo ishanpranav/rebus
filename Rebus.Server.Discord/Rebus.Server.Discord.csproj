@@ -36,4 +36,10 @@
     <ProjectReference Include="..\Rebus.Server\Rebus.Server.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="AppSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

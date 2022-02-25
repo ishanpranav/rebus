@@ -1,4 +1,4 @@
-﻿// Ishan Pranav's REBUS: Format.cs
+﻿// Ishan Pranav's REBUS: Resource.cs
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Rebus.Server
 {
-    [Table(nameof(Format))]
-    [Index(nameof(Resource), nameof(Arguments))]
-    internal sealed class Format
+    [Table(nameof(Resource))]
+    [Index(nameof(Key), nameof(Arguments))]
+    internal sealed class Resource
     {
         public int Id { get; set; }
-        public int Resource { get; set; }
+        public int Key { get; set; }
         public int Arguments { get; set; }
         public string Value { get; set; } = string.Empty;
     }

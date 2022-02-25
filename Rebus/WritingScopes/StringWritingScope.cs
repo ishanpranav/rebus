@@ -1,4 +1,4 @@
-﻿// Ishan Pranav's REBUS: 
+﻿// Ishan Pranav's REBUS: StringWritingScope.cs
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
@@ -8,16 +8,15 @@ namespace Rebus
 {
     internal class StringWritingScope : IDisposable
     {
-        private readonly ScopeTypes _type;
-
         private bool _disposed;
 
         protected ExpressionWriter Writer { get; }
+        protected ScopeTypes Type { get; }
 
         public StringWritingScope(ExpressionWriter writer, ScopeTypes type)
         {
             Writer = writer;
-            _type = type;
+            Type = type;
 
             if (type.HasFlag(ScopeTypes.Parenthetical))
             {
@@ -41,17 +40,17 @@ namespace Rebus
             {
                 if (disposing)
                 {
-                    if (_type.HasFlag(ScopeTypes.SingleQuotation))
+                    if (Type.HasFlag(ScopeTypes.SingleQuotation))
                     {
                         Writer.Write('\'');
                     }
 
-                    if (_type.HasFlag(ScopeTypes.DoubleQuotation))
+                    if (Type.HasFlag(ScopeTypes.DoubleQuotation))
                     {
                         Writer.Write('"');
                     }
 
-                    if (_type.HasFlag(ScopeTypes.Parenthetical))
+                    if (Type.HasFlag(ScopeTypes.Parenthetical))
                     {
                         Writer.Write(')');
                     }

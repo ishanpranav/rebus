@@ -14,7 +14,7 @@ namespace Rebus.Server
         public DbSet<CommandSignature> CommandSignatures { get; set; }
         public DbSet<Concept> Concepts { get; set; }
         public DbSet<ConceptSignature> ConceptSignatures { get; set; }
-        public DbSet<Format> Formats { get; set; }
+        public DbSet<Resource> Resources { get; set; }
         public DbSet<Player> Players { get; set; }
         public DbSet<Token> Tokens { get; set; }
 #nullable enable

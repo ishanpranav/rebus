@@ -65,14 +65,17 @@ namespace Rebus.Server.Discord
                                 SocketCommandContext context = new SocketCommandContext(_discordSocketClient, socketUserMessage);
                                 SocketUser user = context.User;
                                 MarkdownExpressionWriter writer = new MarkdownExpressionWriter();
-
                                 IPlayer player = await _playerRepository.GetPlayerAsync(user.Username, user.Id.ToString(CultureInfo.InvariantCulture));
 
                                 await engine.InterpretAsync(player, content.Substring(start), writer);
-                                await user.SendMessageAsync(writer.ToString());
+
+                                string message = writer.ToString();
+
+                                await user.SendMessageAsync(message);
+
+                                _logger.LogInformation("Replied to client ({ConceptId}): \"{Message}\"", player.ConceptId, message);
                             }
                         }
-
                     });
                 }
 

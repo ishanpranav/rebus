@@ -23,8 +23,9 @@ namespace Rebus.Server
         {
             if (Type.HasFlag(TokenTypes.Symbol))
             {
+                writer.Write("use the ");
                 writer.Write(Value.ToUpper());
-                writer.Write(" (shortcut)");
+                writer.Write(" shortcut");
             }
             else
             {

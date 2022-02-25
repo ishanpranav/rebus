@@ -1,13 +1,16 @@
 # Ishan Pranav\'s REBUS
-A student-developed multi-user dimension (MUD) application.
-## Object model
-### Concepts
-Concepts represent player characters, game areas, physical items, and all other elements of the game world with which players may interact. Concepts may be active instances available within the game world or prototypes cloned to create future instances.
+A student-developed multi-user space trading game.
+## Design
+The game is a dialogue between a player and their simulated navigational computer. Each player\'s character works with the computer to issue orders to spacecraft under their control. 
 
-Concepts are analogous to both _classes_ and _object instances_ (in the object-oriented paradigm) and to grammatical _noun phrases_.
-### Commands
-Commands represent player actions. Commands may be active instances stored in a player\'s command stack (which may be undone, redone, or re-executed) or prototypes cloned to create future instances.
- 
-Commands are analogous to both _methods_ and _delegate instances_ (in the object-oriented paradigm) and to grammatical _verb phrases_.
+Although pseudo-random procedural generation may initialize the in-game universe, randomness is not used thereafter. The game is deterministic with a fixed seed and contains no construct intended to simulate the passage of time.
+
+Please refer to the detailed game documentation [here](Design.md).
+## Implementation
+The game is implemented with a server (either users communicating with a Discord bot or a TCP/IP server) and a database provider (SQLite). Players may join and leave the game at will, collaborating and competing with one another via orders sent simultaneously or asynchronously. 
+
+A recursive-descent parser tokenizes user input, constructs an abstract syntax tree, and executes the given instructions. The interpreter responds with well-formed English sentences that describe the situations that player-controlled spacecraft face and provide context to aid the player\'s decision-making.
+
+Please refer to the detailed object-model documentation [here](Implementation.md).
 ## License
 This repository is licensed with the [MIT](LICENSE) license.

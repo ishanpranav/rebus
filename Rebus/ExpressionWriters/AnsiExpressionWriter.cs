@@ -1,4 +1,4 @@
-﻿// Ishan Pranav's REBUS: 
+﻿// Ishan Pranav's REBUS: AnsiExpressionWriter.cs
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
@@ -10,22 +10,18 @@ namespace Rebus.ExpressionWriters
 {
     public class AnsiExpressionWriter : StringExpressionWriter
     {
+        private string? _previousCode;
+
         public AnsiExpressionWriter() { }
         private protected AnsiExpressionWriter(IWritingState state) : base(state) { }
 
-        protected override void WriteCore(char value)
-        {
-            _stringBuilder.Append(value);
-        }
-
-        protected override void WriteLineCore()
-        {
-            _stringBuilder.AppendLine();
-        }
-
         public override IDisposable BeginScope(ScopeTypes type)
         {
-            return new AnsiWritingScope(writer: this, type);
+            AnsiWritingScope result = new AnsiWritingScope(writer: this, type, _previousCode);
+
+            _previousCode = result.Code;
+
+            return result;
         }
 
         public override ExpressionWriter BeginFragment()

@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections;
+using System.Text;
 using Rebus.WritingStates;
 
 namespace Rebus
@@ -115,9 +116,17 @@ namespace Rebus
 
         public void Write(string value)
         {
-            foreach (char item in value)
+            foreach (char @char in value)
             {
-                _state.Write(context: this, item);
+                _state.Write(context: this, @char);
+            }
+        }
+
+        public void Write(StringBuilder value)
+        {
+            for (int i = 0; i < value.Length; i++)
+            {
+                _state.Write(context: this, value[i]);
             }
         }
 

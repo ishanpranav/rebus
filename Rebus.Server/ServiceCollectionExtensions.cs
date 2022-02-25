@@ -65,7 +65,7 @@ namespace Rebus.Server
                 .AddSingleton<Tokenizer>()
                 .AddSingleton<Parser>()
                 .AddSingleton<CommandBuilder>()
-                .AddSingleton<MessageFactory, FormatMessageFactory>()
+                .AddSingleton<MessageFactory, ResourceMessageFactory>()
                 .AddSingleton<VisionController>()
                 .AddSingleton<Command, VisionCommand>()
                 .AddSingleton<Command, TransitiveVisionCommand>()

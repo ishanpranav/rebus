@@ -54,7 +54,7 @@ namespace Rebus.Server
 
                             if (seed is not null)
                             {
-                                await context.Formats.AddRangeAsync(seed.Formats);
+                                await context.Resources.AddRangeAsync(seed.Resources);
                                 await context.Concepts.AddRangeAsync(seed.Concepts);
                                 await context.SaveChangesAsync();
 

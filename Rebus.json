@@ -1,122 +1,122 @@
 {
-  "formats": [
+  "resources": [
     {
-      "resource": 1,
+      "key": 1,
       "value": "Sorry, I didn't understand the last part of that sentence."
     },
     {
-      "resource": 2,
+      "key": 2,
       "value": "Pardon?"
     },
     {
-      "resource": 2,
+      "key": 2,
       "value": "Excuse me?"
     },
     {
-      "resource": 2,
+      "key": 2,
       "value": "What?"
     },
     {
-      "resource": 2,
+      "key": 2,
       "value": "Sorry?"
     },
     {
-      "resource": 2,
+      "key": 2,
       "value": "Pardon me?"
     },
     {
-      "resource": 2,
+      "key": 2,
       "value": "I didn't catch that."
     },
     {
-      "resource": 2,
+      "key": 2,
       "value": "Please enter an imperative sentence."
     },
     {
-      "resource": 2,
+      "key": 2,
       "value": "Please enter a command."
     },
     {
-      "resource": 2,
+      "key": 2,
       "value": "Please enter an instruction."
     },
     {
-      "resource": 3,
+      "key": 3,
       "value": "Sorry, I expected a verb."
     },
     {
-      "resource": 3,
+      "key": 3,
       "value": "Sorry, I'm not familiar with that verb."
     },
     {
-      "resource": 4,
+      "key": 4,
       "value": "Sorry, I expected a noun."
     },
     {
-      "resource": 4,
+      "key": 4,
       "value": "Sorry, I'm not familiar with that noun."
     },
     {
-      "resource": 5,
+      "key": 5,
       "value": "Sorry, I know about multiple things that satisfy that description. Could you be more specific?"
     },
     {
-      "resource": 5,
+      "key": 5,
       "value": "Could you be more specific?"
     },
     {
-      "resource": 6,
+      "key": 6,
       "value": "I see {0:a}, {1}.",
       "arguments": 2
     },
     {
-      "resource": 7,
+      "key": 7,
       "value": "It contains {0:a}.",
       "arguments": 1
     },
     {
-      "resource": 8,
+      "key": 8,
       "value": "I don't know about anything that satisfies that description."
     },
     {
-      "resource": 8,
+      "key": 8,
       "value": "I don't know what that is."
     },
     {
-      "resource": 9,
+      "key": 9,
       "value": "I know about multiple ways to do that. Could you be more specific?"
     },
     {
-      "resource": 10,
+      "key": 10,
       "value": "I don't know how to do that."
     },
     {
-      "resource": 11,
+      "key": 11,
       "value": "Ishan Pranav's REBUS"
     },
     {
-      "resource": 12,
+      "key": 12,
       "value": "Copyright (c) 2021-2022 Ishan Pranav. All rights reserved."
     },
     {
-      "resource": 13,
+      "key": 13,
       "value": "Version 1.0.0 | Connected via {0:a}",
       "arguments": 1
     },
     {
-      "resource": 14,
+      "key": 14,
       "value": "REBUS is a student-developed multi-user dimension (MUD) server and game engine."
     },
     {
-      "resource": 15,
+      "key": 15,
       "value": "REBUS was created at Arnold O. Beckman High School by Ishan Pranav. It was inspired by early MUD systems and the interactive fiction computer game genre. This software was written in C# on the Microsoft .NET 6 cross-platform framework."
     },
     {
-      "resource": 16,
+      "key": 16,
       "value": "Please enter your user name to begin or resume."
     },
     {
-      "resource": 17,
+      "key": 17,
       "value": "Welcome, {0:a}! I will be your eyes, ears, nose, mouth, and hands. You may direct me with simple commands to interact with the world around you. I await your first instruction.",
       "arguments": 1
     }

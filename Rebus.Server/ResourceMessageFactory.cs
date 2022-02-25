@@ -1,4 +1,4 @@
-﻿// Ishan Pranav's REBUS: FormatMessageFactory.cs
+﻿// Ishan Pranav's REBUS: ResourceMessageFactory.cs
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Rebus.Server
 {
-    internal sealed class FormatMessageFactory : MessageFactory
+    internal sealed class ResourceMessageFactory : MessageFactory
     {
         private readonly IDbContextFactory<UniverseContext> _contextFactory;
 
-        public FormatMessageFactory(IDbContextFactory<UniverseContext> contextFactory)
+        public ResourceMessageFactory(IDbContextFactory<UniverseContext> contextFactory)
         {
             _contextFactory = contextFactory;
         }
@@ -28,8 +28,8 @@ namespace Rebus.Server
 
             await using (UniverseContext context = await _contextFactory.CreateDbContextAsync())
             {
-                return new Message(player, subject, await context.Formats
-                    .Where(x => x.Resource == resource && x.Arguments == arguments.Length)
+                return new Message(player, subject, await context.Resources
+                    .Where(x => x.Key == resource && x.Arguments == arguments.Length)
                     .Select(x => x.Value)
                     .OrderBy(x => EF.Functions.Random())
                     .FirstOrDefaultAsync() ?? $"ERROR 0x{resource:x}", arguments);

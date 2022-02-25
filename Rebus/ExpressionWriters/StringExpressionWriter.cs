@@ -17,12 +17,12 @@ namespace Rebus.ExpressionWriters
 
         protected override void WriteCore(char value)
         {
-            //_stringBuilder.Append(value);
+            _stringBuilder.Append(value);
         }
 
         protected override void WriteLineCore()
         {
-            //_stringBuilder.AppendLine();
+            _stringBuilder.AppendLine();
         }
 
         public override IDisposable BeginScope(ScopeTypes type)

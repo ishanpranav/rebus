@@ -1,45 +1,60 @@
-﻿// Ishan Pranav's REBUS: AnsiColorScope.cs
+﻿// Ishan Pranav's REBUS: AnsiWritingScope.cs
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
+
+using System.Text;
+using Rebus.ExpressionWriters;
 
 namespace Rebus.WritingScopes
 {
     internal sealed class AnsiWritingScope : StringWritingScope
     {
-        private bool _disposed;
-
-        private const string Prefix = "\x1B[";
+        private const string Prefix = "\u001b[";
         private const char Suffix = 'm';
 
-        public AnsiWritingScope(ExpressionWriter writer, ScopeTypes type) : base(writer, type)
+        private readonly string? _previousCode;
+
+        private bool _disposed;
+
+        public string Code { get; }
+
+        public AnsiWritingScope(AnsiExpressionWriter writer, ScopeTypes type, string? previousCode) : base(writer, type)
         {
+            _previousCode = previousCode;
+
+            StringBuilder stringBuilder = new StringBuilder(Prefix);
+
             if (type.HasFlag(ScopeTypes.Keyword))
             {
-                writer.Write(Prefix);
-                writer.Write('1');
-                writer.Write(Suffix);
+                stringBuilder.Append('1');
 
                 type &= ScopeTypes.Keyword;
             }
+            else
+            {
+                stringBuilder.Append('0');
+            }
+
+            stringBuilder.Append(";3");
 
             switch (type)
             {
                 case ScopeTypes.Noun:
-                    writeAffixed('1');
+                    stringBuilder.Append('1');
                     break;
 
                 case ScopeTypes.VerbPhrase:
-                    writeAffixed('2');
+                    stringBuilder.Append('2');
                     break;
             }
 
-            void writeAffixed(char code)
-            {
-                writer.Write(Prefix);
-                writer.Write('3');
-                writer.Write(code);
-                writer.Write(Suffix);
-            }
+            string code = stringBuilder
+                .Append(Suffix)
+                .ToString();
+
+            writer.Write(code);
+
+            Code = code;
         }
 
         protected override void Dispose(bool disposing)
@@ -48,12 +63,16 @@ namespace Rebus.WritingScopes
             {
                 if (disposing)
                 {
-                    Writer.Write(Prefix);
-                    Writer.Write("39");
-                    Writer.Write(Suffix);
-                    Writer.Write(Prefix);
-                    Writer.Write("22");
-                    Writer.Write(Suffix);
+                    if (_previousCode is null)
+                    {
+                        Writer.Write(Prefix);
+                        Writer.Write('0');
+                        Writer.Write(Suffix);
+                    }
+                    else
+                    {
+                        Writer.Write(_previousCode);
+                    }
                 }
 
                 _disposed = true;

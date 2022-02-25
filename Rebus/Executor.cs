@@ -14,8 +14,8 @@ namespace Rebus
         private readonly Stack<Command> _commands = new Stack<Command>();
 
         private Command? _command;
-        
-        public  bool Terminated { get; private set; }
+
+        public bool Terminated { get; private set; }
 
         public void Terminate()
         {

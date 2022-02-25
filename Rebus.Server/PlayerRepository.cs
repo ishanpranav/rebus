@@ -26,11 +26,30 @@ namespace Rebus.Server
 
                 if (result is null)
                 {
-                    StringExpressionWriter nameWriter = new StringExpressionWriter();
+                    StringExpressionWriter writer = new StringExpressionWriter();
 
-                    nameWriter.Write(new string(name
-                        .Where(x => char.IsLetterOrDigit(x) || char.IsWhiteSpace(x))
-                        .ToArray()));
+                    foreach (char @char in name)
+                    {
+                        if (char.IsLetterOrDigit(@char) || char.IsWhiteSpace(@char))
+                        {
+                            writer.Write(@char);
+                        }
+                    }
+
+                    string[] words = writer
+                        .ToString()
+                        .Split();
+                    int lastIndex = words.Length - 1;
+                    Token[] adjectives = new Token[lastIndex];
+
+                    for (int i = 0; i < lastIndex; i++)
+                    {
+                        adjectives[i] = new Token()
+                        {
+                            Type = TokenTypes.Adjective,
+                            Value = words[i]
+                        };
+                    }
 
                     result = new Player()
                     {
@@ -40,16 +59,17 @@ namespace Rebus.Server
                             ContainerId = 1,
                             Characteristics = Characteristics.Agent,
                             Signatures = new ConceptSignature[]
-                           {
-                        new ConceptSignature()
-                        {
-                            Substantive = new Token()
                             {
-                                Type = TokenTypes.Substantive,
-                                Value = nameWriter.ToString()
+                                new ConceptSignature()
+                                {
+                                    Substantive = new Token()
+                                    {
+                                        Type = TokenTypes.Substantive,
+                                        Value = words[lastIndex]
+                                    },
+                                    Adjectives = adjectives
+                                }
                             }
-                        }
-                           }
                         }
                     };
 

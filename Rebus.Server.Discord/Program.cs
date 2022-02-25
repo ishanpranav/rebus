@@ -24,7 +24,7 @@ namespace Rebus.Server.Discord
                 .AddSingleton(new DiscordSocketClient(new DiscordSocketConfig()
                 {
                     LogLevel = LogSeverity.Verbose,
-                    MessageCacheSize = 1000
+                    GatewayIntents = GatewayIntents.Guilds | GatewayIntents.GuildMessages | GatewayIntents.DirectMessages
                 }))
                 .AddSingleton(configurationRoot
                     .GetRequiredSection(nameof(StartupOptions))

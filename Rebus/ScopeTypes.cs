@@ -1,4 +1,4 @@
-﻿// Ishan Pranav's REBUS: WriterScope.cs
+﻿// Ishan Pranav's REBUS: ScopeTypes.cs
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
