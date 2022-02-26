@@ -3,7 +3,7 @@ Rebus simulates a dialogue between a _player\'s character_ and their _navigation
 ## Spacecraft
 All spacecraft are functionally identical.
 
-Each may carry at most one unit of _cargo_ (<!-- either -->a physical _commodity_<!-- or a group of _passengers_ -->) at any moment. <!--Non-passenger cargo--> A player may order a spacecraft to _jettison_ its cargo at any time. Although each type of cargo is uniquely identified by its _mass_, this property does not affect a spacecraft\'s ability to carry it.
+Each may carry at most one unit of _cargo_  at any moment. A player may order a spacecraft to _jettison_ its cargo at any time. Although each type of cargo is uniquely identified by its _mass_, this property does not affect a spacecraft\'s ability to carry it.
 ## Navigation
 The game universe is a grid of _regions of space_ which may be
 - _empty_, containing no permanent features;
@@ -46,34 +46,28 @@ During combat, each fleet loses a number of spacecraft equivalent to three-fourt
 
 The most massive spacecraft from each fleet are destroyed first. The remaining spacecraft in the minor fleet are captured and join the major fleet. During combat, the major fleet always captures at least one spacecraft. As a result, the player controlling the major fleet always emerges from combat controlling all spacecraft in the region.
 
-Let `m` be the initial size of the minor fleet; let `M(0)` be the initial size of the major fleet. The final size of the major fleet, `M(1)` is given by the following formula:
+Let `m` be the initial size of the minor fleet; let `M(0)` be the initial size of the major fleet; let `c` be the number of spacecraft captured by the major fleet; and let `d` be the number of spacecraft destroyed. The final size of the major fleet, `M(1)`, is given by the following process:
 ```python
-M(1) = M(0) - max(1, 0.25 * m)
+c = min(1, m / 4).
+d = m - c.
+M(1) = M(0) - d + c
+     = M(0) - (m - c) + c
+M(1) = M(0) - m + (2 * min(1, m / 4)).
 ```
 ## Commerce
-A player with a spacecraft in a region may conduct _commerce_ with any planet within that region by exchanging _wealth_ for cargo. Wealth is a game currency stored virtually within the microcomputer.
+A player with a spacecraft in a region may conduct _commerce_ with any planet within that region by exchanging _wealth_ for _commodities_ stored as cargo. Wealth is a game currency stored virtually within the microcomputer.
 
 At an _inhabited_ planet, a player may
 - _sell_ commodities being imported by the planet <!-- , --> and
 - _purchase_ commodities being exported by the planet<!-- , -->.
-
-<!--
-- _accept_ groups of passengers of the planet\'s primary species, and
-- _deposit_ groups of passengers of the planet\'s primary species.
--->
 
 Each purchase increases the unit _selling price_ that the exporting planet requests in exchange for the commodity; each sale decreases the unit _purchasing price_ that the importing planet is willing to pay for the commodity.
 
 The quantities supplied and demanded by each planet are unlimited. The amount that a player sells is limited only by their cargo; the amount that a player purchases is limited only by their wealth and the total capacity of their fleet in the region.
 
 At an _uninhabited_ planet, a player may
-- <!-- accept -->_accept_ cargo or
-- _deposit_ cargo<!--, --><!-- or -->.
-
-<!-- deposit groups of passengers of any species, so long as all the passengers deposited are of the same species.
-Each planet has a fixed _population size_. Accepting a group of passengers decreases the _population_ of the planet.
-
-Depositing the first group of passengers onto an uninhabited planet converts it to an inhabited one with the species of the passengers becoming the planet\'s new primary species; accepting the final group of passengers from -->
+- _accept_ cargo or
+- _deposit_ cargo
 ## Interactions
 Aside from out-of-game communication, players may order a spacecraft to broadcast information to all other spacecraft within its region: They may transmit
 - simple textual messages
