@@ -48,11 +48,11 @@ The most massive spacecraft from each fleet are destroyed first. The remaining s
 
 Let `m` be the initial size of the minor fleet; let `M(0)` be the initial size of the major fleet; let `c` be the number of spacecraft captured by the major fleet; and let `d` be the number of spacecraft destroyed. The final size of the major fleet, `M(1)`, is given by the following process:
 ```python
-c = min(1, m / 4).
+c = max(1, m / 4).
 d = m - c.
 M(1) = M(0) - d + c
      = M(0) - (m - c) + c
-M(1) = M(0) - m + (2 * min(1, m / 4)).
+     = M(0) - m + (2 * max(1, m / 4)).
 ```
 ## Commerce
 A player with a spacecraft in a region may conduct _commerce_ with any planet within that region by exchanging _wealth_ for _commodities_ stored as cargo. Wealth is a game currency stored virtually within the microcomputer.
