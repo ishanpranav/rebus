@@ -4,7 +4,7 @@
 
 namespace Rebus.Server.Tcp
 {
-    internal sealed class StartupOptions
+    internal sealed class TcpOptions
     {
         public int Port { get; set; }
     }

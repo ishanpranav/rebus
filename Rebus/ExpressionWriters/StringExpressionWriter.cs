@@ -4,25 +4,26 @@
 
 using System;
 using System.Text;
+using Rebus.WritingScopes;
 using Rebus.WritingStates;
 
 namespace Rebus.ExpressionWriters
 {
     public class StringExpressionWriter : ExpressionWriter
     {
-        protected readonly StringBuilder _stringBuilder = new StringBuilder();
+        protected StringBuilder StringBuilder { get; } = new StringBuilder();
 
         public StringExpressionWriter() { }
         private protected StringExpressionWriter(IWritingState state) : base(state) { }
 
         protected override void WriteCore(char value)
         {
-            _stringBuilder.Append(value);
+            StringBuilder.Append(value);
         }
 
         protected override void WriteLineCore()
         {
-            _stringBuilder.AppendLine();
+            StringBuilder.AppendLine();
         }
 
         public override IDisposable BeginScope(ScopeTypes type)
@@ -37,7 +38,7 @@ namespace Rebus.ExpressionWriters
 
         public override string ToString()
         {
-            return _stringBuilder.ToString();
+            return StringBuilder.ToString();
         }
     }
 }

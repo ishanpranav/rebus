@@ -12,17 +12,15 @@ namespace Rebus.Server.Tcp
     {
         private static async Task Main()
         {
-            IConfigurationRoot configurationRoot = new ConfigurationBuilder()
-                .AddJsonFile("AppSettings.json")
-                .Build();
             ServiceCollection services = new ServiceCollection();
 
             await using (ServiceProvider serviceProvider = services
-                 .AddRebus(configurationRoot)
+                 .AddRebus()
                  .AddSingleton<Startup>()
-                 .AddSingleton(configurationRoot
-                    .GetRequiredSection(nameof(StartupOptions))
-                    .Get<StartupOptions>())
+                 .AddSingleton(x => x
+                    .GetRequiredService<IConfiguration>()
+                    .GetRequiredSection(nameof(TcpOptions))
+                    .Get<TcpOptions>())
                  .BuildServiceProvider())
             {
                 await serviceProvider

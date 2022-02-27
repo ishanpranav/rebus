@@ -14,7 +14,7 @@ namespace Rebus.Commands.System
     {
         protected internal override IAsyncEnumerable<IWritable> ExecuteAsync()
         {
-            Executor.Terminate();
+            Executor.Terminated = true;
 
             return AsyncEnumerable.Empty<IWritable>();
         }

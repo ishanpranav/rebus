@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace Rebus.Server.Commands
@@ -11,16 +12,9 @@ namespace Rebus.Server.Commands
     [Guid("72DEFA85-F66F-4049-A40C-C05C7496985A")]
     internal sealed class TransitiveVisionCommand : Command
     {
-        private readonly VisionController _controller;
-
-        public TransitiveVisionCommand(VisionController controller)
-        {
-            _controller = controller;
-        }
-
         protected override IAsyncEnumerable<IWritable> ExecuteAsync()
         {
-            return _controller.ViewAsync(Player, GetConcept(Argument.Subject), GetConcept(Argument.DirectObject));
+            return AsyncEnumerable.Empty<IWritable>();
         }
     }
 }

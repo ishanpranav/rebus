@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Rebus
 {
-    public abstract class Command
+    public abstract class Command : ICloneable
     {
 #nullable disable
         private object[] _arguments;
@@ -32,27 +32,32 @@ namespace Rebus
 
         public IConcept GetConcept(Argument argument)
         {
-            return _arguments[(int)argument] as IConcept ?? throw new RebusException("GetConcept");
+            return (IConcept)_arguments[(int)argument];
         }
 
         public int GetNumber(Argument argument)
         {
-            return _arguments[(int)argument] as int? ?? throw new RebusException("GetNumber");
+            return (int)_arguments[(int)argument];
         }
 
         public string GetQuotation(Argument argument)
         {
-            return _arguments[(int)argument] as string ?? throw new RebusException("GetQuotation");
+            return _arguments[(int)argument].ToString() ?? string.Empty;
         }
 
         public Command CreateCommand(IConcept player, object?[] arguments)
         {
-            Command result = (Command)MemberwiseClone();
+            Command result = (Command)Clone();
 
             result.Player = player;
             result._arguments = arguments;
 
             return result;
+        }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
         }
     }
 }

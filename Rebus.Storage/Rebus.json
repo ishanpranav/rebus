@@ -1,0 +1,140 @@
+{
+  "commands": [
+    {
+      "guid": "6C4E330D-29AD-498B-B6A9-CB45724B0A32",
+      "signatures": [
+        {
+          "verb": {
+            "$id": "l",
+            "type": "symbol, verb",
+            "value": "l"
+          },
+          "arguments": [
+            {
+              "$id": "subject-any",
+              "argument": "subject",
+              "type": "concept",
+              "constraint": "none"
+            }
+          ]
+        },
+        {
+          "verb": {
+            "$id": "look",
+            "type": "verb",
+            "value": "look"
+          },
+          "arguments": [ { "$ref": "subject-any" } ]
+        },
+        {
+          "verb": { "$ref": "look" },
+          "adverb": {
+            "$id": "around",
+            "type": "adverb",
+            "value": "around"
+          },
+          "arguments": [ { "$ref": "subject-any" } ]
+        },
+        {
+          "verb": { "$ref": "look" },
+          "adverb": { "$ref": "around" },
+          "arguments": [
+            { "$ref": "subject-any" },
+            {
+              "$id": "directObject-any",
+              "argument": "directObject",
+              "type": "concept",
+              "constraint": "none"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "guid": "72DEFA85-F66F-4049-A40C-C05C7496985A",
+      "signatures": [
+        {
+          "verb": { "$ref": "l" },
+          "arguments": [
+            { "$ref": "subject-any" },
+            { "$ref": "directObject-any" }
+          ]
+        },
+        {
+          "verb": { "$ref": "look" },
+          "adverb": {
+            "type": "adverb",
+            "value": "at"
+          },
+          "arguments": [
+            { "$ref": "subject-any" },
+            { "$ref": "directObject-any" }
+          ]
+        }
+      ]
+    }
+  ],
+  "concepts": [],
+  "tokens": [
+    {
+      "type": "firstPersonSubject",
+      "value": "I"
+    },
+    {
+      "type": "article",
+      "value": "an"
+    },
+    {
+      "type": "conjunction",
+      "value": "and"
+    },
+    {
+      "type": "interjection",
+      "value": "hello"
+    },
+    {
+      "type": "firstPersonObject",
+      "value": "me"
+    },
+    {
+      "type": "firstPersonObject",
+      "value": "myself"
+    },
+    {
+      "type": "object",
+      "value": "self"
+    },
+    {
+      "type": "determiner",
+      "value": "that"
+    },
+    {
+      "type": "article, determiner",
+      "value": "the"
+    },
+    {
+      "type": "determiner",
+      "value": "those"
+    },
+    {
+      "type": "firstPersonObject",
+      "value": "us"
+    },
+    {
+      "type": "firstPersonSubject",
+      "value": "we"
+    },
+    {
+      "type": "secondPersonObject",
+      "value": "you"
+    },
+    {
+      "type": "secondPersonObject",
+      "value": "yourself"
+    },
+    {
+      "type": "determiner",
+      "value": "my"
+    }
+  ]
+}

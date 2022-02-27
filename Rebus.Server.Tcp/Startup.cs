@@ -2,7 +2,6 @@
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
-using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
@@ -17,30 +16,29 @@ namespace Rebus.Server.Tcp
     internal sealed class Startup
     {
         private readonly ILogger<Startup> _logger;
-        private readonly StartupOptions _options;
+        private readonly TcpOptions _options;
         private readonly IPlayerRepository _playerRepository;
-        private readonly IEngineFactory _engineFactory;
+        private readonly IEngine _engine;
         private readonly MessageFactory _messageFactory;
 
-        public Startup(ILogger<Startup> logger, StartupOptions options, IPlayerRepository playerRepository, IEngineFactory engineFactory, MessageFactory messageFactory)
+        public Startup(ILogger<Startup> logger, TcpOptions options, IPlayerRepository playerRepository, IEngine engine, MessageFactory messageFactory)
         {
             _logger = logger;
             _options = options;
             _playerRepository = playerRepository;
-            _engineFactory = engineFactory;
+            _engine = engine;
             _messageFactory = messageFactory;
         }
 
         public async Task StartAsync()
         {
-            IEngine engine = await _engineFactory.CreateEngineAsync();
             SimpleTcpServer simpleTcpServer = new SimpleTcpServer()
             {
                 AutoTrimStrings = true,
                 Delimiter = (byte)'\n',
                 StringEncoder = Encoding.UTF8,
             };
-            Dictionary<TcpClient, IPlayer> playersByClient = new Dictionary<TcpClient, IPlayer>();
+            Dictionary<TcpClient, int> playersByClient = new Dictionary<TcpClient, int>();
 
             simpleTcpServer.ClientConnected += async (sender, e) =>
             {
@@ -48,10 +46,9 @@ namespace Rebus.Server.Tcp
 
                 await sendMessageAsync(await _messageFactory.CreateMessageAsync(11), e);
                 await sendMessageAsync(await _messageFactory.CreateMessageAsync(12), e);
-                await sendMessageAsync(await _messageFactory.CreateMessageAsync(13, "TCP"), e);
+                await sendMessageAsync(await _messageFactory.CreateMessageAsync(13, "TCP/IP"), e);
                 await sendMessageAsync(await _messageFactory.CreateMessageAsync(14), e);
                 await sendMessageAsync(await _messageFactory.CreateMessageAsync(15), e);
-                await sendMessageAsync(await _messageFactory.CreateMessageAsync(16), e);
                 await promptAsync(e);
             };
 
@@ -62,23 +59,26 @@ namespace Rebus.Server.Tcp
 
             simpleTcpServer.DelimiterDataReceived += async (sender, e) =>
             {
-                if (playersByClient.TryGetValue(e.TcpClient, out IPlayer? player))
+                if (playersByClient.TryGetValue(e.TcpClient, out int player))
                 {
                     _logger.LogInformation("Client sent \"{MessageString}\" from {RemoteEndPoint}", e.MessageString, e.TcpClient.Client.RemoteEndPoint);
 
-                    AnsiExpressionWriter writer = new AnsiExpressionWriter();
+                    WrappedExpressionWriter writer = new WrappedExpressionWriter();
 
-                    bool terminated = !await engine.InterpretAsync(player, e.MessageString, writer);
+                    bool terminated = !await _engine.InterpretAsync(player, e.MessageString, writer);
+
+                    writer.WriteLine();
+                    writer.Wrap();
 
                     e.ReplyLine(writer.ToString());
 
                     await promptAsync(e.TcpClient);
 
-                    _logger.LogInformation("Replied to client ({ConceptId}): \"{MessageString}\" at {RemoteEndPoint}", player.ConceptId, writer, e.TcpClient.Client.RemoteEndPoint);
+                    _logger.LogInformation("Replied to client ({ConceptId}): \"{MessageString}\" at {RemoteEndPoint}", player, writer, e.TcpClient.Client.RemoteEndPoint);
 
                     if (terminated)
                     {
-                        _logger.LogInformation("Terminated client ({ConceptId}) at {RemoteEndPoint}", player.ConceptId, e.TcpClient.Client.RemoteEndPoint);
+                        _logger.LogInformation("Terminated client ({ConceptId}) at {RemoteEndPoint}", player, e.TcpClient.Client.RemoteEndPoint);
 
                         e.TcpClient.Close();
                     }
@@ -87,9 +87,12 @@ namespace Rebus.Server.Tcp
                 {
                     _logger.LogInformation("Client sent self-identifier \"{MessageString}\" from {RemoteEndPoint}", e.MessageString, e.TcpClient.Client.RemoteEndPoint);
 
-                    playersByClient.Add(e.TcpClient, await _playerRepository.GetPlayerAsync(e.MessageString, e.MessageString));
+                    if (!string.IsNullOrEmpty(e.MessageString))
+                    {
+                        playersByClient.Add(e.TcpClient, await _playerRepository.GetPlayerAsync(e.MessageString));
 
-                    await sendMessageAsync(await _messageFactory.CreateMessageAsync(17, e.MessageString), e.TcpClient);
+                        await sendMessageAsync(await _messageFactory.CreateMessageAsync(16, e.MessageString), e.TcpClient);
+                    }
 
                     await promptAsync(e.TcpClient);
                 }
@@ -101,17 +104,17 @@ namespace Rebus.Server.Tcp
 
             static async Task sendMessageAsync(IWritable message, TcpClient tcpClient)
             {
-                AnsiExpressionWriter writer = new AnsiExpressionWriter();
+                WrappedExpressionWriter writer = new WrappedExpressionWriter();
 
                 message.Write(writer);
+
+                writer.WriteLine();
+                writer.WriteLine();
+                writer.Wrap();
 
                 await tcpClient
                     .GetStream()
                     .WriteAsync(Encoding.UTF8.GetBytes(writer.ToString()));
-
-                await tcpClient
-                    .GetStream()
-                    .WriteAsync(Encoding.UTF8.GetBytes(Environment.NewLine));
             }
 
             static async Task promptAsync(TcpClient tcpClient)

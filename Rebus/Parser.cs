@@ -48,7 +48,7 @@ namespace Rebus
                 }
                 else
                 {
-                    throw await _messageBuilder.CreateExceptionAsync(1);
+                    throw await _messageBuilder.CreateExceptionAsync(resource: 1);
                 }
 
                 Task<RebusException> createSubstantiveExceptionAsync()
@@ -83,6 +83,8 @@ namespace Rebus
                 async Task<Expression> parseSentenceAsync()
                 {
                     Expression subject = await parseSubjectAsync();
+
+                    while ((await acceptAsync(TokenTypes.Interjection)) is not null) { }
 
                     IToken verb = await acceptAsync(TokenTypes.Verb) ?? throw await _messageBuilder.CreateExceptionAsync(resource: 3);
                     IToken? adverb = await acceptAsync(TokenTypes.Adverb);

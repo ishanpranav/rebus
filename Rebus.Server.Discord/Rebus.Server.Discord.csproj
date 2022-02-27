@@ -3,9 +3,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <UserSecretsId>f7bee9b0-def5-4ea6-9057-708d270dce2e</UserSecretsId>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/ishanpranav/rebus</RepositoryUrl>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
@@ -21,6 +20,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="..\Rebus.Storage\AppSettings.json" Link="AppSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
@@ -28,18 +33,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Discord.Net.WebSocket" Version="3.3.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
+    <PackageReference Include="Discord.Net.WebSocket" Version="3.3.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Rebus.Server\Rebus.Server.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="AppSettings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

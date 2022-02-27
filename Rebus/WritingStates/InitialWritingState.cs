@@ -4,9 +4,9 @@
 
 namespace Rebus.WritingStates
 {
-    internal sealed class InitialWritingState : IWritingState
+    internal class InitialWritingState : IWritingState
     {
-        public void Write(IWritingContext context, char value)
+        public virtual void Write(IWritingContext context, char value)
         {
             if (!char.IsWhiteSpace(value))
             {

@@ -13,7 +13,7 @@ namespace Rebus
     {
         private IWritingState _state;
 
-        protected ExpressionWriter() : this(new SentenceWritingState()) { }
+        protected ExpressionWriter() : this(new InitialWritingState()) { }
 
         private protected ExpressionWriter(IWritingState state)
         {

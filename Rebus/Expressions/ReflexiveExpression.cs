@@ -48,7 +48,14 @@ namespace Rebus.Expressions
 
         public override void WriteXml(XmlWriter writer)
         {
-            writer.WriteElementString(localName: "Reflexive", value: null);
+            if (_firstPerson)
+            {
+                writer.WriteElementString(localName: "FirstPerson", value: null);
+            }
+            else
+            {
+                writer.WriteElementString(localName: "SecondPerson", value: null);
+            }
         }
     }
 }

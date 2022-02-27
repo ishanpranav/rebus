@@ -1,29 +1,28 @@
-﻿// Ishan Pranav's REBUS: UniverseContext.cs
+﻿// Ishan Pranav's REBUS: RebusDbContext.cs
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Rebus.Server.Concepts;
 
 namespace Rebus.Server
 {
-    internal sealed class UniverseContext : DbContext
+    internal sealed class RebusDbContext : DbContext
     {
 #nullable disable
         public DbSet<CommandSignature> CommandSignatures { get; set; }
-        public DbSet<Concept> Concepts { get; set; }
         public DbSet<ConceptSignature> ConceptSignatures { get; set; }
-        public DbSet<Resource> Resources { get; set; }
         public DbSet<Player> Players { get; set; }
+        public DbSet<Resource> Resources { get; set; }
         public DbSet<Token> Tokens { get; set; }
 #nullable enable
 
-        public UniverseContext(DbContextOptions options) : base(options) { }
+        public RebusDbContext(DbContextOptions options) : base(options) { }
 
-        public IQueryable<Concept> IncludeUniverse()
+        public IQueryable<TConcept> Query<TConcept>() where TConcept : Concept
         {
-            return Concepts
+            return Set<TConcept>()
                 .Include(x => x.Signatures)
                 .ThenInclude(x => x.Article)
                 .Include(x => x.Signatures)
@@ -39,9 +38,10 @@ namespace Rebus.Server
 
             modelBuilder
                 .Entity<Concept>()
-                .HasOne<Concept>()
-                .WithMany()
-                .HasForeignKey(x => x.ContainerId);
+                .HasDiscriminator<int>("Discriminator")
+                .HasValue<MicrocomputerConcept>(1)
+                .HasValue<RegionConcept>(2)
+                .HasValue<SpacecraftConcept>(3);
 
             modelBuilder.Entity<ConceptSignature>(coceptSignature =>
             {
@@ -53,16 +53,15 @@ namespace Rebus.Server
                     .WithMany(x => x.Signatures);
             });
 
-            EntityTypeBuilder<Token> token = modelBuilder.Entity<Token>();
-            EntityTypeBuilder<Player> player = modelBuilder.Entity<Player>();
-
             if (Database.IsSqlite())
             {
-                player
+                modelBuilder
+                    .Entity<Player>()
                     .Property(x => x.UserId)
                     .UseCollation(Collations.SqliteIgnoreCase);
 
-                token
+                modelBuilder
+                    .Entity<Token>()
                     .Property(x => x.Value)
                     .UseCollation(Collations.SqliteIgnoreCase);
             }

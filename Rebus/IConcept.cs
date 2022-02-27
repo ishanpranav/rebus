@@ -7,8 +7,5 @@ namespace Rebus
     public interface IConcept : IWritable
     {
         int Id { get; }
-        int? ContainerId { get; }
-        Characteristics Characteristics { get; }
-        string VisualDescription { get; }
     }
 }

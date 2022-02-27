@@ -24,8 +24,11 @@ namespace Rebus.WritingStates
                         context.State = new WhiteSpaceWritingState();
                         break;
 
-                    case ':':
                     case '.':
+                        context.State = new FullStopWritingState();
+                        break;
+
+                    case ':':
                     case '!':
                         context.Write(' ');
 

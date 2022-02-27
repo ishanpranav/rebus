@@ -2,6 +2,7 @@
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
+using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
@@ -13,22 +14,19 @@ namespace Rebus.Server.Discord
     {
         private static async Task Main()
         {
-            IConfigurationRoot configurationRoot = new ConfigurationBuilder()
-                .AddUserSecrets(typeof(Program).Assembly)
-                .AddJsonFile("AppSettings.json")
-                .Build();
             ServiceCollection services = new ServiceCollection();
 
             await using (ServiceProvider serviceProvider = services
-                .AddRebus(configurationRoot)
+                .AddRebus()
                 .AddSingleton(new DiscordSocketClient(new DiscordSocketConfig()
                 {
                     LogLevel = LogSeverity.Verbose,
                     GatewayIntents = GatewayIntents.Guilds | GatewayIntents.GuildMessages | GatewayIntents.DirectMessages
                 }))
-                .AddSingleton(configurationRoot
-                    .GetRequiredSection(nameof(StartupOptions))
-                    .Get<StartupOptions>())
+                .AddSingleton(x => x
+                    .GetRequiredService<IConfiguration>()
+                    .GetRequiredSection(nameof(DiscordOptions))
+                    .Get<DiscordOptions>())
                 .AddSingleton<Startup>()
                 .BuildServiceProvider())
             {

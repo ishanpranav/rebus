@@ -4,7 +4,7 @@
 
 namespace Rebus.Server.Discord
 {
-    internal sealed class StartupOptions
+    internal sealed class DiscordOptions
     {
         public string Token { get; set; } = string.Empty;
     }

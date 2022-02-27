@@ -12,29 +12,27 @@ namespace Rebus.Server
 {
     internal sealed class CommandBuilder : ICommandBuilder
     {
-        private readonly IDbContextFactory<UniverseContext> _contextFactory;
-        private readonly IConceptRepository _repository;
-        private readonly Dictionary<Guid, Command> _prototypesByGuid;
+        private readonly IDbContextFactory<RebusDbContext> _contextFactory;
         private readonly List<Command> _commands = new List<Command>();
         private readonly MessageFactory _messageFactory;
+        private readonly Dictionary<Guid, Command> _commandsByGuid;
         private readonly int _argumentCount = Enum.GetValues<Argument>().Length;
 
         private IToken? _verb;
         private IToken? _adverb;
-        private IPlayer? _player;
+        private int? _player;
         private IConcept? _playerConcept;
         private object?[] _arguments;
 
-        public CommandBuilder(IDbContextFactory<UniverseContext> contextFactory, IEnumerable<Command> prototypes, IConceptRepository repository, MessageFactory messageFactory)
+        public CommandBuilder(IDbContextFactory<RebusDbContext> contextFactory, MessageFactory messageFactory, IEnumerable<Command> commands)
         {
             _contextFactory = contextFactory;
-            _repository = repository;
-            _prototypesByGuid = prototypes.ToDictionary(x => x.Guid);
             _messageFactory = messageFactory;
+            _commandsByGuid = commands.ToDictionary(x => x.Guid);
             _arguments = new object?[_argumentCount];
         }
 
-        public void SetPlayer(IPlayer player)
+        public void SetPlayer(int player)
         {
             _player = player;
 
@@ -52,7 +50,12 @@ namespace Rebus.Server
             }
             else
             {
-                _playerConcept = await _repository.GetConceptAsync(_player.ConceptId);
+                await using (RebusDbContext context = await _contextFactory.CreateDbContextAsync())
+                {
+                    _playerConcept = await context
+                        .Query<Concept>()
+                        .SingleAsync(x => x.Id == _player);
+                }
             }
         }
 
@@ -85,7 +88,7 @@ namespace Rebus.Server
 
         private async Task<Concept> GetConceptAsync(IEnumerable<IToken> adjectives, IToken substantive)
         {
-            await using (UniverseContext context = await _contextFactory.CreateDbContextAsync())
+            await using (RebusDbContext context = await _contextFactory.CreateDbContextAsync())
             {
                 ILookup<int, ConceptSignature> signaturesByCount = context.ConceptSignatures
                     .Include(signature => signature.Substantive)
@@ -104,17 +107,17 @@ namespace Rebus.Server
                 }
                 catch
                 {
-                    throw await _messageFactory.CreateExceptionAsync(Resources.MultipleMatchesConcept);
+                    throw await _messageFactory.CreateExceptionAsync(resource: 5);
                 }
 
                 if (signature is null)
                 {
-                    throw await _messageFactory.CreateExceptionAsync(Resources.NoMatchesConcept);
+                    throw await _messageFactory.CreateExceptionAsync(resource: 8);
                 }
                 else
                 {
                     return await context
-                        .IncludeUniverse()
+                        .Query<Concept>()
                         .SingleAsync(x => x.Id == signature.Concepts.First().Id);
                 }
             }
@@ -132,7 +135,7 @@ namespace Rebus.Server
 
                 try
                 {
-                    await using (UniverseContext context = await _contextFactory.CreateDbContextAsync())
+                    await using (RebusDbContext context = await _contextFactory.CreateDbContextAsync())
                     {
                         result = context.CommandSignatures
                             .Where(signature => signature.Verb.Value == _verb.Value && signature.Adverb == _adverb)
@@ -163,7 +166,7 @@ namespace Rebus.Server
                                             switch (argumentSignature.Type)
                                             {
                                                 case ArgumentType.Concept:
-                                                    if (argument is not IConcept concept || !concept.Characteristics.HasFlag(argumentSignature.Constraint))
+                                                    if (argument is not IConcept concept)
                                                     {
                                                         return false;
                                                     }
@@ -204,10 +207,10 @@ namespace Rebus.Server
                 }
                 catch
                 {
-                    throw await _messageFactory.CreateExceptionAsync(Resources.MultipleMatchesCommand);
+                    throw await _messageFactory.CreateExceptionAsync(resource: 9);
                 }
 
-                _commands.Add(_prototypesByGuid[(result ?? throw await _messageFactory.CreateExceptionAsync(Resources.NoMatchesCommand)).Command.Guid].CreateCommand(_playerConcept, _arguments));
+                _commands.Add(_commandsByGuid[(result ?? throw await _messageFactory.CreateExceptionAsync(resource: 10)).Command.Guid].CreateCommand(_playerConcept, _arguments));
             }
 
             _verb = null;

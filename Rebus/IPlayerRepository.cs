@@ -8,6 +8,6 @@ namespace Rebus
 {
     public interface IPlayerRepository
     {
-        Task<IPlayer> GetPlayerAsync(string name, string userId);
+        Task<int> GetPlayerAsync(string userId);
     }
 }

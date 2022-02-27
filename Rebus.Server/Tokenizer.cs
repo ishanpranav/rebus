@@ -10,20 +10,16 @@ namespace Rebus.Server
 {
     internal sealed class Tokenizer
     {
-        private const char DoubleQuoteChar = '"';
+        private readonly IDbContextFactory<RebusDbContext> _contextFactory;
 
-        private readonly Regex _regex;
-        private readonly IDbContextFactory<UniverseContext> _contextFactory;
-
-        public Tokenizer(Regex regex, IDbContextFactory<UniverseContext> contextFactory)
+        public Tokenizer(IDbContextFactory<RebusDbContext> contextFactory)
         {
-            _regex = regex;
             _contextFactory = contextFactory;
         }
 
         public async IAsyncEnumerable<Token> TokenizeAsync(string value)
         {
-            foreach (Match match in _regex.Matches(value))
+            foreach (Match match in Regex.Matches(value, pattern: @"(\w+)|\""([\w\s]*)""", RegexOptions.Compiled))
             {
                 Group quotationGroup = match.Groups[2];
 
@@ -49,7 +45,7 @@ namespace Rebus.Server
                     }
                     else
                     {
-                        await using (UniverseContext context = await _contextFactory.CreateDbContextAsync())
+                        await using (RebusDbContext context = await _contextFactory.CreateDbContextAsync())
                         {
                             yield return (await context.Tokens.SingleOrDefaultAsync(x => x.Value == lexeme)) ?? new Token()
                             {

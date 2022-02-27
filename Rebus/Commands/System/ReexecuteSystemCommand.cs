@@ -3,6 +3,7 @@
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace Rebus.Commands.System
@@ -12,7 +13,14 @@ namespace Rebus.Commands.System
     {
         protected internal override IAsyncEnumerable<IWritable> ExecuteAsync()
         {
-            return Executor.ReexecuteAsync();
+            if (Executor.Terminated || Executor.Command is null)
+            {
+                return AsyncEnumerable.Empty<IWritable>();
+            }
+            else
+            {
+                return Executor.ExecuteAsync(Executor.Command);
+            }
         }
     }
 }

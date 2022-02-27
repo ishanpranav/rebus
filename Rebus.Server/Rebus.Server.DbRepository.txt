@@ -1,3 +1,0 @@
-﻿x0f1=I do not know about {0}.
-x1f2=I know about multiple {0}. Did you mean {1}?
-x2f2=I do not know about any {0} with with the following characteristics: {1}.

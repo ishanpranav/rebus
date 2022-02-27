@@ -3,6 +3,8 @@
 // Licensed under the MIT License.
 
 using System.Globalization;
+using System.Threading;
+using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
@@ -14,33 +16,31 @@ namespace Rebus.Server.Discord
     internal sealed class Startup
     {
         private readonly ILogger<Startup> _logger;
-        private readonly StartupOptions _options;
+        private readonly DiscordOptions _options;
         private readonly DiscordSocketClient _discordSocketClient;
         private readonly IPlayerRepository _playerRepository;
-        private readonly IEngineFactory _engineFactory;
+        private readonly IEngine _engine;
 
-        public Startup(ILogger<Startup> logger, StartupOptions options, DiscordSocketClient discordSocketClient, IPlayerRepository playerRepository, IEngineFactory engineFactory)
+        public Startup(ILogger<Startup> logger, DiscordOptions options, DiscordSocketClient discordSocketClient, IPlayerRepository playerRepository, IEngine engine)
         {
             _logger = logger;
             _options = options;
             _discordSocketClient = discordSocketClient;
             _playerRepository = playerRepository;
-            _engineFactory = engineFactory;
+            _engine = engine;
         }
 
         public async Task StartAsync()
         {
-            IEngine engine = await _engineFactory.CreateEngineAsync();
-
             _discordSocketClient.MessageReceived += (socketMessage) =>
             {
                 if (socketMessage is SocketUserMessage socketUserMessage)
                 {
                     Task.Run(async () =>
                     {
-                        await OnMessageReceivedAsync(engine, socketUserMessage).ConfigureAwait(false);
+                        await OnMessageReceivedAsync().ConfigureAwait(false);
 
-                        async Task OnMessageReceivedAsync(IEngine engine, SocketUserMessage socketUserMessage)
+                        async Task OnMessageReceivedAsync()
                         {
                             SocketSelfUser currentUser = _discordSocketClient.CurrentUser;
                             string content = socketUserMessage.Content;
@@ -65,15 +65,16 @@ namespace Rebus.Server.Discord
                                 SocketCommandContext context = new SocketCommandContext(_discordSocketClient, socketUserMessage);
                                 SocketUser user = context.User;
                                 MarkdownExpressionWriter writer = new MarkdownExpressionWriter();
-                                IPlayer player = await _playerRepository.GetPlayerAsync(user.Username, user.Id.ToString(CultureInfo.InvariantCulture));
 
-                                await engine.InterpretAsync(player, content.Substring(start), writer);
+                                int player = await _playerRepository.GetPlayerAsync(user.Id.ToString(CultureInfo.InvariantCulture));
+
+                                await _engine.InterpretAsync(player, content.Substring(start), writer);
 
                                 string message = writer.ToString();
 
                                 await user.SendMessageAsync(message);
 
-                                _logger.LogInformation("Replied to client ({ConceptId}): \"{Message}\"", player.ConceptId, message);
+                                _logger.LogInformation("Replied to client ({ConceptId}): \"{Message}\"", player, message);
                             }
                         }
                     });

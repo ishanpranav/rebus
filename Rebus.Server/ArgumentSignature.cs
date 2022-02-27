@@ -9,13 +9,12 @@ using Microsoft.EntityFrameworkCore;
 namespace Rebus.Server
 {
     [Table(nameof(ArgumentSignature))]
-    [Index(nameof(Argument), nameof(Type), nameof(Constraint), IsUnique = true)]
+    [Index(nameof(Argument), nameof(Type), IsUnique = true)]
     internal sealed class ArgumentSignature
     {
         public int Id { get; set; }
         public Argument Argument { get; set; }
         public ArgumentType Type { get; set; }
-        public Characteristics Constraint { get; set; }
 
         public ICollection<CommandSignature> Commands { get; set; } = new HashSet<CommandSignature>();
     }

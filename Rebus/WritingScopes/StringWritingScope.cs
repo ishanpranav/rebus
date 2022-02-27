@@ -4,14 +4,14 @@
 
 using System;
 
-namespace Rebus
+namespace Rebus.WritingScopes
 {
     internal class StringWritingScope : IDisposable
     {
         private bool _disposed;
 
-        protected ExpressionWriter Writer { get; }
-        protected ScopeTypes Type { get; }
+        public ExpressionWriter Writer { get; }
+        public ScopeTypes Type { get; }
 
         public StringWritingScope(ExpressionWriter writer, ScopeTypes type)
         {

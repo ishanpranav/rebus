@@ -1,5 +1,5 @@
 # Design
-Rebus simulates a dialogue between a _player\'s character_ and their _navigational microcomputer_. The player works with their character\'s microcomputer to issue orders to _spacecraft_ under their control.
+Ishan Pranav's REBUS simulates a dialogue between a _player\'s character_ and their _microcomputer_ assistant. The player works with their character\'s microcomputer to issue orders to _spacecraft_ under their control.
 ## Spacecraft
 All spacecraft are functionally identical.
 
@@ -28,7 +28,7 @@ A player may order a stationary spacecraft to adopt a
 - _passive_ stance, requiring it to take no action upon intercepting an enemy, or a
 - _defensive_ stance, requiring it to initiate a conflict upon intercepting an enemy.
 ## Conflict
-If a player\' spacecraft enters a region containing only passive enemy spacecraft, the player may order their spacecraft to undertake an _offensive_, initiating a conflict against the passive enemy.
+If a player\'s spacecraft enters a region containing only passive enemy spacecraft, the player may order their spacecraft to undertake an _offensive_, initiating a conflict against the passive enemy.
 
 During a conflict, the _player fleet_ includes all the player\'s spacecraft currently in the region of the conflict; all other spacecraft in the region unite into the _opposing_ fleet. Thus, the opposing fleet can include spacecraft controlled by several enemy players.
 
@@ -67,10 +67,10 @@ The quantities supplied and demanded by each planet are unlimited. The amount th
 
 At an _uninhabited_ planet, a player may
 - _accept_ cargo or
-- _deposit_ cargo
+- _deposit_ cargo.
 ## Interactions
 Aside from out-of-game communication, players may order a spacecraft to broadcast information to all other spacecraft within its region: They may transmit
-- simple textual messages
+- simple textual messages and
 - navigational information enabling recipients to autopilot to a planet or star.
 
 ## Future considerations

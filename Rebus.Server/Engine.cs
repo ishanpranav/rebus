@@ -5,11 +5,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using Microsoft.Extensions.Logging;
+using Rebus.ExpressionWriters;
 
 namespace Rebus.Server
 {
@@ -21,7 +21,7 @@ namespace Rebus.Server
         private readonly CommandBuilder _commandBuilder;
         private readonly XmlWriterSettings _xmlWriterSettings;
         private readonly XmlSerializer _xmlSerializer;
-        private readonly Dictionary<IPlayer, Executor> _executorsByPlayer = new Dictionary<IPlayer, Executor>();
+        private readonly Dictionary<int, Executor> _executorsByPlayer = new Dictionary<int, Executor>();
 
         public Engine(ILogger<Engine> logger, Tokenizer tokenizer, Parser parser, CommandBuilder commandBuilder, XmlSerializer xmlSerializer, XmlWriterSettings xmlWriterSettings)
         {
@@ -33,26 +33,35 @@ namespace Rebus.Server
             _xmlWriterSettings = xmlWriterSettings;
         }
 
-        public async Task<bool> InterpretAsync(IPlayer player, string value, ExpressionWriter writer)
+        public async Task<bool> InterpretAsync(int player, string value, ExpressionWriter writer)
         {
+            if (!_executorsByPlayer.TryGetValue(player, out Executor? executor))
+            {
+                executor = new Executor();
+
+                _executorsByPlayer[player] = executor;
+            }
+
             try
             {
                 IAsyncEnumerable<Token> tokens = _tokenizer.TokenizeAsync(value);
-                StringBuilder stringBuilder = new StringBuilder();
+                StringExpressionWriter tokenWriter = new StringExpressionWriter();
 
                 await foreach (Token token in tokens)
                 {
-                    stringBuilder
-                        .Append('(')
-                        .Append(token.Type
+                    using (tokenWriter.BeginScope(ScopeTypes.Parenthetical))
+                    {
+                        tokenWriter.Write(token.Type
                             .ToString()
-                            .ToUpper())
-                        .Append(' ')
-                        .Append(token.Value)
-                        .Append(") ");
+                            .ToUpper());
+                        tokenWriter.Write(' ');
+                        tokenWriter.Write(token.Value.ToLower());
+                    }
+
+                    tokenWriter.Write(' ');
                 }
 
-                _logger.LogInformation("{Tokens}", stringBuilder);
+                _logger.LogInformation("{Tokens}", tokenWriter);
 
                 Expression expression = await _parser.ParseAsync(tokens);
 
@@ -73,13 +82,6 @@ namespace Rebus.Server
                 }
 
                 await expression.InterpretAsync(_commandBuilder);
-
-                if (!_executorsByPlayer.TryGetValue(player, out Executor? executor))
-                {
-                    executor = new Executor();
-
-                    _executorsByPlayer[player] = executor;
-                }
 
                 foreach (Command command in _commandBuilder.Build())
                 {
@@ -104,9 +106,14 @@ namespace Rebus.Server
                 _logger.LogError(exception, "Exception");
             }
 
-            writer.WriteLine();
-
-            return !_executorsByPlayer[player].Terminated;
+            if (executor.Terminated)
+            {
+                return !_executorsByPlayer.Remove(player);
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }

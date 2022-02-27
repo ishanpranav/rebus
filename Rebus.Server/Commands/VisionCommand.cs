@@ -4,30 +4,32 @@
 
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Microsoft.EntityFrameworkCore;
 
 namespace Rebus.Server.Commands
 {
     [Guid("6C4E330D-29AD-498B-B6A9-CB45724B0A32")]
     internal sealed class VisionCommand : Command
     {
-        private readonly IConceptRepository _repository;
-        private readonly VisionController _controller;
+        private readonly IDbContextFactory<RebusDbContext> _contextFactory;
 
-        public VisionCommand(IConceptRepository repository, VisionController controller)
+        public VisionCommand(IDbContextFactory<RebusDbContext> contextFactory)
         {
-            _repository = repository;
-            _controller = controller;
+            _contextFactory = contextFactory;
         }
 
         protected override async IAsyncEnumerable<IWritable> ExecuteAsync()
         {
             IConcept subject = GetConcept(Argument.Subject);
 
-            if (subject.ContainerId is int containerId)
+            if (subject is IViewer viewer)
             {
-                await foreach (IWritable result in _controller.ViewAsync(Player, subject, await _repository.GetConceptAsync(containerId)))
+                await using (RebusDbContext context = await _contextFactory.CreateDbContextAsync())
                 {
-                    yield return result;
+                    await foreach (IWritable writable in viewer.ViewAsync(context))
+                    {
+                        yield return writable;
+                    }
                 }
             }
         }
