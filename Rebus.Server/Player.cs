@@ -4,34 +4,33 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
+using System.Runtime.InteropServices;
 using Microsoft.EntityFrameworkCore;
-using Rebus.Server.Concepts;
 
 namespace Rebus.Server
 {
     [Table(nameof(Player))]
     [Index(nameof(UserId), IsUnique = true)]
-    internal sealed class Player
+    [Guid("FA616059-61DE-42DB-AC8C-153F18270424")]
+    internal sealed class Player : IEntity
     {
         public int Id { get; set; }
         public string UserId { get; set; } = string.Empty;
 
-        public ICollection<Concept> Concepts { get; set; } = new HashSet<Concept>();
+#nullable disable
+        [Required]
+        public Concept Concept { get; set; }
+#nullable enable
 
-        public Player() { }
+        public int ConceptId { get; set; }
 
-        public Player(Concept concept)
+        public ICollection<Spacecraft> Spacecraft { get; set; } = new HashSet<Spacecraft>();
+
+        public void Write(ExpressionWriter writer)
         {
-            Concepts.Add(concept);
-        }
-
-        public MicrocomputerConcept GetConcept()
-        {
-            return Concepts
-                .OfType<MicrocomputerConcept>()
-                .Single();
+            Concept.Write(writer);
         }
     }
 }

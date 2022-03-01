@@ -1,4 +1,4 @@
-﻿// Ishan Pranav's REBUS: AnsiExpressionWriter.cs
+﻿// Ishan Pranav's REBUS: WrappedExpressionWriter.cs
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
@@ -82,7 +82,7 @@ namespace Rebus.ExpressionWriters
             }
         }
 
-        public override ExpressionWriter BeginFragment()
+        public override ExpressionWriter CreateFragment()
         {
             return new WrappedExpressionWriter(new SentenceWritingState());
         }

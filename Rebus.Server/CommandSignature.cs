@@ -15,7 +15,7 @@ namespace Rebus.Server
 
 #nullable disable
         [Required]
-        public CommandPrototype Command { get; set; }
+        public Command Command { get; set; }
 
         [Required]
         public Token Verb { get; set; }

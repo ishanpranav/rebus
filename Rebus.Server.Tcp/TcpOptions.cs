@@ -1,4 +1,4 @@
-﻿// Ishan Pranav's REBUS: StartupOptions.cs
+﻿// Ishan Pranav's REBUS: TcpOptions.cs
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 

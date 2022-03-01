@@ -32,7 +32,7 @@ namespace Rebus
             }
         }
 
-        public void Write(object? value)
+        public void Write(object? value, string? format)
         {
             if (value is IWritable writable)
             {
@@ -50,13 +50,17 @@ namespace Rebus
             {
                 Write(int32);
             }
-            else if (value is IList values)
+            else if (value is IList list)
             {
-                Write(values);
+                Write(list, format);
             }
             else if (value is Argument argument)
             {
                 Write(argument);
+            }
+            else if (value is Enum @enum)
+            {
+                Write(@enum);
             }
             else if (value is not null)
             {
@@ -81,11 +85,16 @@ namespace Rebus
 
         public void Write(IList values)
         {
-            int count = values.Count;
+            Write(values, conjunction: null);
+        }
+
+        public void Write(IList list, string? conjunction)
+        {
+            int count = list.Count;
 
             for (int i = count; i > 0; i--)
             {
-                Write(values[count - i]);
+                Write(list[count - i], conjunction);
 
                 switch (i)
                 {
@@ -97,7 +106,13 @@ namespace Rebus
                             Write(',');
                         }
 
-                        Write(" and ");
+                        Write(' ');
+
+                        if (conjunction is not null)
+                        {
+                            Write(conjunction);
+                            Write(' ');
+                        }
                         break;
 
                     default:
@@ -107,7 +122,22 @@ namespace Rebus
             }
         }
 
-        public void Write(Argument value) { }
+        public void Write(Argument value)
+        {
+            switch (value)
+            {
+                case Argument.IndirectObject:
+                    Write(" to ");
+                    break;
+            }
+        }
+
+        public void Write(Enum value)
+        {
+            Write(value
+                .ToString()
+                .ToLower());
+        }
 
         void IWritingContext.Write(char value)
         {
@@ -141,8 +171,8 @@ namespace Rebus
 
         protected abstract void WriteLineCore();
 
-        public abstract IDisposable BeginScope(ScopeTypes type);
-        public abstract ExpressionWriter BeginFragment();
+        public abstract IDisposable CreateScope(ScopeType type);
+        public abstract ExpressionWriter CreateFragment();
 
         public abstract override string ToString();
     }

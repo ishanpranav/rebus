@@ -13,12 +13,12 @@ namespace Rebus.ExpressionWriters
         public MarkdownExpressionWriter() { }
         private protected MarkdownExpressionWriter(IWritingState state) : base(state) { }
 
-        public override IDisposable BeginScope(ScopeTypes type)
+        public override IDisposable CreateScope(ScopeType type)
         {
             return new MarkdownWritingScope(writer: this, type);
         }
 
-        public override ExpressionWriter BeginFragment()
+        public override ExpressionWriter CreateFragment()
         {
             return new MarkdownExpressionWriter(new SentenceWritingState());
         }

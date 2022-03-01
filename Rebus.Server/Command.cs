@@ -1,4 +1,4 @@
-﻿// Ishan Pranav's REBUS: CommandPrototype.cs
+﻿// Ishan Pranav's REBUS: Command.cs
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Rebus.Server
 {
-    [Table(nameof(CommandPrototype))]
+    [Table(nameof(Command))]
     [Index(nameof(Guid), IsUnique = true)]
-    internal sealed class CommandPrototype
+    internal sealed class Command
     {
         public int Id { get; set; }
         public Guid Guid { get; set; }

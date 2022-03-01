@@ -2,12 +2,10 @@
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
-using System.Collections.Generic;
-
 namespace Rebus.Server
 {
-    internal interface IViewer
+    internal interface IEntity : IWritable
     {
-        IAsyncEnumerable<IWritable> ViewAsync(RebusDbContext context);
+        public Concept Concept { get; }
     }
 }

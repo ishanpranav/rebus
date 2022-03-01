@@ -7,15 +7,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Rebus.Exceptions;
 
 namespace Rebus.Server
 {
     internal sealed class CommandBuilder : ICommandBuilder
     {
-        private readonly IDbContextFactory<RebusDbContext> _contextFactory;
-        private readonly List<Command> _commands = new List<Command>();
-        private readonly MessageFactory _messageFactory;
-        private readonly Dictionary<Guid, Command> _commandsByGuid;
+        private readonly RebusDbContext _context;
+        private readonly List<Rebus.Command> _commands = new List<Rebus.Command>();
+        private readonly Dictionary<Guid, Rebus.Command> _commandsByGuid;
         private readonly int _argumentCount = Enum.GetValues<Argument>().Length;
 
         private IToken? _verb;
@@ -24,10 +24,9 @@ namespace Rebus.Server
         private IConcept? _playerConcept;
         private object?[] _arguments;
 
-        public CommandBuilder(IDbContextFactory<RebusDbContext> contextFactory, MessageFactory messageFactory, IEnumerable<Command> commands)
+        public CommandBuilder(RebusDbContext context, IEnumerable<Rebus.Command> commands)
         {
-            _contextFactory = contextFactory;
-            _messageFactory = messageFactory;
+            _context = context;
             _commandsByGuid = commands.ToDictionary(x => x.Guid);
             _arguments = new object?[_argumentCount];
         }
@@ -50,12 +49,9 @@ namespace Rebus.Server
             }
             else
             {
-                await using (RebusDbContext context = await _contextFactory.CreateDbContextAsync())
-                {
-                    _playerConcept = await context
-                        .Query<Concept>()
-                        .SingleAsync(x => x.Id == _player);
-                }
+                _playerConcept = (await _context.Players
+                    .IncludeConcept()
+                    .SingleAsync(x => x.Id == _player)).Concept;
             }
         }
 
@@ -73,7 +69,35 @@ namespace Rebus.Server
 
         public async Task SetConceptAsync(Argument argument, IEnumerable<IToken> adjectives, IToken substantive)
         {
-            _arguments[(int)argument] = await GetConceptAsync(adjectives, substantive);
+            ILookup<int, ConceptSignature> signaturesByCount = _context.ConceptSignatures
+                .Include(signature => signature.Substantive)
+                .Where(signature => signature.Substantive.Value == substantive.Value)
+                .Include(signature => signature.Article)
+                .Include(signature => signature.Adjectives)
+                .AsSplitQuery()
+                .ToLookup(signature => adjectives.Count(adjective => signature.Adjectives.Any(x => adjective.Value == x.Value)));
+
+            ConceptSignature? signature;
+
+            try
+            {
+                signature = signaturesByCount[adjectives.Count()].SingleOrDefault();
+            }
+            catch
+            {
+                throw new RebusException(resource: 5);
+            }
+
+            if (signature is null)
+            {
+                throw new RebusException(resource: 8);
+            }
+            else
+            {
+                _arguments[(int)argument] = await _context
+                    .IncludeConcepts()
+                    .SingleAsync(x => x.Id == signature.ConceptId);
+            }
         }
 
         public void SetQuotation(Argument argument, string quotation)
@@ -84,43 +108,6 @@ namespace Rebus.Server
         public void SetNumber(Argument argument, int number)
         {
             _arguments[(int)argument] = number;
-        }
-
-        private async Task<Concept> GetConceptAsync(IEnumerable<IToken> adjectives, IToken substantive)
-        {
-            await using (RebusDbContext context = await _contextFactory.CreateDbContextAsync())
-            {
-                ILookup<int, ConceptSignature> signaturesByCount = context.ConceptSignatures
-                    .Include(signature => signature.Substantive)
-                    .Where(signature => signature.Substantive.Value == substantive.Value)
-                    .Include(signature => signature.Article)
-                    .Include(signature => signature.Adjectives)
-                    .AsSplitQuery()
-                    .Include(signature => signature.Concepts)
-                    .ToLookup(signature => adjectives.Count(adjective => signature.Adjectives.Any(x => adjective.Value == x.Value)));
-
-                ConceptSignature? signature;
-
-                try
-                {
-                    signature = signaturesByCount[adjectives.Count()].SingleOrDefault();
-                }
-                catch
-                {
-                    throw await _messageFactory.CreateExceptionAsync(resource: 5);
-                }
-
-                if (signature is null)
-                {
-                    throw await _messageFactory.CreateExceptionAsync(resource: 8);
-                }
-                else
-                {
-                    return await context
-                        .Query<Concept>()
-                        .SingleAsync(x => x.Id == signature.Concepts.First().Id);
-                }
-            }
         }
 
         public async Task SaveChangesAsync()
@@ -135,82 +122,79 @@ namespace Rebus.Server
 
                 try
                 {
-                    await using (RebusDbContext context = await _contextFactory.CreateDbContextAsync())
-                    {
-                        result = context.CommandSignatures
-                            .Where(signature => signature.Verb.Value == _verb.Value && signature.Adverb == _adverb)
-                            .Include(signature => signature.Command)
-                            .Include(signature => signature.Arguments)
-                            .AsEnumerable()
-                            .SingleOrDefault(signature =>
+                    result = await _context.CommandSignatures
+                        .Where(signature => signature.Verb.Value == _verb.Value && signature.Adverb == _adverb)
+                        .Include(signature => signature.Command)
+                        .Include(signature => signature.Arguments)
+                        .AsAsyncEnumerable()
+                        .SingleOrDefaultAsync(signature =>
+                        {
+                            ArgumentSignature?[] argumentSignatures = new ArgumentSignature?[_argumentCount];
+
+                            foreach (ArgumentSignature argumentSignature in signature.Arguments)
                             {
-                                ArgumentSignature?[] argumentSignatures = new ArgumentSignature?[_argumentCount];
+                                argumentSignatures[(int)argumentSignature.Argument] = argumentSignature;
+                            }
 
-                                foreach (ArgumentSignature argumentSignature in signature.Arguments)
+                            for (int i = 0; i < _argumentCount; i++)
+                            {
+                                object? argument = _arguments[i];
+
+                                if (argumentSignatures[i] is ArgumentSignature argumentSignature)
                                 {
-                                    argumentSignatures[(int)argumentSignature.Argument] = argumentSignature;
-                                }
-
-                                for (int i = 0; i < _argumentCount; i++)
-                                {
-                                    object? argument = _arguments[i];
-
-                                    if (argumentSignatures[i] is ArgumentSignature argumentSignature)
-                                    {
-                                        if (argument is null)
-                                        {
-                                            return false;
-                                        }
-                                        else
-                                        {
-                                            switch (argumentSignature.Type)
-                                            {
-                                                case ArgumentType.Concept:
-                                                    if (argument is not IConcept concept)
-                                                    {
-                                                        return false;
-                                                    }
-                                                    break;
-
-                                                case ArgumentType.Number:
-                                                    if (argument is not int)
-                                                    {
-                                                        return false;
-                                                    }
-                                                    break;
-
-                                                case ArgumentType.Quotation:
-                                                    if (argument is not string)
-                                                    {
-                                                        return false;
-                                                    }
-                                                    break;
-
-                                                case ArgumentType.ReflexiveOnly:
-                                                    if (argument != _playerConcept)
-                                                    {
-                                                        return false;
-                                                    }
-                                                    break;
-                                            }
-                                        }
-                                    }
-                                    else if (argument is not null)
+                                    if (argument is null)
                                     {
                                         return false;
                                     }
-                                };
+                                    else
+                                    {
+                                        switch (argumentSignature.Type)
+                                        {
+                                            case ArgumentType.Concept:
+                                                if (argument is not IConcept concept)
+                                                {
+                                                    return false;
+                                                }
+                                                break;
 
-                                return true;
-                            });
-                    }
+                                            case ArgumentType.Number:
+                                                if (argument is not int)
+                                                {
+                                                    return false;
+                                                }
+                                                break;
+
+                                            case ArgumentType.Quotation:
+                                                if (argument is not string)
+                                                {
+                                                    return false;
+                                                }
+                                                break;
+
+                                            case ArgumentType.ReflexiveOnly:
+                                                if (argument != _playerConcept)
+                                                {
+                                                    return false;
+                                                }
+                                                break;
+                                        }
+                                    }
+                                }
+                                else if (argument is not null)
+                                {
+                                    return false;
+                                }
+                            };
+
+                            return true;
+                        });
                 }
                 catch
                 {
-                    throw await _messageFactory.CreateExceptionAsync(resource: 9);
+                    throw new RebusException(resource: 9);
                 }
 
-                _commands.Add(_commandsByGuid[(result ?? throw await _messageFactory.CreateExceptionAsync(resource: 10)).Command.Guid].CreateCommand(_playerConcept, _arguments));
+                _commands.Add(_commandsByGuid[(result ?? throw new RebusException(resource: 10)).Command.Guid].CreateCommand(_playerConcept, _player.GetValueOrDefault(), _arguments));
             }
 
             _verb = null;
@@ -219,7 +203,7 @@ namespace Rebus.Server
             _arguments = new object?[_argumentCount];
         }
 
-        public IEnumerable<Command> Build()
+        public IEnumerable<Rebus.Command> Build()
         {
             return _commands;
         }

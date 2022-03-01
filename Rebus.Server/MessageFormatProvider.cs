@@ -17,9 +17,9 @@ namespace Rebus.Server
 
         public string Format(string? format, object? arg, IFormatProvider? formatProvider)
         {
-            ExpressionWriter writer = _writer.BeginFragment();
+            ExpressionWriter writer = _writer.CreateFragment();
 
-            writer.Write(arg);
+            writer.Write(arg, format);
 
             return writer.ToString();
         }

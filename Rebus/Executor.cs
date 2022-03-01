@@ -14,7 +14,13 @@ namespace Rebus
         internal Stack<Command> Commands { get; } = new Stack<Command>();
         internal Stack<OperationCommand> OperationCommands { get; } = new Stack<OperationCommand>();
 
+        public int Id { get; }
         public bool Terminated { get; internal set; }
+
+        public Executor(int id)
+        {
+            Id = id;
+        }
 
         public IAsyncEnumerable<IWritable> ExecuteAsync(Command command)
         {

@@ -25,12 +25,9 @@ namespace Rebus.Expressions
 
         public override void Write(ExpressionWriter writer)
         {
-            using (writer.BeginScope(ScopeTypes.VerbPhrase))
+            using (writer.CreateScope(ScopeType.Bold))
             {
-                using (writer.BeginScope(ScopeTypes.Keyword))
-                {
-                    _verb.Write(writer);
-                }
+                _verb.Write(writer);
 
                 if (_adverb is not null)
                 {

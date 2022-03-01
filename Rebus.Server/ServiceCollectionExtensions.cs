@@ -3,12 +3,11 @@
 // Licensed under the MIT License.
 
 using System;
-using System.Xml;
-using System.Xml.Serialization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Rebus.Commands.System;
+using Rebus.EditDistances;
 using Rebus.Server.Commands;
 
 namespace Rebus.Server
@@ -29,27 +28,17 @@ namespace Rebus.Server
                     .AddConsole()
                     .SetMinimumLevel(LogLevel.Information))
                 .AddDbContextFactory<RebusDbContext, RebusDbContextFactory>()
-                .AddSingleton(x => new XmlWriterSettings()
-                {
-                    Async = true,
-                    Indent = true,
-                    IndentChars = "    "
-                })
                 .AddSingleton<IConfiguration>(configurationRoot)
-                .AddSingleton(x => new XmlSerializer(typeof(Expression)))
                 .AddSingleton(Random.Shared)
-                .AddSingleton<IPlayerRepository, PlayerRepository>()
-                .AddSingleton<Tokenizer>()
                 .AddSingleton<Parser>()
-                .AddSingleton<CommandBuilder>()
-                .AddSingleton<MessageFactory, ResourceMessageFactory>()
+                .AddSingleton<IEditDistance, DamerauLevenshteinEditDistance>()
                 .AddSingleton<IEngine, Engine>()
-                .AddSingleton<Command, VisionCommand>()
-                .AddSingleton<Command, TransitiveVisionCommand>()
-                .AddSingleton<Command, RedoSystemCommand>()
-                .AddSingleton<Command, ReexecuteSystemCommand>()
-                .AddSingleton<Command, UndoSystemCommand>()
-                .AddSingleton<Command, TerminateSystemCommand>();
+                .AddSingleton<Rebus.Command, VisionCommand>()
+                .AddSingleton<Rebus.Command, TransitiveVisionCommand>()
+                .AddSingleton<Rebus.Command, RedoSystemCommand>()
+                .AddSingleton<Rebus.Command, ReexecuteSystemCommand>()
+                .AddSingleton<Rebus.Command, UndoSystemCommand>()
+                .AddSingleton<Rebus.Command, TerminateSystemCommand>();
         }
     }
 }

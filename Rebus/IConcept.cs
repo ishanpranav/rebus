@@ -6,6 +6,7 @@ namespace Rebus
 {
     public interface IConcept : IWritable
     {
-        int Id { get; }
+        bool Is<T>() where T : class;
+        bool Is<T>(out T? result) where T : class;
     }
 }

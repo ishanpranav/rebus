@@ -1,4 +1,4 @@
-﻿// Ishan Pranav's REBUS: 
+﻿// Ishan Pranav's REBUS: FullStopWritingState.cs
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
@@ -8,7 +8,7 @@ namespace Rebus.WritingStates
     {
         public override void Write(IWritingContext context, char value)
         {
-            if (!char.IsDigit(value))
+            if (!char.IsDigit(value) && !char.IsWhiteSpace(value))
             {
                 context.Write(' ');
             }

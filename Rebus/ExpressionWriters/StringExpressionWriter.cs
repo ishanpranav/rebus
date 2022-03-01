@@ -26,12 +26,12 @@ namespace Rebus.ExpressionWriters
             StringBuilder.AppendLine();
         }
 
-        public override IDisposable BeginScope(ScopeTypes type)
+        public override IDisposable CreateScope(ScopeType type)
         {
             return new StringWritingScope(writer: this, type);
         }
 
-        public override ExpressionWriter BeginFragment()
+        public override ExpressionWriter CreateFragment()
         {
             return new StringExpressionWriter(new SentenceWritingState());
         }

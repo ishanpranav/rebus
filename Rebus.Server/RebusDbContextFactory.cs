@@ -28,7 +28,7 @@ namespace Rebus.Server
         {
             return new RebusDbContext(new DbContextOptionsBuilder<RebusDbContext>()
                 .UseSqlite(_configuration.GetConnectionString(nameof(RebusDbContext)), x => x
-                    .MigrationsHistoryTable("Migration"))
+                    .MigrationsHistoryTable("dotnet_migration"))
                 .Options);
         }
 

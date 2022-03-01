@@ -8,9 +8,9 @@ namespace Rebus.WritingScopes
     {
         private bool _disposed;
 
-        public MarkdownWritingScope(ExpressionWriter writer, ScopeTypes type) : base(writer, type)
+        public MarkdownWritingScope(ExpressionWriter writer, ScopeType type) : base(writer, type)
         {
-            if (type.HasFlag(ScopeTypes.Noun) || type.HasFlag(ScopeTypes.VerbPhrase))
+            if (type is ScopeType.Bold)
             {
                 writer.Write("**");
             }
@@ -22,7 +22,7 @@ namespace Rebus.WritingScopes
             {
                 if (disposing)
                 {
-                    if (Type.HasFlag(ScopeTypes.Noun) || Type.HasFlag(ScopeTypes.VerbPhrase))
+                    if (Type is ScopeType.Bold)
                     {
                         Writer.Write("**");
                     }

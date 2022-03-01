@@ -18,15 +18,13 @@ namespace Rebus.Server.Discord
         private readonly ILogger<Startup> _logger;
         private readonly DiscordOptions _options;
         private readonly DiscordSocketClient _discordSocketClient;
-        private readonly IPlayerRepository _playerRepository;
         private readonly IEngine _engine;
 
-        public Startup(ILogger<Startup> logger, DiscordOptions options, DiscordSocketClient discordSocketClient, IPlayerRepository playerRepository, IEngine engine)
+        public Startup(ILogger<Startup> logger, DiscordOptions options, DiscordSocketClient discordSocketClient, IEngine engine)
         {
             _logger = logger;
             _options = options;
             _discordSocketClient = discordSocketClient;
-            _playerRepository = playerRepository;
             _engine = engine;
         }
 
@@ -66,15 +64,11 @@ namespace Rebus.Server.Discord
                                 SocketUser user = context.User;
                                 MarkdownExpressionWriter writer = new MarkdownExpressionWriter();
 
-                                int player = await _playerRepository.GetPlayerAsync(user.Id.ToString(CultureInfo.InvariantCulture));
-
-                                await _engine.InterpretAsync(player, content.Substring(start), writer);
+                                await _engine.InterpretAsync(user.Id.ToString(CultureInfo.InvariantCulture), content.Substring(start), writer);
 
                                 string message = writer.ToString();
 
                                 await user.SendMessageAsync(message);
-
-                                _logger.LogInformation("Replied to client ({ConceptId}): \"{Message}\"", player, message);
                             }
                         }
                     });

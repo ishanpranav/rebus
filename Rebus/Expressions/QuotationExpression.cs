@@ -29,7 +29,7 @@ namespace Rebus.Expressions
         {
             writer.Write(_argument);
 
-            using (writer.BeginScope(ScopeTypes.DoubleQuotation))
+            using (writer.CreateScope(ScopeType.Quotation))
             {
                 writer.Write(_value);
             }

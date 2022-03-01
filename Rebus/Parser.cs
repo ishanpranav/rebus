@@ -4,35 +4,37 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Rebus.Exceptions;
 using Rebus.Expressions;
 
 namespace Rebus
 {
     public class Parser
     {
-        private readonly MessageFactory _messageBuilder;
+        private readonly IAsyncEnumerable<IToken> _tokens;
 
-        public Parser(MessageFactory messageBuilder)
+        public Parser(IAsyncEnumerable<IToken> tokens)
         {
-            _messageBuilder = messageBuilder;
+            _tokens = tokens;
         }
 
-        public async Task<Expression> ParseAsync(IAsyncEnumerable<IToken> tokens)
+        public async Task<Expression> ParseAsync()
         {
-            await using (IAsyncEnumerator<IToken> enumerator = tokens.GetAsyncEnumerator())
+            await using (IAsyncEnumerator<IToken> enumerator = _tokens.GetAsyncEnumerator())
             {
                 await enumerator.MoveNextAsync();
 
                 bool complete = false;
+                string? current = null;
                 Expression? result = await parseSentenceAsync();
 
                 if (await acceptAsync(TokenTypes.Conjunction) is not null)
                 {
                     List<Expression> sentences = new List<Expression>(2)
-                {
-                    result,
-                    await parseSentenceAsync()
-                };
+                    {
+                        result,
+                        await parseSentenceAsync()
+                    };
 
                     while (await acceptAsync(TokenTypes.Conjunction) is not null)
                     {
@@ -48,12 +50,7 @@ namespace Rebus
                 }
                 else
                 {
-                    throw await _messageBuilder.CreateExceptionAsync(resource: 1);
-                }
-
-                Task<RebusException> createSubstantiveExceptionAsync()
-                {
-                    return _messageBuilder.CreateExceptionAsync(resource: 4);
+                    throw new RebusException(resource: 1);
                 }
 
                 async Task<IToken?> acceptAsync(TokenTypes tokenType)
@@ -64,16 +61,21 @@ namespace Rebus
 
                         if (result is null)
                         {
-                            throw await _messageBuilder.CreateExceptionAsync(resource: 2);
+                            throw new RebusException(resource: 2);
                         }
-                        else if (result.Type.HasFlag(tokenType))
+                        else
                         {
-                            if (!await enumerator.MoveNextAsync())
-                            {
-                                complete = true;
-                            }
+                            current = result.Value;
 
-                            return result;
+                            if (result.Type.HasFlag(tokenType))
+                            {
+                                if (!await enumerator.MoveNextAsync())
+                                {
+                                    complete = true;
+                                }
+
+                                return result;
+                            }
                         }
                     }
 
@@ -86,7 +88,7 @@ namespace Rebus
 
                     while ((await acceptAsync(TokenTypes.Interjection)) is not null) { }
 
-                    IToken verb = await acceptAsync(TokenTypes.Verb) ?? throw await _messageBuilder.CreateExceptionAsync(resource: 3);
+                    IToken verb = await acceptAsync(TokenTypes.Verb) ?? throw new RebusSpellingException(TokenTypes.Verb, current);
                     IToken? adverb = await acceptAsync(TokenTypes.Adverb);
 
                     Expression? directObject = await parseDirectObjectAsync();
@@ -114,7 +116,7 @@ namespace Rebus
                         {
                             if (adjectives.Count > 0)
                             {
-                                throw await createSubstantiveExceptionAsync();
+                                throw new RebusSpellingException(TokenTypes.Substantive, current);
                             }
                         }
                         else
@@ -155,7 +157,7 @@ namespace Rebus
                                     {
                                         if (adjectives.Count > 0)
                                         {
-                                            throw await createSubstantiveExceptionAsync();
+                                            throw new RebusSpellingException(TokenTypes.Substantive, current);
                                         }
                                         else
                                         {

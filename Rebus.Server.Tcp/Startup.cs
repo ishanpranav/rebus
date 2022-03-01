@@ -17,17 +17,13 @@ namespace Rebus.Server.Tcp
     {
         private readonly ILogger<Startup> _logger;
         private readonly TcpOptions _options;
-        private readonly IPlayerRepository _playerRepository;
         private readonly IEngine _engine;
-        private readonly MessageFactory _messageFactory;
 
-        public Startup(ILogger<Startup> logger, TcpOptions options, IPlayerRepository playerRepository, IEngine engine, MessageFactory messageFactory)
+        public Startup(ILogger<Startup> logger, TcpOptions options, IEngine engine)
         {
             _logger = logger;
             _options = options;
-            _playerRepository = playerRepository;
             _engine = engine;
-            _messageFactory = messageFactory;
         }
 
         public async Task StartAsync()
@@ -38,17 +34,17 @@ namespace Rebus.Server.Tcp
                 Delimiter = (byte)'\n',
                 StringEncoder = Encoding.UTF8,
             };
-            Dictionary<TcpClient, int> playersByClient = new Dictionary<TcpClient, int>();
+            Dictionary<TcpClient, string> userIdsByClient = new Dictionary<TcpClient, string>();
 
             simpleTcpServer.ClientConnected += async (sender, e) =>
             {
                 _logger.LogInformation("Client connected from {RemoteEndPoint}", e.Client.RemoteEndPoint);
 
-                await sendMessageAsync(await _messageFactory.CreateMessageAsync(11), e);
-                await sendMessageAsync(await _messageFactory.CreateMessageAsync(12), e);
-                await sendMessageAsync(await _messageFactory.CreateMessageAsync(13, "TCP/IP"), e);
-                await sendMessageAsync(await _messageFactory.CreateMessageAsync(14), e);
-                await sendMessageAsync(await _messageFactory.CreateMessageAsync(15), e);
+                await sendAsync("ishan Pranav's REBUS", e);
+                await sendAsync("copyright (c) 2021-2022 Ishan Pranav.all rights reserved.this software is licensed with the MIT license.", e);
+                await sendAsync("version 1.0.0 | Connected via TCP/IP", e);
+                await sendAsync("greetings,I am REBUS,your microcomputer assistant.with my instruments and your intellect,we will command vast fleets of spacecraft and explore the galaxy.i was created at Arnold O.beckman High School in Irvine,California,between 2021 and 2022 by Ishan Pranav.my design is inspired by early multi-user dungeon systems and the interactive fiction computer game genre.my software is written in C# for the Microsoft .NET 6.0 cross-platform runtime.", e);
+                await sendAsync("please enter your username to log on.", e);
                 await promptAsync(e);
             };
 
@@ -59,13 +55,13 @@ namespace Rebus.Server.Tcp
 
             simpleTcpServer.DelimiterDataReceived += async (sender, e) =>
             {
-                if (playersByClient.TryGetValue(e.TcpClient, out int player))
+                if (userIdsByClient.TryGetValue(e.TcpClient, out string? userId))
                 {
                     _logger.LogInformation("Client sent \"{MessageString}\" from {RemoteEndPoint}", e.MessageString, e.TcpClient.Client.RemoteEndPoint);
 
                     WrappedExpressionWriter writer = new WrappedExpressionWriter();
 
-                    bool terminated = !await _engine.InterpretAsync(player, e.MessageString, writer);
+                    await _engine.InterpretAsync(userId, e.MessageString, writer);
 
                     writer.WriteLine();
                     writer.Wrap();
@@ -74,11 +70,11 @@ namespace Rebus.Server.Tcp
 
                     await promptAsync(e.TcpClient);
 
-                    _logger.LogInformation("Replied to client ({ConceptId}): \"{MessageString}\" at {RemoteEndPoint}", player, writer, e.TcpClient.Client.RemoteEndPoint);
+                    _logger.LogInformation("Replied to client ({UserId}): \"{MessageString}\" at {RemoteEndPoint}", userId, writer, e.TcpClient.Client.RemoteEndPoint);
 
-                    if (terminated)
+                    if (!_engine.IsActive(userId))
                     {
-                        _logger.LogInformation("Terminated client ({ConceptId}) at {RemoteEndPoint}", player, e.TcpClient.Client.RemoteEndPoint);
+                        _logger.LogInformation("Terminated client ({UserId}) at {RemoteEndPoint}", userId, e.TcpClient.Client.RemoteEndPoint);
 
                         e.TcpClient.Close();
                     }
@@ -89,9 +85,9 @@ namespace Rebus.Server.Tcp
 
                     if (!string.IsNullOrEmpty(e.MessageString))
                     {
-                        playersByClient.Add(e.TcpClient, await _playerRepository.GetPlayerAsync(e.MessageString));
+                        userIdsByClient.Add(e.TcpClient, e.MessageString);
 
-                        await sendMessageAsync(await _messageFactory.CreateMessageAsync(16, e.MessageString), e.TcpClient);
+                        await sendAsync($"welcome,{e.MessageString}.I await your instructions.", e.TcpClient);
                     }
 
                     await promptAsync(e.TcpClient);
@@ -102,12 +98,11 @@ namespace Rebus.Server.Tcp
 
             await Task.Delay(Timeout.Infinite);
 
-            static async Task sendMessageAsync(IWritable message, TcpClient tcpClient)
+            static async Task sendAsync(string message, TcpClient tcpClient)
             {
                 WrappedExpressionWriter writer = new WrappedExpressionWriter();
 
-                message.Write(writer);
-
+                writer.Write(message);
                 writer.WriteLine();
                 writer.WriteLine();
                 writer.Wrap();

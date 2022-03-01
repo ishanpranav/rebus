@@ -46,7 +46,7 @@ namespace Rebus.Expressions
 
         public override void Write(ExpressionWriter writer)
         {
-            using (writer.BeginScope(ScopeTypes.Noun))
+            using (writer.CreateScope(ScopeType.Bold))
             {
                 writer.Write(_argument);
 
@@ -76,10 +76,7 @@ namespace Rebus.Expressions
                     writer.Write(' ');
                 }
 
-                using (writer.BeginScope(ScopeTypes.Keyword))
-                {
-                    _substantive.Write(writer);
-                }
+                _substantive.Write(writer);
             }
 
             if (_argument is Argument.Subject)

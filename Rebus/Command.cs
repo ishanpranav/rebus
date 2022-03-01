@@ -15,6 +15,8 @@ namespace Rebus
         public IConcept Player { get; private set; }
 #nullable enable
 
+        public int PlayerId { get; private set; }
+
         public Guid Guid
         {
             get
@@ -45,11 +47,12 @@ namespace Rebus
             return _arguments[(int)argument].ToString() ?? string.Empty;
         }
 
-        public Command CreateCommand(IConcept player, object?[] arguments)
+        public Command CreateCommand(IConcept player, int playerId, object?[] arguments)
         {
             Command result = (Command)Clone();
 
             result.Player = player;
+            result.PlayerId = playerId;
             result._arguments = arguments;
 
             return result;

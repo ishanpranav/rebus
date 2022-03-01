@@ -11,26 +11,21 @@ namespace Rebus.WritingScopes
         private bool _disposed;
 
         public ExpressionWriter Writer { get; }
-        public ScopeTypes Type { get; }
+        public ScopeType Type { get; }
 
-        public StringWritingScope(ExpressionWriter writer, ScopeTypes type)
+        public StringWritingScope(ExpressionWriter writer, ScopeType type)
         {
             Writer = writer;
             Type = type;
 
-            if (type.HasFlag(ScopeTypes.Parenthetical))
+            if (type is ScopeType.Parenthetical)
             {
                 writer.Write('(');
             }
 
-            if (type.HasFlag(ScopeTypes.DoubleQuotation))
+            if (type is ScopeType.Quotation)
             {
                 writer.Write('"');
-            }
-
-            if (type.HasFlag(ScopeTypes.SingleQuotation))
-            {
-                writer.Write('\'');
             }
         }
 
@@ -40,17 +35,12 @@ namespace Rebus.WritingScopes
             {
                 if (disposing)
                 {
-                    if (Type.HasFlag(ScopeTypes.SingleQuotation))
-                    {
-                        Writer.Write('\'');
-                    }
-
-                    if (Type.HasFlag(ScopeTypes.DoubleQuotation))
+                    if (Type is ScopeType.Quotation)
                     {
                         Writer.Write('"');
                     }
 
-                    if (Type.HasFlag(ScopeTypes.Parenthetical))
+                    if (Type is ScopeType.Parenthetical)
                     {
                         Writer.Write(')');
                     }

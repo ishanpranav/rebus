@@ -8,6 +8,8 @@ namespace Rebus
 {
     public interface IEngine
     {
-        Task<bool> InterpretAsync(int player, string value, ExpressionWriter writer);
+        bool IsActive(string userId);
+
+        Task InterpretAsync(string userId, string value, ExpressionWriter writer);
     }
 }

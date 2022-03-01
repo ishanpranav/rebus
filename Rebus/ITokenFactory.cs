@@ -1,4 +1,4 @@
-﻿// Ishan Pranav's REBUS: IPlayerRepository.cs
+﻿// Ishan Pranav's REBUS: ITokenFactory.cs
 // Copyright (c) Ishan Pranav. All Rights Reserved.
 // Licensed under the MIT License.
 
@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Rebus
 {
-    public interface IPlayerRepository
+    public interface ITokenFactory
     {
-        Task<int> GetPlayerAsync(string userId);
+        Task<IToken> CreateTokenAsync(string value);
     }
 }

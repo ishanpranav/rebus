@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Rebus.Server
 {
     [Table(nameof(Resource))]
-    [Index(nameof(Key), nameof(Arguments))]
+    [Index(nameof(Key), nameof(Arguments), nameof(Value), IsUnique = true)]
     internal sealed class Resource
     {
         public int Id { get; set; }
