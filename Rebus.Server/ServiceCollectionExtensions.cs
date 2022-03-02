@@ -1,12 +1,11 @@
 ﻿// Ishan Pranav's REBUS: ServiceCollectionExtensions.cs
-// Copyright (c) Ishan Pranav. All Rights Reserved.
+// Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Rebus.Commands.System;
 using Rebus.EditDistances;
 using Rebus.Server.Commands;
 
@@ -33,12 +32,12 @@ namespace Rebus.Server
                 .AddSingleton<Parser>()
                 .AddSingleton<IEditDistance, DamerauLevenshteinEditDistance>()
                 .AddSingleton<IEngine, Engine>()
-                .AddSingleton<Rebus.Command, VisionCommand>()
-                .AddSingleton<Rebus.Command, TransitiveVisionCommand>()
-                .AddSingleton<Rebus.Command, RedoSystemCommand>()
-                .AddSingleton<Rebus.Command, ReexecuteSystemCommand>()
-                .AddSingleton<Rebus.Command, UndoSystemCommand>()
-                .AddSingleton<Rebus.Command, TerminateSystemCommand>();
+                .AddSingleton<Command, VisionCommand>()
+                .AddSingleton<Command, TransitiveVisionCommand>()
+                .AddSingleton<Command, RedoCommand>()
+                .AddSingleton<Command, ReexecuteCommand>()
+                .AddSingleton<Command, UndoCommand>();
+            //.AddSingleton<Command, TerminateCommand>();
         }
     }
 }

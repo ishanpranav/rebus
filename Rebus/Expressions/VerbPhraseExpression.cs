@@ -1,5 +1,5 @@
 ﻿// Ishan Pranav's REBUS: VerbPhraseExpression.cs
-// Copyright (c) Ishan Pranav. All Rights Reserved.
+// Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
 using System.Threading.Tasks;
@@ -20,7 +20,10 @@ namespace Rebus.Expressions
 
         public override Task InterpretAsync(ICommandBuilder context)
         {
-            return context.SetVerbPhraseAsync(_verb, _adverb);
+            context.Verb = _verb;
+            context.Adverb = _adverb;
+
+            return Task.CompletedTask;
         }
 
         public override void Write(ExpressionWriter writer)

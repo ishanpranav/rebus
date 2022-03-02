@@ -1,11 +1,18 @@
 ﻿// Ishan Pranav's REBUS: DamerauLevenshteinEditDistance.cs
-// Copyright (c) Ishan Pranav. All Rights Reserved.
+// Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
 
 namespace Rebus.EditDistances
 {
+    /// <summary>
+    /// An <see cref="IEditDistance"/> used to calculate the edit distance between two strings using the Damerau–Levenshtein algorithm.
+    /// </summary>
+    /// <remarks>
+    /// The implementation of this class was inspired by and based on <see href=" https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance">this</see> Wikipedia article.
+    /// </remarks>
+    /// <seealso href="https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance">Damerau–Levenshtein distance - Wikipedia</seealso>
     public class DamerauLevenshteinEditDistance : LevenshteinEditDistance
     {
         protected override void RestrictedDistance(int[,] matrix, int i, int j, string a, string b)

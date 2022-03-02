@@ -1,5 +1,5 @@
 ﻿// Ishan Pranav's REBUS: RebusSpellingException.cs
-// Copyright (c) Ishan Pranav. All Rights Reserved.
+// Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -10,11 +10,11 @@ namespace Rebus.Exceptions
     [Serializable]
     public class RebusSpellingException : Exception
     {
-        public TokenTypes ExpectedType
+        public TokenTypes? ExpectedType
         {
             get
             {
-                return (TokenTypes)(Data[nameof(ExpectedType)] ?? TokenTypes.None);
+                return (TokenTypes?)Data[nameof(ExpectedType)];
             }
         }
 
@@ -26,10 +26,14 @@ namespace Rebus.Exceptions
             }
         }
 
-        public RebusSpellingException(TokenTypes expectedType, string? actualValue)
+        public RebusSpellingException(string? actualValue)
+        {
+            Data[nameof(ActualValue)] = actualValue;
+        }
+
+        public RebusSpellingException(TokenTypes expectedType, string? actualValue) : this(actualValue)
         {
             Data[nameof(ExpectedType)] = expectedType;
-            Data[nameof(ActualValue)] = actualValue;
         }
 
         protected RebusSpellingException(SerializationInfo info, StreamingContext context) : base(info, context) { }

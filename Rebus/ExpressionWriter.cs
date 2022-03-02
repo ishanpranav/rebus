@@ -1,9 +1,10 @@
 ﻿// Ishan Pranav's REBUS: ExpressionWriter.cs
-// Copyright (c) Ishan Pranav. All Rights Reserved.
+// Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using Rebus.WritingStates;
 
@@ -34,41 +35,48 @@ namespace Rebus
 
         public void Write(object? value, string? format)
         {
-            if (value is IWritable writable)
+            if (value is not null)
             {
-                writable.Write(writer: this);
-            }
-            else if (value is char @char)
-            {
-                Write(@char);
-            }
-            else if (value is string @string)
-            {
-                Write(@string);
-            }
-            else if (value is int int32)
-            {
-                Write(int32);
-            }
-            else if (value is IList list)
-            {
-                Write(list, format);
-            }
-            else if (value is Argument argument)
-            {
-                Write(argument);
-            }
-            else if (value is Enum @enum)
-            {
-                Write(@enum);
-            }
-            else if (value is not null)
-            {
-                string? valueToString = value.ToString();
-
-                if (valueToString is not null)
+                if (value is IWritable writable)
                 {
-                    Write(valueToString);
+                    writable.Write(writer: this);
+                }
+                else if (value is char @char)
+                {
+                    Write(@char);
+                }
+                else if (value is string @string)
+                {
+                    Write(@string);
+                }
+                else if (value is Argument argument)
+                {
+                    Write(argument);
+                }
+                else if (value is Enum @enum)
+                {
+                    Write(@enum);
+                }
+                else if (value is IList list)
+                {
+                    Write(list, format);
+                }
+                else if (value is HexPoint hexPoint)
+                {
+                    Write(hexPoint);
+                }
+                else if (value is IFormattable formattable)
+                {
+                    Write(formattable.ToString(format, formatProvider: null));
+                }
+                else
+                {
+                    string? valueToString = value.ToString();
+
+                    if (valueToString is not null)
+                    {
+                        Write(valueToString);
+                    }
                 }
             }
         }
@@ -80,7 +88,24 @@ namespace Rebus
 
         public void Write(int value)
         {
-            Write(value.ToString("n"));
+            Write(value.ToString("n0"));
+        }
+
+        public void Write(Argument value)
+        {
+            switch (value)
+            {
+                case Argument.IndirectObject:
+                    Write(" to ");
+                    break;
+            }
+        }
+
+        public void Write(Enum value)
+        {
+            Write(value
+                .ToString()
+                .ToLower());
         }
 
         public void Write(IList values)
@@ -122,21 +147,42 @@ namespace Rebus
             }
         }
 
-        public void Write(Argument value)
+        /// <summary>
+        /// Writes the string representation of the specified <see cref="HexPoint"/> value to this instance.
+        /// </summary>
+        /// <param name="value">The <see cref="HexPoint"/> value to write.</param>
+        /// <remarks>This method converts the given <see cref="HexPoint"/> value to a specialized region notation. The first section of the resulting string is the <see cref="HexPoint.Q"/> coordinate formatted as a base-26 (hexavigesimal) number where each digit represents an uppercase letter of the English alphabet (e.g., <c>'A'</c> is zero, <c>'Z'</c> is 25, <c>'AA'</c> is 26, <c>ZZ</c> is 675, etc.). The second section of the string is the Arabic-numeral representation of the <see cref="HexPoint.R"/> coordinate.</remarks>
+        public void Write(HexPoint value)
         {
-            switch (value)
-            {
-                case Argument.IndirectObject:
-                    Write(" to ");
-                    break;
-            }
-        }
+            int q = value.Q;
+            int ones;
+            Stack<char> chars = new Stack<char>();
 
-        public void Write(Enum value)
-        {
-            Write(value
-                .ToString()
-                .ToLower());
+            do
+            {
+                ones = q % 26;
+
+                chars.Push((char)(ones + 'A'));
+
+                q = (q - ones) / 26;
+            }
+            while (q > 0);
+
+            while (chars.TryPop(out char result))
+            {
+                Write(result);
+            }
+
+            string r = value.R.ToString();
+
+            Write(r);
+            Write(" at (");
+            Write(r);
+            Write(',');
+            Write(value.Q.ToString());
+            Write(',');
+            Write(value.S.ToString());
+            Write(')');
         }
 
         void IWritingContext.Write(char value)

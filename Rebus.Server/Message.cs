@@ -1,5 +1,5 @@
 ﻿// Ishan Pranav's REBUS: Message.cs
-// Copyright (c) Ishan Pranav. All Rights Reserved.
+// Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -9,12 +9,12 @@ namespace Rebus.Server
 {
     internal sealed class Message : Writable
     {
-        private readonly IConcept? _player;
-        private readonly IConcept? _subject;
+        private readonly IWritable? _player;
+        private readonly IWritable? _subject;
         private readonly string _format;
         private readonly object[] _arguments;
 
-        public Message(IConcept? player, IConcept? subject, string format, object[] arguments)
+        public Message(IWritable? player, IWritable? subject, string format, object[] arguments)
         {
             _player = player;
             _subject = subject;

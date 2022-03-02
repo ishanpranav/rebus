@@ -1,20 +1,19 @@
 ﻿// Ishan Pranav's REBUS: Token.cs
-// Copyright (c) Ishan Pranav. All Rights Reserved.
+// Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
-using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace Rebus.Server
 {
     [Table(nameof(Token))]
-    [Index(nameof(Value), IsUnique = true)]
     internal sealed class Token : Writable, IToken
     {
-        public int Id { get; set; }
         public TokenTypes Type { get; set; }
+
+        [Key]
         public string Value { get; set; } = string.Empty;
 
         public ICollection<ConceptSignature> Signatures { get; set; } = new HashSet<ConceptSignature>();

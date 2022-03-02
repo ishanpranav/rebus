@@ -1,5 +1,5 @@
 ﻿// Ishan Pranav's REBUS: RebusException.cs
-// Copyright (c) Ishan Pranav. All Rights Reserved.
+// Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
 using System;

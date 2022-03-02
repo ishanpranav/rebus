@@ -1,5 +1,5 @@
 ﻿// Ishan Pranav's REBUS: Engine.cs
-// Copyright (c) Ishan Pranav. All Rights Reserved.
+// Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Rebus.Exceptions;
 using Rebus.ExpressionWriters;
+using Rebus.Server.Concepts;
 
 namespace Rebus.Server
 {
@@ -21,7 +22,7 @@ namespace Rebus.Server
         private readonly ILogger<Engine> _logger;
         private readonly IDbContextFactory<RebusDbContext> _contextFactory;
         private readonly IEditDistance _editDistance;
-        private readonly IEnumerable<Rebus.Command> _commands;
+        private readonly IEnumerable<Command> _commands;
         private readonly XmlWriterSettings _xmlWriterSettings = new XmlWriterSettings()
         {
             Async = true,
@@ -31,7 +32,7 @@ namespace Rebus.Server
         private readonly XmlSerializer _xmlSerializer = new XmlSerializer(typeof(Expression));
         private readonly Dictionary<string, Executor> _executorsByUserId = new Dictionary<string, Executor>();
 
-        public Engine(ILogger<Engine> logger, IDbContextFactory<RebusDbContext> contextFactory, IEditDistance editDistance, IEnumerable<Rebus.Command> commands)
+        public Engine(ILogger<Engine> logger, IDbContextFactory<RebusDbContext> contextFactory, IEditDistance editDistance, IEnumerable<Command> commands)
         {
             _logger = logger;
             _contextFactory = contextFactory;
@@ -39,17 +40,12 @@ namespace Rebus.Server
             _commands = commands;
         }
 
-        public bool IsActive(string userId)
-        {
-            return _executorsByUserId.ContainsKey(userId);
-        }
-
         public async Task InterpretAsync(string userId, string value, ExpressionWriter writer)
         {
             try
             {
                 Executor? executor;
-                IEnumerable<Rebus.Command> commands;
+                IEnumerable<Command> commands;
 
                 await using (RebusDbContext context = await _contextFactory.CreateDbContextAsync())
                 {
@@ -100,7 +96,7 @@ namespace Rebus.Server
 
                     CommandBuilder commandBuilder = new CommandBuilder(context, _commands);
 
-                    commandBuilder.SetPlayer(executor.Id);
+                    await commandBuilder.SetPlayerAsync(executor.Id);
 
                     await using (StringWriter stringWriter = new StringWriter())
                     {
@@ -117,7 +113,7 @@ namespace Rebus.Server
                     commands = commandBuilder.Build();
                 }
 
-                foreach (Rebus.Command command in commands)
+                foreach (Command command in commands)
                 {
                     await foreach (IWritable result in executor.ExecuteAsync(command))
                     {
@@ -128,33 +124,36 @@ namespace Rebus.Server
 
                     writer.WriteLine();
                 }
-
-                if (executor.Terminated)
-                {
-                    _executorsByUserId.Remove(userId);
-                }
             }
             catch (RebusSpellingException rebusSpellingException)
             {
                 await using (RebusDbContext context = await _contextFactory.CreateDbContextAsync())
                 {
-                    string[]? suggestions = null;
-                    TokenTypes expectedType = rebusSpellingException.ExpectedType;
+                    Token[]? suggestions = null;
+                    TokenTypes? expectedType = rebusSpellingException.ExpectedType;
                     string? actualValue = rebusSpellingException.ActualValue;
+                    int resource = 4;
 
                     if (actualValue is not null)
                     {
-                        suggestions = context.Tokens
-                            .Where(x => x.Type.HasFlag(expectedType))
-                            .Select(x => x.Value)
+                        IQueryable<Token> tokens = context.Tokens;
+
+                        if (expectedType is not null)
+                        {
+                            tokens = tokens.Where(x => x.Type.HasFlag(expectedType.Value));
+
+                            resource = 3;
+                        }
+
+                        suggestions = tokens
                             .AsEnumerable()
-                            .GroupBy(x => _editDistance.Calculate(x, actualValue))
+                            .GroupBy(x => _editDistance.Calculate(x.Value, actualValue))
                             .Where(x => x.Key < 3)
                             .MinBy(x => x.Key)?
                             .ToArray();
                     }
 
-                (await context.CreateMessageAsync(resource: 3, expectedType, actualValue)).Write(writer);
+                (await context.CreateMessageAsync(resource, expectedType, suggestions)).Write(writer);
                 }
             }
             catch (RebusException rebusException)

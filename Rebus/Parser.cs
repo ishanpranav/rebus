@@ -1,5 +1,5 @@
 ﻿// Ishan Pranav's REBUS: Parser.cs
-// Copyright (c) Ishan Pranav. All Rights Reserved.
+// Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
@@ -9,6 +9,13 @@ using Rebus.Expressions;
 
 namespace Rebus
 {
+    /// <summary>
+    /// Provides a recursive descent parser that constructs an abstract syntax tree of <see cref="Expression"/> instances from a set of <see cref="IToken"/> instances.
+    /// </summary>
+    /// <remarks>
+    /// The implementation of this class was inspired by and based on <see href="https://en.wikipedia.org/wiki/Recursive_descent_parser">this</see> Wikipedia article.
+    /// </remarks>
+    /// <seealso href="https://en.wikipedia.org/wiki/Recursive_descent_parser">Recursive descent parser - Wikipedia</seealso>
     public class Parser
     {
         private readonly IAsyncEnumerable<IToken> _tokens;
@@ -25,7 +32,7 @@ namespace Rebus
                 await enumerator.MoveNextAsync();
 
                 bool complete = false;
-                string? current = null;
+                string? actualValue = null;
                 Expression? result = await parseSentenceAsync();
 
                 if (await acceptAsync(TokenTypes.Conjunction) is not null)
@@ -50,14 +57,14 @@ namespace Rebus
                 }
                 else
                 {
-                    throw new RebusException(resource: 1);
+                    throw new RebusSpellingException(actualValue);
                 }
 
                 async Task<IToken?> acceptAsync(TokenTypes tokenType)
                 {
                     if (!complete)
                     {
-                        IToken result = enumerator.Current;
+                        IToken? result = enumerator.Current;
 
                         if (result is null)
                         {
@@ -65,7 +72,7 @@ namespace Rebus
                         }
                         else
                         {
-                            current = result.Value;
+                            actualValue = result.Value;
 
                             if (result.Type.HasFlag(tokenType))
                             {
@@ -88,7 +95,7 @@ namespace Rebus
 
                     while ((await acceptAsync(TokenTypes.Interjection)) is not null) { }
 
-                    IToken verb = await acceptAsync(TokenTypes.Verb) ?? throw new RebusSpellingException(TokenTypes.Verb, current);
+                    IToken verb = await acceptAsync(TokenTypes.Verb) ?? throw new RebusSpellingException(TokenTypes.Verb, actualValue);
                     IToken? adverb = await acceptAsync(TokenTypes.Adverb);
 
                     Expression? directObject = await parseDirectObjectAsync();
@@ -116,7 +123,7 @@ namespace Rebus
                         {
                             if (adjectives.Count > 0)
                             {
-                                throw new RebusSpellingException(TokenTypes.Substantive, current);
+                                throw new RebusSpellingException(TokenTypes.Substantive, actualValue);
                             }
                         }
                         else
@@ -157,7 +164,7 @@ namespace Rebus
                                     {
                                         if (adjectives.Count > 0)
                                         {
-                                            throw new RebusSpellingException(TokenTypes.Substantive, current);
+                                            throw new RebusSpellingException(TokenTypes.Substantive, actualValue);
                                         }
                                         else
                                         {

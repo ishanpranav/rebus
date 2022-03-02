@@ -1,5 +1,5 @@
 ﻿// Ishan Pranav's REBUS: HexPoint.cs
-// Copyright (c) Ishan Pranav. All Rights Reserved.
+// Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -7,6 +7,14 @@ using System.Collections.Generic;
 
 namespace Rebus
 {
+    /// <summary>
+    /// Represents a cubic coordinate used to identify tiles in a grid of hexagons.
+    /// </summary>
+    /// <remarks>
+    /// The implementation of this structure was inspired by and based on <see href="https://www.redblobgames.com/grids/hexagons/">this</see> article by <see href="http://www-cs-students.stanford.edu/~amitp/">Amit Patel</see>.
+    /// </remarks>
+    /// <seealso href="https://www.redblobgames.com/grids/hexagons/">Red Blob Games - Hexagonal Grids</seealso>
+    /// <seealso href="http://www-cs-students.stanford.edu/~amitp/">Amit Patel's Home Page</seealso>
     public readonly struct HexPoint : IEquatable<HexPoint>, IFormattable
     {
         public static readonly HexPoint One = new HexPoint(1, 0);
@@ -31,26 +39,6 @@ namespace Rebus
         {
             Q = q;
             R = r;
-        }
-
-        public byte[] ToByteArray()
-        {
-            byte[] result = new byte[8];
-
-            BitConverter
-                .GetBytes(Q)
-                .CopyTo(result, 0);
-
-            BitConverter
-                .GetBytes(R)
-                .CopyTo(result, 4);
-
-            return result;
-        }
-
-        public static HexPoint FromByteArray(byte[] value)
-        {
-            return new HexPoint(BitConverter.ToInt32(value, 0), BitConverter.ToInt32(value, 4));
         }
 
         public override string ToString()

@@ -1,5 +1,5 @@
 ﻿// Ishan Pranav's REBUS: WrappedExpressionWriter.cs
-// Copyright (c) Ishan Pranav. All Rights Reserved.
+// Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
 using System.Text;
@@ -16,7 +16,9 @@ namespace Rebus.ExpressionWriters
         private protected WrappedExpressionWriter(IWritingState state) : base(state) { }
 
         /// <summary>Wraps the text contained in the writer.</summary>
-        /// <remarks>The implementation of this method was inspired by and based on <see href="https://stackoverflow.com/questions/52605996/c-sharp-console-word-wrap">this</see> Stack Overflow question asked by <see href="https://stackoverflow.com/users/8853235/alasdair-c">Alasdair C</see> and the answer provided by <see href="https://stackoverflow.com/users/2224523/mike">Mike</see>. The software code is licensed under the Creative Commons <see href="https://creativecommons.org/licenses/by-sa/3.0/">Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)</see> license.</remarks>
+        /// <remarks>
+        /// The implementation of this method was inspired by and based on <see href="https://stackoverflow.com/questions/52605996/c-sharp-console-word-wrap">this</see> Stack Overflow question asked by <see href="https://stackoverflow.com/users/8853235/alasdair-c">Alasdair C</see> and the answer provided by <see href="https://stackoverflow.com/users/2224523/mike">Mike</see>. The software code is licensed under the Creative Commons <see href="https://creativecommons.org/licenses/by-sa/3.0/">Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)</see> license.
+        /// </remarks>
         /// <seealso href="https://stackoverflow.com/questions/52605996/c-sharp-console-word-wrap">C# Console Word Wrap - Stack Overflow</seealso>
         /// <seealso href="https://stackoverflow.com/users/8853235/alasdair-c">Alasdair C</seealso>
         /// <seealso href="https://stackoverflow.com/users/2224523/mike">Mike</seealso>

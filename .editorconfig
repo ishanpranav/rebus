@@ -159,7 +159,7 @@ csharp_space_between_square_brackets = false
 csharp_style_implicit_object_creation_when_type_is_apparent = false
 
 # License header
-file_header_template = Ishan Pranav's REBUS: {fileName}\nCopyright (c) Ishan Pranav. All Rights Reserved.\nLicensed under the MIT License.
+file_header_template = Ishan Pranav's REBUS: {fileName}\nCopyright (c) Ishan Pranav. All rights reserved.\nLicensed under the MIT License.
 
 # C++ Files
 [*.{cpp,h,in}]

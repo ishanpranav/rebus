@@ -1,5 +1,5 @@
 ﻿// Ishan Pranav's REBUS: NounExpression.cs
-// Copyright (c) Ishan Pranav. All Rights Reserved.
+// Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
@@ -41,7 +41,9 @@ namespace Rebus.Expressions
 
         public override Task InterpretAsync(ICommandBuilder context)
         {
-            return context.SetConceptAsync(_argument, _adjectives, _substantive);
+            context.SetConceptSignature(_argument, _adjectives, _substantive);
+
+            return Task.CompletedTask;
         }
 
         public override void Write(ExpressionWriter writer)

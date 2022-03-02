@@ -1,12 +1,12 @@
 ﻿// Ishan Pranav's REBUS: MessageFormatProvider.cs
-// Copyright (c) Ishan Pranav. All Rights Reserved.
+// Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
 
 namespace Rebus.Server
 {
-    internal class MessageFormatProvider : ICustomFormatter, IFormatProvider
+    internal sealed class MessageFormatProvider : ICustomFormatter, IFormatProvider
     {
         private readonly ExpressionWriter _writer;
 

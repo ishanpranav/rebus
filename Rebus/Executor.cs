@@ -1,53 +1,42 @@
 ﻿// Ishan Pranav's REBUS: Executor.cs
-// Copyright (c) Ishan Pranav. All Rights Reserved.
+// Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
-using System.Linq;
-using Rebus.Commands;
 
 namespace Rebus
 {
     public class Executor
     {
-        internal Command? Command { get; private set; }
-        internal Stack<Command> Commands { get; } = new Stack<Command>();
-        internal Stack<OperationCommand> OperationCommands { get; } = new Stack<OperationCommand>();
-
         public int Id { get; }
-        public bool Terminated { get; internal set; }
+        public IExecutable? Executable { get; private set; }
+        public Stack<IExecutable> Executables { get; } = new Stack<IExecutable>();
+        public Stack<IUnexecutable> Unexecutables { get; } = new Stack<IUnexecutable>();
 
         public Executor(int id)
         {
             Id = id;
         }
 
-        public IAsyncEnumerable<IWritable> ExecuteAsync(Command command)
+        public IAsyncEnumerable<IWritable> ExecuteAsync(IExecutable executable)
         {
-            if (Terminated)
+            if (executable is IExecutorProvider executorProvider)
             {
-                return AsyncEnumerable.Empty<IWritable>();
+                executorProvider.Executor = this;
             }
             else
             {
-                if (command is SystemCommand systemCommand)
+                if (executable is IUnexecutable unexecutable)
                 {
-                    systemCommand.Executor = this;
-                }
-                else
-                {
-                    if (command is OperationCommand operationCommand)
-                    {
-                        OperationCommands.Push(operationCommand);
-                    }
-
-                    Commands.Clear();
-
-                    Command = command;
+                    Unexecutables.Push(unexecutable);
                 }
 
-                return command.ExecuteAsync();
+                Executables.Clear();
+
+                Executable = executable;
             }
+
+            return executable.ExecuteAsync();
         }
     }
 }

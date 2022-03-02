@@ -1,5 +1,5 @@
 ﻿// Ishan Pranav's REBUS: Startup.cs
-// Copyright (c) Ishan Pranav. All Rights Reserved.
+// Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
@@ -51,9 +51,11 @@ namespace Rebus.Server.Tcp
             simpleTcpServer.ClientDisconnected += (sender, e) =>
             {
                 _logger.LogInformation("Client disconnected from {RemoteEndPoint}", e.Client.RemoteEndPoint);
+
+                userIdsByClient.Remove(e);
             };
 
-            simpleTcpServer.DelimiterDataReceived += async (sender, e) =>
+            simpleTcpServer.DataReceived += async (sender, e) =>
             {
                 if (userIdsByClient.TryGetValue(e.TcpClient, out string? userId))
                 {
@@ -71,13 +73,6 @@ namespace Rebus.Server.Tcp
                     await promptAsync(e.TcpClient);
 
                     _logger.LogInformation("Replied to client ({UserId}): \"{MessageString}\" at {RemoteEndPoint}", userId, writer, e.TcpClient.Client.RemoteEndPoint);
-
-                    if (!_engine.IsActive(userId))
-                    {
-                        _logger.LogInformation("Terminated client ({UserId}) at {RemoteEndPoint}", userId, e.TcpClient.Client.RemoteEndPoint);
-
-                        e.TcpClient.Close();
-                    }
                 }
                 else
                 {
