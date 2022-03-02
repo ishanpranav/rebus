@@ -13,13 +13,10 @@ namespace Rebus.Server
 {
     public static class ServiceCollectionExtensions
     {
-        internal const string AppSettingsJsonFile = "AppSettings.json";
-
         public static IServiceCollection AddRebus(this IServiceCollection source)
         {
             IConfigurationRoot configurationRoot = new ConfigurationBuilder()
                 .AddUserSecrets(typeof(ServiceCollectionExtensions).Assembly)
-                .AddJsonFile(AppSettingsJsonFile)
                 .Build();
 
             return source

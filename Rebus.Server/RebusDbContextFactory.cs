@@ -17,7 +17,7 @@ namespace Rebus.Server
         public RebusDbContextFactory() : this(
             LoggerFactory.Create(x => x.AddConsole()),
             new ConfigurationBuilder()
-                .AddJsonFile(ServiceCollectionExtensions.AppSettingsJsonFile)
+                .AddUserSecrets(typeof(ServiceCollectionExtensions).Assembly)
                 .Build())
         { }
 
