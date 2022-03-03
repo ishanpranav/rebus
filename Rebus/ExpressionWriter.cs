@@ -173,16 +173,7 @@ namespace Rebus
                 Write(result);
             }
 
-            string r = value.R.ToString();
-
-            Write(r);
-            Write(" at (");
-            Write(r);
-            Write(',');
-            Write(value.Q.ToString());
-            Write(',');
-            Write(value.S.ToString());
-            Write(')');
+            Write(value.R.ToString());
         }
 
         void IWritingContext.Write(char value)

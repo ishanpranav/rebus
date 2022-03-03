@@ -13,7 +13,7 @@ namespace Rebus.Expressions
     {
         private readonly Argument _argument;
         private readonly IToken? _article;
-        private readonly IEnumerable<IToken> _adjectives;
+        private readonly IReadOnlyCollection<IToken> _adjectives;
         private readonly IToken _substantive;
 
         public override char Punctuation
@@ -31,7 +31,7 @@ namespace Rebus.Expressions
             }
         }
 
-        public NounExpression(Argument argument, IToken? article, IEnumerable<IToken> adjectives, IToken substantive)
+        public NounExpression(Argument argument, IToken? article, IReadOnlyCollection<IToken> adjectives, IToken substantive)
         {
             _argument = argument;
             _article = article;
@@ -41,7 +41,7 @@ namespace Rebus.Expressions
 
         public override Task InterpretAsync(ICommandBuilder context)
         {
-            context.SetConceptSignature(_argument, _adjectives, _substantive);
+            context.Set(_argument, _adjectives, _substantive);
 
             return Task.CompletedTask;
         }

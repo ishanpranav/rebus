@@ -11,7 +11,7 @@ using Rebus.Server;
 namespace Rebus.Server.Migrations
 {
     [DbContext(typeof(RebusDbContext))]
-    [Migration("20220301211323_InitialMigration")]
+    [Migration("20220303034406_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -112,6 +112,9 @@ namespace Rebus.Server.Migrations
                     b.Property<int?>("PlayerId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("Priority")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int?>("SpacecraftId")
                         .HasColumnType("INTEGER");
 
@@ -124,6 +127,8 @@ namespace Rebus.Server.Migrations
                     b.HasIndex("ArticleValue");
 
                     b.HasIndex("PlayerId");
+
+                    b.HasIndex("Priority");
 
                     b.HasIndex("SpacecraftId");
 
@@ -179,19 +184,15 @@ namespace Rebus.Server.Migrations
 
             modelBuilder.Entity("Rebus.Server.CommandSignature", b =>
                 {
-                    b.HasOne("Rebus.Server.Token", "Adverb")
+                    b.HasOne("Rebus.Server.Token", null)
                         .WithMany()
                         .HasForeignKey("AdverbValue");
 
-                    b.HasOne("Rebus.Server.Token", "Verb")
+                    b.HasOne("Rebus.Server.Token", null)
                         .WithMany()
                         .HasForeignKey("VerbValue")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Adverb");
-
-                    b.Navigation("Verb");
                 });
 
             modelBuilder.Entity("Rebus.Server.Concepts.Spacecraft", b =>
@@ -213,7 +214,7 @@ namespace Rebus.Server.Migrations
                         .WithMany("Signatures")
                         .HasForeignKey("PlayerId");
 
-                    b.HasOne("Rebus.Server.Concepts.Spacecraft", "Spacecraft")
+                    b.HasOne("Rebus.Server.Concepts.Spacecraft", null)
                         .WithMany("Signatures")
                         .HasForeignKey("SpacecraftId");
 
@@ -224,8 +225,6 @@ namespace Rebus.Server.Migrations
                         .IsRequired();
 
                     b.Navigation("Article");
-
-                    b.Navigation("Spacecraft");
 
                     b.Navigation("Substantive");
                 });

@@ -5,7 +5,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Rebus.Server.Concepts;
 
 namespace Rebus.Server.Commands
 {
@@ -13,7 +12,7 @@ namespace Rebus.Server.Commands
     internal sealed class RedoCommand : Command, IExecutorProvider
     {
         public RedoCommand() { }
-        private RedoCommand(Player player) : base(player) { }
+        private RedoCommand(ArgumentSet arguments) : base(arguments) { }
 
 #nullable disable
         public Executor Executor { get; set; }
@@ -36,9 +35,9 @@ namespace Rebus.Server.Commands
             }
         }
 
-        protected override Command CreateCommand(Player player)
+        public override Command CreateCommand(ArgumentSet arguments)
         {
-            return new RedoCommand(player);
+            return new RedoCommand(arguments);
         }
     }
 }

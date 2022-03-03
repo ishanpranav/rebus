@@ -20,7 +20,7 @@ namespace Rebus.Expressions
 
         public override Task InterpretAsync(ICommandBuilder context)
         {
-            context.SetReflexive(_argument);
+            context.Arguments.SetReflexive(_argument);
 
             return Task.CompletedTask;
         }

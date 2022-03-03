@@ -17,13 +17,21 @@ namespace Rebus.Server
         private readonly RebusDbContext _context;
         private readonly List<Command> _commands = new List<Command>();
         private readonly Dictionary<Guid, Command> _commandsByGuid;
-        private readonly Dictionary<Argument, object> _arguments = new Dictionary<Argument, object>();
 
-        private int? _playerId;
-        private Player? _player;
+        private ArgumentSet _arguments = new ArgumentSet();
+
+        public IArgumentSet Arguments
+        {
+            get
+            {
+                return _arguments;
+            }
+        }
 
         public IToken? Verb { get; set; }
         public IToken? Adverb { get; set; }
+
+        private Player? _player;
 
         public CommandBuilder(RebusDbContext context, IEnumerable<Command> commands)
         {
@@ -31,58 +39,34 @@ namespace Rebus.Server
             _commandsByGuid = commands.ToDictionary(x => x.Guid);
         }
 
-        public async Task SetPlayerAsync(int player)
+        public async Task SetPlayerAsync(int id)
         {
-            _playerId = player;
-
             _commands.Clear();
+            _arguments = new ArgumentSet();
 
-            if (_playerId is null)
+            _player = await _context.Players
+                .IncludeSignatures()
+                .SingleAsync(x => x.Id == id);
+
+            if (_player.Signature is not null)
             {
-                throw new InvalidOperationException();
-            }
-            else
-            {
-                _player = await _context.Players
-                    .Include(x => x.Signatures)
-                    .ThenInclude(x => x.Article)
-                    .Include(x => x.Signatures)
-                    .ThenInclude(x => x.Substantive)
-                    .AsSplitQuery()
-                    .Include(x => x.Signatures)
-                    .ThenInclude(x => x.Adjectives)
-                    .SingleAsync(x => x.Id == _playerId);
+                _arguments.Player = _player;
             }
         }
 
-        public void SetReflexive(Argument argument)
+        public void Set(Argument argument, IReadOnlyCollection<IToken> adjectives, IToken substantive)
         {
-            if (argument is Argument.Subject)
-            {
-                _arguments[Argument.Subject] = true;
-            }
-            else
-            {
-                _arguments[argument] = _arguments[Argument.Subject];
-            }
-        }
-
-        public void SetConceptSignature(Argument argument, IEnumerable<IToken> adjectives, IToken substantive)
-        {
-            ILookup<int, ConceptSignature> signaturesByCount = _context.ConceptSignatures
-                .Include(signature => signature.Substantive)
-                .Where(signature => signature.Substantive.Value == substantive.Value)
-                .Include(signature => signature.Article)
-                .Include(signature => signature.Spacecraft)
-                .Include(signature => signature.Adjectives)
-                .AsSplitQuery()
-                .ToLookup(signature => adjectives.Count(adjective => signature.Adjectives.Any(x => adjective.Value == x.Value)));
-
             ConceptSignature? signature;
 
             try
             {
-                signature = signaturesByCount[adjectives.Count()].SingleOrDefault();
+                signature = _context.ConceptSignatures
+                    .Include(signature => signature.Substantive)
+                    .Where(signature => signature.Substantive.Value == substantive.Value)
+                    .Include(signature => signature.Article)
+                    .Include(signature => signature.Adjectives)
+                    .AsEnumerable()
+                    .SingleOrDefault(signature => adjectives.All(adjective => signature.Adjectives.Any(x => adjective.Value == x.Value)));
             }
             catch
             {
@@ -95,21 +79,11 @@ namespace Rebus.Server
             }
             else
             {
-                _arguments[argument] = signature;
+                _arguments.SetConceptSignature(argument, signature);
             }
         }
 
-        public void SetQuotation(Argument argument, string quotation)
-        {
-            _arguments[argument] = quotation;
-        }
-
-        public void SetNumber(Argument argument, int number)
-        {
-            _arguments[argument] = number;
-        }
-
-        public async Task SaveChangesAsync()
+        public void MoveNext()
         {
             if (Verb is null || _player is null)
             {
@@ -117,26 +91,30 @@ namespace Rebus.Server
             }
             else
             {
-                CommandSignature? result;
+                Command? prototype;
 
                 try
                 {
-                    result = await _context.CommandSignatures
-                        .SingleOrDefaultAsync(signature => signature.Verb.Value == Verb.Value && signature.Adverb == Adverb);
+                    string? adverb = Adverb?.Value;
+
+                    prototype = _context.CommandSignatures
+                        .Where(signature => signature.VerbValue == Verb.Value && signature.AdverbValue == adverb)
+                        .Select(x => x.Guid)
+                        .AsEnumerable()
+                        .Select(x => _commandsByGuid[x])
+                        .SingleOrDefault(x => x.Matches(_arguments));
                 }
                 catch
                 {
                     throw new RebusException(resource: 9);
                 }
 
-                _commands.Add(_commandsByGuid[(result ?? throw new RebusException(resource: 10)).Guid].CreateCommand(_player, _arguments));
+                _commands.Add((prototype ?? throw new RebusException(resource: 10)).CreateCommand(_arguments));
             }
 
             Verb = null;
             Adverb = null;
             _player = null;
-
-            _arguments.Clear();
         }
 
         public IEnumerable<Command> Build()

@@ -55,12 +55,37 @@ namespace Rebus.Server
 
                         if (player is null)
                         {
+                            Spacecraft spacecraft = new Spacecraft();
+                            ConceptSignature spacecraftSignature = new ConceptSignature()
+                            {
+                                SubstantiveValue = "Spacecraft"
+                            };
                             player = new Player()
                             {
                                 UserId = userId
                             };
 
-                            player.Spacecraft.Add(new Spacecraft());
+                            spacecraftSignature.Adjectives.Add(new Token()
+                            {
+                                Type = TokenTypes.Adjective,
+                                Value = Guid.NewGuid().ToString()
+                            });
+
+                            spacecraft.Signatures.Add(spacecraftSignature);
+                            player.Spacecraft.Add(spacecraft);
+
+                            ConceptSignature playerSignature = new ConceptSignature()
+                            {
+                                SubstantiveValue = "Player"
+                            };
+
+                            playerSignature.Adjectives.Add(new Token()
+                            {
+                                Type = TokenTypes.Adjective,
+                                Value = userId
+                            });
+
+                            player.Signatures.Add(playerSignature);
 
                             await context.AddAsync(player);
                             await context.SaveChangesAsync();

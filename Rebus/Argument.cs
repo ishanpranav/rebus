@@ -6,7 +6,7 @@ namespace Rebus
 {
     public enum Argument
     {
-        None = 0,
+        None,
         Subject,
         DirectObject,
         IndirectObject

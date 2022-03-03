@@ -30,6 +30,7 @@ namespace Rebus.WritingStates
 
                     case ':':
                     case '!':
+                    case '?':
                         context.Write(' ');
 
                         context.State = new InitialWritingState();

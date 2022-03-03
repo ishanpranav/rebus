@@ -5,9 +5,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Rebus.Expressions;
-using Rebus.Server.Concepts;
 
 namespace Rebus.Server
 {
@@ -26,11 +26,14 @@ namespace Rebus.Server
         public Token Substantive { get; set; }
 #nullable enable
 
-        public Spacecraft? Spacecraft { get; set; }
+        public string SubstantiveValue { get; set; } = string.Empty;
+
+        public int? SpacecraftId { get; set; }
+        public int? PlayerId { get; set; }
 
         public override void Write(ExpressionWriter writer)
         {
-            new NounExpression(Argument.None, Article, Adjectives, Substantive).Write(writer);
+            new NounExpression(Argument.None, Article, Adjectives.ToArray(), Substantive).Write(writer);
         }
     }
 }

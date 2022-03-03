@@ -17,8 +17,7 @@ namespace Rebus.Server.Migrations
                 name: "Player",
                 columns: table => new
                 {
-                    Id = table
-                        .Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     UserId = table.Column<string>(type: "TEXT", nullable: false, collation: "NOCASE")
                 },
@@ -56,8 +55,7 @@ namespace Rebus.Server.Migrations
                 name: "Spacecraft",
                 columns: table => new
                 {
-                    Id = table
-                        .Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     PlayerId = table.Column<int>(type: "INTEGER", nullable: false),
                     Q = table.Column<int>(type: "INTEGER", nullable: false),
@@ -78,8 +76,7 @@ namespace Rebus.Server.Migrations
                 name: "CommandSignature",
                 columns: table => new
                 {
-                    Id = table
-                        .Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Guid = table.Column<Guid>(type: "TEXT", nullable: false),
                     VerbValue = table.Column<string>(type: "TEXT", nullable: false),
@@ -105,10 +102,9 @@ namespace Rebus.Server.Migrations
                 name: "ConceptSignature",
                 columns: table => new
                 {
-                    Id = table
-                        .Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Priority = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0),
+                    Priority = table.Column<int>(type: "INTEGER", nullable: false),
                     ArticleValue = table.Column<string>(type: "TEXT", nullable: true),
                     SubstantiveValue = table.Column<string>(type: "TEXT", nullable: false),
                     SpacecraftId = table.Column<int>(type: "INTEGER", nullable: true),
@@ -183,6 +179,11 @@ namespace Rebus.Server.Migrations
                 name: "IX_ConceptSignature_PlayerId",
                 table: "ConceptSignature",
                 column: "PlayerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ConceptSignature_Priority",
+                table: "ConceptSignature",
+                column: "Priority");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ConceptSignature_SpacecraftId",

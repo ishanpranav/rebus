@@ -13,11 +13,17 @@ namespace Rebus.Server
 
         public ICollection<ConceptSignature> Signatures { get; set; } = new HashSet<ConceptSignature>();
 
+        public ConceptSignature? Signature
+        {
+            get
+            {
+                return Signatures.MinBy(x => x.Priority);
+            }
+        }
+
         public override void Write(ExpressionWriter writer)
         {
-            Signatures
-                .MinBy(x => x.Priority)?
-                .Write(writer);
+            Signature?.Write(writer);
         }
     }
 }

@@ -38,7 +38,7 @@ namespace Rebus.Expressions
                 await _directObject.InterpretAsync(context);
             }
 
-            await context.SaveChangesAsync();
+            context.MoveNext();
         }
 
         public override void Write(ExpressionWriter writer)

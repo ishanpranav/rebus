@@ -68,18 +68,35 @@ namespace Rebus.Server
                     .WithMany(x => x.Signatures);
             });
 
+            modelBuilder.Entity<CommandSignature>(commandSignature =>
+            {
+                commandSignature
+                    .HasOne<Token>()
+                    .WithMany()
+                    .HasForeignKey(x => x.VerbValue);
+
+                commandSignature
+                    .HasOne<Token>()
+                    .WithMany()
+                    .HasForeignKey(x => x.AdverbValue);
+            });
+
+            string? ignoreCaseCollation = null;
+
             if (Database.IsSqlite())
             {
-                modelBuilder
-                    .Entity<Player>()
-                    .Property(x => x.UserId)
-                    .UseCollation(Collations.SqliteIgnoreCase);
-
-                modelBuilder
-                    .Entity<Token>()
-                    .Property(x => x.Value)
-                    .UseCollation(Collations.SqliteIgnoreCase);
+                ignoreCaseCollation = "NOCASE";
             }
+
+            modelBuilder
+                .Entity<Player>()
+                .Property(x => x.UserId)
+                .UseCollation(ignoreCaseCollation);
+
+            modelBuilder
+                .Entity<Token>()
+                .Property(x => x.Value)
+                .UseCollation(ignoreCaseCollation);
         }
 
         public async Task<IToken> CreateTokenAsync(string value)

@@ -1,7 +1,7 @@
 # Ishan Pranav\'s REBUS
 A student-developed multi-user space trading game.
 ## Design
-Ishan Pranav's REBUS simulates a dialogue between a _player\'s character_ a microcomputer assistant. The player works with their character\'s microcomputer to issue orders to spacecraft under their control.
+Ishan Pranav\'s REBUS simulates a dialogue between a _player\'s character_ and their _microcomputer_ assistant. The player works with their character\'s microcomputer to issue orders to spacecraft under their control.
 
 Although pseudo-random procedural generation may initialize the in-game universe, randomness is not used thereafter. The game is deterministic with a fixed seed and contains no construct intended to simulate the passage of time.
 

@@ -5,7 +5,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Rebus.Server.Concepts;
 
 namespace Rebus.Server.Commands
 {
@@ -17,7 +16,7 @@ namespace Rebus.Server.Commands
 #nullable enable
 
         public ReexecuteCommand() { }
-        private ReexecuteCommand(Player player) : base(player) { }
+        private ReexecuteCommand(ArgumentSet arguments) : base(arguments) { }
 
         public override IAsyncEnumerable<IWritable> ExecuteAsync()
         {
@@ -31,9 +30,9 @@ namespace Rebus.Server.Commands
             }
         }
 
-        protected override Command CreateCommand(Player player)
+        public override Command CreateCommand(ArgumentSet arguments)
         {
-            return new ReexecuteCommand(player);
+            return new ReexecuteCommand(arguments);
         }
     }
 }

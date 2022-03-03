@@ -21,31 +21,29 @@ namespace Rebus.Server.Commands
             _contextFactory = contextFactory;
         }
 
-        private VisionCommand(Player player, IDbContextFactory<RebusDbContext> contextFactory) : base(player)
+        private VisionCommand(ArgumentSet arguments, IDbContextFactory<RebusDbContext> contextFactory) : base(arguments)
         {
             _contextFactory = contextFactory;
         }
 
         public override async IAsyncEnumerable<IWritable> ExecuteAsync()
         {
-            if (IsReflexive(Argument.Subject))
+            await using (RebusDbContext context = await _contextFactory.CreateDbContextAsync())
             {
-                await using (RebusDbContext context = await _contextFactory.CreateDbContextAsync())
+                foreach (IGrouping<HexPoint, Spacecraft> grouping in context.Spacecraft
+                    .Where(x => x.PlayerId == Arguments.Player.Id)
+                    .IncludeSignatures()
+                    .AsEnumerable()
+                    .GroupBy(x => x.Location))
                 {
-                    foreach (IGrouping<HexPoint, Spacecraft> grouping in context.Spacecraft
-                        .Where(x => x.PlayerId == Player.Id)
-                        .AsEnumerable()
-                        .GroupBy(x => x.Location))
-                    {
-                        yield return await context.CreateMessageAsync(resource: 1, grouping.Key, grouping.ToArray());
-                    }
+                    yield return await context.CreateMessageAsync(resource: 1, grouping.Key, grouping.ToArray());
                 }
             }
         }
 
-        protected override Command CreateCommand(Player player)
+        public override Command CreateCommand(ArgumentSet arguments)
         {
-            return new VisionCommand(player, _contextFactory);
+            return new VisionCommand(arguments, _contextFactory);
         }
     }
 }

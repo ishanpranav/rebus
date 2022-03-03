@@ -30,11 +30,9 @@ namespace Rebus.Server
                 .AddSingleton<IEditDistance, DamerauLevenshteinEditDistance>()
                 .AddSingleton<IEngine, Engine>()
                 .AddSingleton<Command, VisionCommand>()
-                .AddSingleton<Command, TransitiveVisionCommand>()
                 .AddSingleton<Command, RedoCommand>()
                 .AddSingleton<Command, ReexecuteCommand>()
                 .AddSingleton<Command, UndoCommand>();
-            //.AddSingleton<Command, TerminateCommand>();
         }
     }
 }

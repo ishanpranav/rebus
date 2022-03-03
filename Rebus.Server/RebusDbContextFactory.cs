@@ -31,8 +31,7 @@ namespace Rebus.Server
         {
             return new RebusDbContext(new DbContextOptionsBuilder<RebusDbContext>()
                 .UseLoggerFactory(_loggerFactory)
-                .UseSqlite(_configuration.GetConnectionString(nameof(RebusDbContext)), x => x
-                       .MigrationsHistoryTable("dotnet_migration")).Options);
+                .UseSqlite(_configuration.GetConnectionString(nameof(RebusDbContext)), x => x.MigrationsHistoryTable("dotnet_migration")).Options);
         }
 
         public RebusDbContext CreateDbContext(string[] args)
