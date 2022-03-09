@@ -3,7 +3,6 @@
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -11,29 +10,12 @@ namespace Rebus.Expressions
 {
     public class NounExpression : Expression
     {
-        private readonly Argument _argument;
         private readonly IToken? _article;
         private readonly IReadOnlyCollection<IToken> _adjectives;
         private readonly IToken _substantive;
 
-        public override char Punctuation
+        public NounExpression(IToken? article, IReadOnlyCollection<IToken> adjectives, IToken substantive)
         {
-            get
-            {
-                if (_argument is Argument.Subject)
-                {
-                    return '!';
-                }
-                else
-                {
-                    return base.Punctuation;
-                }
-            }
-        }
-
-        public NounExpression(Argument argument, IToken? article, IReadOnlyCollection<IToken> adjectives, IToken substantive)
-        {
-            _argument = argument;
             _article = article;
             _adjectives = adjectives;
             _substantive = substantive;
@@ -41,50 +23,9 @@ namespace Rebus.Expressions
 
         public override Task InterpretAsync(ICommandBuilder context)
         {
-            context.Set(_argument, _adjectives, _substantive);
+            context.Include(_adjectives, _substantive);
 
             return Task.CompletedTask;
-        }
-
-        public override void Write(ExpressionWriter writer)
-        {
-            using (writer.CreateScope(ScopeType.Bold))
-            {
-                writer.Write(_argument);
-
-                if (_article is not null)
-                {
-                    _article.Write(writer);
-
-                    writer.Write(' ');
-                }
-
-                foreach (IGrouping<TokenTypes, IToken> grouping in _adjectives
-                    .GroupBy(x => x.Type)
-                    .OrderBy(x => x.Key))
-                {
-                    IToken[] array = grouping.ToArray();
-                    int lastIndex = array.Length - 1;
-
-                    for (int i = 0; i < lastIndex; i++)
-                    {
-                        array[i].Write(writer);
-
-                        writer.Write(',');
-                    }
-
-                    array[lastIndex].Write(writer);
-
-                    writer.Write(' ');
-                }
-
-                _substantive.Write(writer);
-            }
-
-            if (_argument is Argument.Subject)
-            {
-                writer.Write(',');
-            }
         }
 
         public override void WriteXml(XmlWriter writer)

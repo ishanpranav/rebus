@@ -9,26 +9,18 @@ namespace Rebus.Expressions
 {
     internal sealed class NumberExpression : Expression
     {
-        private readonly Argument _argument;
         private readonly int _value;
 
-        public NumberExpression(Argument argument, int value)
+        public NumberExpression(int value)
         {
-            _argument = argument;
             _value = value;
         }
 
         public override Task InterpretAsync(ICommandBuilder context)
         {
-            context.Arguments.SetNumber(_argument, _value);
+            context.Include(_value);
 
             return Task.CompletedTask;
-        }
-
-        public override void Write(ExpressionWriter writer)
-        {
-            writer.Write(_argument);
-            writer.Write(_value);
         }
 
         public override void WriteXml(XmlWriter writer)

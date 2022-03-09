@@ -5,17 +5,18 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Runtime.InteropServices;
 using Microsoft.EntityFrameworkCore;
+using Rebus.Server.Concepts;
 
-namespace Rebus.Server.Concepts
+namespace Rebus.Server
 {
     [Table(nameof(Player))]
     [Index(nameof(UserId), IsUnique = true)]
-    [Guid("FA616059-61DE-42DB-AC8C-153F18270424")]
-    internal sealed class Player : Concept
+    internal sealed class Player
     {
+        public int Id { get; set; }
         public string UserId { get; set; } = string.Empty;
+        public string Credential { get; set; } = string.Empty;
 
         public ICollection<Spacecraft> Spacecraft { get; set; } = new HashSet<Spacecraft>();
     }

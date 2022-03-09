@@ -2,9 +2,7 @@
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
-using System;
 using System.Text;
-using Rebus.WritingScopes;
 using Rebus.WritingStates;
 
 namespace Rebus.ExpressionWriters
@@ -24,11 +22,6 @@ namespace Rebus.ExpressionWriters
         protected override void WriteLineCore()
         {
             StringBuilder.AppendLine();
-        }
-
-        public override IDisposable CreateScope(ScopeType type)
-        {
-            return new StringWritingScope(writer: this, type);
         }
 
         public override ExpressionWriter CreateFragment()

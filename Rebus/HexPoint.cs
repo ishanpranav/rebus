@@ -17,12 +17,17 @@ namespace Rebus
     /// <seealso href="http://www-cs-students.stanford.edu/~amitp/">Amit Patel's Home Page</seealso>
     public readonly struct HexPoint : IEquatable<HexPoint>, IFormattable
     {
-        public static readonly HexPoint One = new HexPoint(1, 0);
-        public static readonly HexPoint Two = new HexPoint(1, -1);
-        public static readonly HexPoint Three = new HexPoint(0, -1);
-        public static readonly HexPoint Four = new HexPoint(-1, 0);
-        public static readonly HexPoint Five = new HexPoint(-1, 1);
-        public static readonly HexPoint Six = new HexPoint(0, 1);
+        public static readonly HexPoint Zero = new HexPoint();
+
+        private static readonly HexPoint[] s_directions = new HexPoint[]
+        {
+            new HexPoint(1, 0),
+            new HexPoint(1, -1),
+            new HexPoint(0, -1),
+            new HexPoint(-1, 0),
+            new HexPoint(-1, 1),
+            new HexPoint(0, 1)
+        };
 
         public int Q { get; }
         public int R { get; }
@@ -86,12 +91,49 @@ namespace Rebus
 
         public IEnumerable<HexPoint> Neighbors()
         {
-            yield return this + One;
-            yield return this + Two;
-            yield return this + Three;
-            yield return this + Four;
-            yield return this + Five;
-            yield return this + Six;
+            foreach (HexPoint direction in s_directions)
+            {
+                yield return this + direction;
+            }
+        }
+
+        public IEnumerable<HexPoint> Range(int radius)
+        {
+            for (int q = -radius; q <= radius; q++)
+            {
+                for (int r = Math.Max(-radius, -radius - q); r <= Math.Min(radius, radius - q); r++)
+                {
+                    yield return this + new HexPoint(q, r);
+                }
+            }
+        }
+
+        public IEnumerable<HexPoint> Ring(int radius)
+        {
+            HexPoint point = this + (s_directions[4] * radius);
+
+            foreach (HexPoint direction in s_directions)
+            {
+                for (int i = 0; i < radius; i++)
+                {
+                    yield return point;
+
+                    point += direction;
+                }
+            }
+        }
+
+        public IEnumerable<HexPoint> Spiral(int radius)
+        {
+            yield return this;
+
+            for (int i = 1; i <= radius; i++)
+            {
+                foreach (HexPoint point in Ring(i))
+                {
+                    yield return point;
+                }
+            }
         }
 
         public static int Distance(HexPoint value1, HexPoint value2)

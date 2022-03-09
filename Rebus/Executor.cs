@@ -3,22 +3,17 @@
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Rebus
 {
     public class Executor
     {
-        public int Id { get; }
         public IExecutable? Executable { get; private set; }
         public Stack<IExecutable> Executables { get; } = new Stack<IExecutable>();
         public Stack<IUnexecutable> Unexecutables { get; } = new Stack<IUnexecutable>();
 
-        public Executor(int id)
-        {
-            Id = id;
-        }
-
-        public IAsyncEnumerable<IWritable> ExecuteAsync(IExecutable executable)
+        public Task ExecuteAsync(IExecutable executable, ExpressionWriter writer)
         {
             if (executable is IExecutorProvider executorProvider)
             {
@@ -36,7 +31,7 @@ namespace Rebus
                 Executable = executable;
             }
 
-            return executable.ExecuteAsync();
+            return executable.ExecuteAsync(writer);
         }
     }
 }

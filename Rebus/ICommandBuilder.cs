@@ -11,11 +11,14 @@ namespace Rebus
     {
         IToken? Verb { get; set; }
         IToken? Adverb { get; set; }
-        IArgumentSet Arguments { get; }
+        Argument Argument { get; set; }
 
         Task SetPlayerAsync(int id);
 
-        void Set(Argument argument, IReadOnlyCollection<IToken> adjectives, IToken substantive);
+        void Include(IReadOnlyCollection<IToken> adjectives, IToken substantive);
+        void Include(int number);
+        void Include(string quotation);
+        void IncludeReflexive();
 
         void MoveNext();
     }

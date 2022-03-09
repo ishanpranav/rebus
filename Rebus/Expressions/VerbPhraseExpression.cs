@@ -26,21 +26,6 @@ namespace Rebus.Expressions
             return Task.CompletedTask;
         }
 
-        public override void Write(ExpressionWriter writer)
-        {
-            using (writer.CreateScope(ScopeType.Bold))
-            {
-                _verb.Write(writer);
-
-                if (_adverb is not null)
-                {
-                    writer.Write(' ');
-
-                    _adverb.Write(writer);
-                }
-            }
-        }
-
         public override void WriteXml(XmlWriter writer)
         {
             writer.WriteElementString(localName: "Verb", _verb.Value);

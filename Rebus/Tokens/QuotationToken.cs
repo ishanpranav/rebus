@@ -23,10 +23,9 @@ namespace Rebus.Tokens
 
         public void Write(ExpressionWriter writer)
         {
-            using (writer.CreateScope(ScopeType.Quotation))
-            {
-                writer.Write(Value);
-            }
+            writer.Write('"');
+            writer.Write(Value);
+            writer.Write('"');
         }
     }
 }

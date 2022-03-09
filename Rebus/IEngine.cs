@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Rebus
 {
-    public interface IEngine
+    public interface IEngine<T>
     {
-        Task InterpretAsync(string userId, string value, ExpressionWriter writer);
+        Task InterpretAsync(T user, string value, ExpressionWriter writer);
     }
 }

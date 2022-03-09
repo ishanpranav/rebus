@@ -2,9 +2,8 @@
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace Rebus.Server.Commands
 {
@@ -18,15 +17,15 @@ namespace Rebus.Server.Commands
         public UndoCommand() { }
         private UndoCommand(ArgumentSet arguments) : base(arguments) { }
 
-        public override IAsyncEnumerable<IWritable> ExecuteAsync()
+        public override Task ExecuteAsync(ExpressionWriter writer)
         {
             if (Executor.Unexecutables.TryPop(out IUnexecutable? result))
             {
-                return result.UnexecuteAsync();
+                return result.UnexecuteAsync(writer);
             }
             else
             {
-                return AsyncEnumerable.Empty<IWritable>();
+                return Task.CompletedTask;
             }
         }
 

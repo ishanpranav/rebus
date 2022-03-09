@@ -14,21 +14,23 @@ namespace Rebus.Server
     {
 #nullable disable
         public DbSet<CommandSignature> CommandSignatures { get; set; }
-        public DbSet<ConceptSignature> ConceptSignatures { get; set; }
+        public DbSet<Concept> Concepts { get; set; }
+        public DbSet<Planet> Planets { get; set; }
         public DbSet<Player> Players { get; set; }
         public DbSet<Resource> Resources { get; set; }
         public DbSet<Spacecraft> Spacecraft { get; set; }
+        public DbSet<Star> Stars { get; set; }
         public DbSet<Token> Tokens { get; set; }
 #nullable enable
 
         public RebusDbContext(DbContextOptions<RebusDbContext> options) : base(options) { }
 
-        public Task<IWritable> CreateMessageAsync(int resource, params object?[] arguments)
+        public IQueryable<Concept> GetKnownViewers()
         {
-            return CreateMessageAsync(player: null, subject: null, resource, arguments);
+            return Spacecraft;
         }
 
-        public async Task<IWritable> CreateMessageAsync(IWritable? player, IWritable? subject, int resource, params object?[] arguments)
+        public async Task<IWritable> CreateMessageAsync(int resource, params object?[] arguments)
         {
             object[] filteredArguments = arguments
                 .OfType<object>()
@@ -38,7 +40,7 @@ namespace Rebus.Server
                 .ToArray();
             int count = filteredArguments.Length;
 
-            return new Message(player, subject, await Resources
+            return new Message(await Resources
                 .Where(x => x.Key == resource && x.Arguments == count)
                 .Select(x => x.Value)
                 .OrderBy(x => EF.Functions.Random())
@@ -49,23 +51,43 @@ namespace Rebus.Server
         {
             base.OnModelCreating(modelBuilder);
 
+            string? ignoreCaseCollation = null;
+
+            if (Database.IsSqlite())
+            {
+                ignoreCaseCollation = "NOCASE";
+            }
+
             modelBuilder
-                .Entity<Resource>()
+                .Entity<Adjective>()
                 .HasKey(x => new
                 {
-                    x.Key,
-                    x.Arguments,
-                    x.Value
+                    x.TokenValue,
+                    x.ConceptId
                 });
 
-            modelBuilder.Entity<ConceptSignature>(conceptSignature =>
+            modelBuilder.Entity<Concept>(concept =>
             {
-                conceptSignature.HasOne(x => x.Article);
-                conceptSignature.HasOne(x => x.Substantive);
+                const string Discriminator = "Type";
 
-                conceptSignature
+                concept
+                    .HasDiscriminator<char>(Discriminator)
+                    .HasValue<Direction>('D')
+                    .HasValue<Planet>('P')
+                    .HasValue<Spacecraft>('S')
+                    .HasValue<Star>('T');
+
+                concept
+                    .Property(Discriminator)
+                    .HasDefaultValue(' ');
+
+                concept.HasOne(x => x.Article);
+                concept.HasOne(x => x.Substantive);
+
+                concept
                     .HasMany(x => x.Adjectives)
-                    .WithMany(x => x.Signatures);
+                    .WithOne()
+                    .HasForeignKey(x => x.ConceptId);
             });
 
             modelBuilder.Entity<CommandSignature>(commandSignature =>
@@ -81,17 +103,16 @@ namespace Rebus.Server
                     .HasForeignKey(x => x.AdverbValue);
             });
 
-            string? ignoreCaseCollation = null;
-
-            if (Database.IsSqlite())
+            modelBuilder.Entity<Player>(player =>
             {
-                ignoreCaseCollation = "NOCASE";
-            }
+                player
+                    .Property(x => x.UserId)
+                    .UseCollation(ignoreCaseCollation);
 
-            modelBuilder
-                .Entity<Player>()
-                .Property(x => x.UserId)
-                .UseCollation(ignoreCaseCollation);
+                player
+                    .Property(x => x.Credential)
+                    .UseCollation(ignoreCaseCollation);
+            });
 
             modelBuilder
                 .Entity<Token>()

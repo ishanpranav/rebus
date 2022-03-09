@@ -3,8 +3,8 @@
 // Licensed under the MIT License.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Rebus.WritingStates;
 
@@ -33,6 +33,11 @@ namespace Rebus
             }
         }
 
+        public void Write(object? value)
+        {
+            Write(value, format: null);
+        }
+
         public void Write(object? value, string? format)
         {
             if (value is not null)
@@ -57,9 +62,17 @@ namespace Rebus
                 {
                     Write(@enum);
                 }
-                else if (value is IList list)
+                else if (value is IReadOnlyList<object> readOnlyList)
                 {
-                    Write(list, format);
+                    Write(readOnlyList, format);
+                }
+                else if (value is ICollection<object> collection)
+                {
+                    Write(collection, format);
+                }
+                else if (value is IEnumerable<object> enumerable)
+                {
+                    Write(enumerable, format);
                 }
                 else if (value is HexPoint hexPoint)
                 {
@@ -108,18 +121,29 @@ namespace Rebus
                 .ToLower());
         }
 
-        public void Write(IList values)
+        public void Write<T>(IEnumerable<T> values, string? conjunction)
         {
-            Write(values, conjunction: null);
+            T[] array = values.ToArray();
+
+            Write((IReadOnlyList<T>)array, conjunction);
         }
 
-        public void Write(IList list, string? conjunction)
+        public void Write<T>(ICollection<T> values, string? conjunction)
         {
-            int count = list.Count;
+            T[] array = new T[values.Count];
+
+            values.CopyTo(array, arrayIndex: 0);
+
+            Write((IReadOnlyList<T>)array, conjunction);
+        }
+
+        public void Write<T>(IReadOnlyList<T> values, string? conjunction)
+        {
+            int count = values.Count;
 
             for (int i = count; i > 0; i--)
             {
-                Write(list[count - i], conjunction);
+                Write(values[count - i], conjunction);
 
                 switch (i)
                 {
@@ -208,7 +232,6 @@ namespace Rebus
 
         protected abstract void WriteLineCore();
 
-        public abstract IDisposable CreateScope(ScopeType type);
         public abstract ExpressionWriter CreateFragment();
 
         public abstract override string ToString();

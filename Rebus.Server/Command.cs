@@ -2,28 +2,20 @@
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
-using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Rebus.Server
 {
     internal abstract class Command : IExecutable
     {
-#nullable disable
         public ArgumentSet Arguments { get; }
-#nullable enable
 
-        public Guid Guid
+        public abstract Task ExecuteAsync(ExpressionWriter writer);
+
+        protected Command()
         {
-            get
-            {
-                return GetType().GUID;
-            }
+            Arguments = new ArgumentSet();
         }
-
-        public abstract IAsyncEnumerable<IWritable> ExecuteAsync();
-
-        protected Command() { }
 
         protected Command(ArgumentSet arguments)
         {

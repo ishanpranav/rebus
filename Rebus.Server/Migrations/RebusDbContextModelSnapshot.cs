@@ -17,19 +17,19 @@ namespace Rebus.Server.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.2");
 
-            modelBuilder.Entity("ConceptSignatureToken", b =>
+            modelBuilder.Entity("Rebus.Server.Adjective", b =>
                 {
-                    b.Property<string>("AdjectivesValue")
+                    b.Property<string>("TokenValue")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("SignaturesId")
+                    b.Property<int>("ConceptId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("AdjectivesValue", "SignaturesId");
+                    b.HasKey("TokenValue", "ConceptId");
 
-                    b.HasIndex("SignaturesId");
+                    b.HasIndex("ConceptId");
 
-                    b.ToTable("ConceptSignatureToken");
+                    b.ToTable("Adjective");
                 });
 
             modelBuilder.Entity("Rebus.Server.CommandSignature", b =>
@@ -54,14 +54,59 @@ namespace Rebus.Server.Migrations
 
                     b.HasIndex("VerbValue");
 
-                    b.ToTable("CommandSignature");
+                    b.ToTable("Command");
                 });
 
-            modelBuilder.Entity("Rebus.Server.Concepts.Player", b =>
+            modelBuilder.Entity("Rebus.Server.Concept", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("ArticleValue")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("PlayerId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Q")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("R")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("SubstantiveValue")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<char>("Type")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValue(' ');
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArticleValue");
+
+                    b.HasIndex("SubstantiveValue");
+
+                    b.HasIndex("Q", "R");
+
+                    b.ToTable("Concept");
+
+                    b.HasDiscriminator<char>("Type");
+                });
+
+            modelBuilder.Entity("Rebus.Server.Player", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Credential")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -76,77 +121,26 @@ namespace Rebus.Server.Migrations
                     b.ToTable("Player");
                 });
 
-            modelBuilder.Entity("Rebus.Server.Concepts.Spacecraft", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("PlayerId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Q")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("R")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PlayerId");
-
-                    b.ToTable("Spacecraft");
-                });
-
-            modelBuilder.Entity("Rebus.Server.ConceptSignature", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("ArticleValue")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("PlayerId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Priority")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("SpacecraftId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("SubstantiveValue")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ArticleValue");
-
-                    b.HasIndex("PlayerId");
-
-                    b.HasIndex("Priority");
-
-                    b.HasIndex("SpacecraftId");
-
-                    b.HasIndex("SubstantiveValue");
-
-                    b.ToTable("ConceptSignature");
-                });
-
             modelBuilder.Entity("Rebus.Server.Resource", b =>
                 {
-                    b.Property<int>("Key")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Arguments")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("Key")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Value")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Key", "Arguments", "Value");
+                    b.HasKey("Id");
+
+                    b.HasIndex("Key", "Arguments", "Value")
+                        .IsUnique();
 
                     b.ToTable("Resource");
                 });
@@ -165,19 +159,65 @@ namespace Rebus.Server.Migrations
                     b.ToTable("Token");
                 });
 
-            modelBuilder.Entity("ConceptSignatureToken", b =>
+            modelBuilder.Entity("Rebus.Server.Concepts.Direction", b =>
                 {
-                    b.HasOne("Rebus.Server.Token", null)
-                        .WithMany()
-                        .HasForeignKey("AdjectivesValue")
+                    b.HasBaseType("Rebus.Server.Concept");
+
+                    b.HasIndex("PlayerId");
+
+                    b.ToTable("Concept");
+
+                    b.HasDiscriminator().HasValue('D');
+                });
+
+            modelBuilder.Entity("Rebus.Server.Concepts.Planet", b =>
+                {
+                    b.HasBaseType("Rebus.Server.Concept");
+
+                    b.HasIndex("PlayerId");
+
+                    b.ToTable("Concept");
+
+                    b.HasDiscriminator().HasValue('P');
+                });
+
+            modelBuilder.Entity("Rebus.Server.Concepts.Spacecraft", b =>
+                {
+                    b.HasBaseType("Rebus.Server.Concept");
+
+                    b.HasIndex("PlayerId");
+
+                    b.ToTable("Concept");
+
+                    b.HasDiscriminator().HasValue('S');
+                });
+
+            modelBuilder.Entity("Rebus.Server.Concepts.Star", b =>
+                {
+                    b.HasBaseType("Rebus.Server.Concept");
+
+                    b.HasIndex("PlayerId");
+
+                    b.ToTable("Concept");
+
+                    b.HasDiscriminator().HasValue('T');
+                });
+
+            modelBuilder.Entity("Rebus.Server.Adjective", b =>
+                {
+                    b.HasOne("Rebus.Server.Concept", null)
+                        .WithMany("Adjectives")
+                        .HasForeignKey("ConceptId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Rebus.Server.ConceptSignature", null)
-                        .WithMany()
-                        .HasForeignKey("SignaturesId")
+                    b.HasOne("Rebus.Server.Token", "Token")
+                        .WithMany("Adjectives")
+                        .HasForeignKey("TokenValue")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Token");
                 });
 
             modelBuilder.Entity("Rebus.Server.CommandSignature", b =>
@@ -193,28 +233,11 @@ namespace Rebus.Server.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Rebus.Server.Concepts.Spacecraft", b =>
-                {
-                    b.HasOne("Rebus.Server.Concepts.Player", null)
-                        .WithMany("Spacecraft")
-                        .HasForeignKey("PlayerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Rebus.Server.ConceptSignature", b =>
+            modelBuilder.Entity("Rebus.Server.Concept", b =>
                 {
                     b.HasOne("Rebus.Server.Token", "Article")
                         .WithMany()
                         .HasForeignKey("ArticleValue");
-
-                    b.HasOne("Rebus.Server.Concepts.Player", null)
-                        .WithMany("Signatures")
-                        .HasForeignKey("PlayerId");
-
-                    b.HasOne("Rebus.Server.Concepts.Spacecraft", null)
-                        .WithMany("Signatures")
-                        .HasForeignKey("SpacecraftId");
 
                     b.HasOne("Rebus.Server.Token", "Substantive")
                         .WithMany()
@@ -227,16 +250,55 @@ namespace Rebus.Server.Migrations
                     b.Navigation("Substantive");
                 });
 
-            modelBuilder.Entity("Rebus.Server.Concepts.Player", b =>
+            modelBuilder.Entity("Rebus.Server.Concepts.Direction", b =>
                 {
-                    b.Navigation("Signatures");
+                    b.HasOne("Rebus.Server.Player", "Player")
+                        .WithMany()
+                        .HasForeignKey("PlayerId");
 
-                    b.Navigation("Spacecraft");
+                    b.Navigation("Player");
+                });
+
+            modelBuilder.Entity("Rebus.Server.Concepts.Planet", b =>
+                {
+                    b.HasOne("Rebus.Server.Player", "Player")
+                        .WithMany()
+                        .HasForeignKey("PlayerId");
+
+                    b.Navigation("Player");
                 });
 
             modelBuilder.Entity("Rebus.Server.Concepts.Spacecraft", b =>
                 {
-                    b.Navigation("Signatures");
+                    b.HasOne("Rebus.Server.Player", "Player")
+                        .WithMany("Spacecraft")
+                        .HasForeignKey("PlayerId");
+
+                    b.Navigation("Player");
+                });
+
+            modelBuilder.Entity("Rebus.Server.Concepts.Star", b =>
+                {
+                    b.HasOne("Rebus.Server.Player", "Player")
+                        .WithMany()
+                        .HasForeignKey("PlayerId");
+
+                    b.Navigation("Player");
+                });
+
+            modelBuilder.Entity("Rebus.Server.Concept", b =>
+                {
+                    b.Navigation("Adjectives");
+                });
+
+            modelBuilder.Entity("Rebus.Server.Player", b =>
+                {
+                    b.Navigation("Spacecraft");
+                });
+
+            modelBuilder.Entity("Rebus.Server.Token", b =>
+                {
+                    b.Navigation("Adjectives");
                 });
 #pragma warning restore 612, 618
         }

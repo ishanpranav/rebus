@@ -2,9 +2,8 @@
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace Rebus.Server.Commands
 {
@@ -18,7 +17,7 @@ namespace Rebus.Server.Commands
         public Executor Executor { get; set; }
 #nullable enable
 
-        public override IAsyncEnumerable<IWritable> ExecuteAsync()
+        public override Task ExecuteAsync(ExpressionWriter writer)
         {
             if (Executor.Executables.TryPop(out IExecutable? result))
             {
@@ -27,11 +26,11 @@ namespace Rebus.Server.Commands
                     Executor.Unexecutables.Push(unexecutable);
                 }
 
-                return result.ExecuteAsync();
+                return result.ExecuteAsync(writer);
             }
             else
             {
-                return AsyncEnumerable.Empty<IWritable>();
+                return Task.CompletedTask;
             }
         }
 

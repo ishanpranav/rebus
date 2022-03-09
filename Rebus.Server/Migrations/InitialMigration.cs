@@ -1,8 +1,4 @@
-﻿// Ishan Pranav's REBUS: InitialMigration.cs
-// Copyright (c) Ishan Pranav. All rights reserved.
-// Licensed under the MIT License.
-
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -19,7 +15,8 @@ namespace Rebus.Server.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<string>(type: "TEXT", nullable: false, collation: "NOCASE")
+                    UserId = table.Column<string>(type: "TEXT", nullable: false, collation: "NOCASE"),
+                    Credential = table.Column<string>(type: "TEXT", nullable: false, collation: "NOCASE")
                 },
                 constraints: table =>
                 {
@@ -30,13 +27,15 @@ namespace Rebus.Server.Migrations
                 name: "Resource",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
                     Key = table.Column<int>(type: "INTEGER", nullable: false),
                     Arguments = table.Column<int>(type: "INTEGER", nullable: false),
                     Value = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Resource", x => new { x.Key, x.Arguments, x.Value });
+                    table.PrimaryKey("PK_Resource", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -52,28 +51,7 @@ namespace Rebus.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Spacecraft",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    PlayerId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Q = table.Column<int>(type: "INTEGER", nullable: false),
-                    R = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Spacecraft", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Spacecraft_Player_PlayerId",
-                        column: x => x.PlayerId,
-                        principalTable: "Player",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CommandSignature",
+                name: "Command",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -84,14 +62,14 @@ namespace Rebus.Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CommandSignature", x => x.Id);
+                    table.PrimaryKey("PK_Command", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CommandSignature_Token_AdverbValue",
+                        name: "FK_Command_Token_AdverbValue",
                         column: x => x.AdverbValue,
                         principalTable: "Token",
                         principalColumn: "Value");
                     table.ForeignKey(
-                        name: "FK_CommandSignature_Token_VerbValue",
+                        name: "FK_Command_Token_VerbValue",
                         column: x => x.VerbValue,
                         principalTable: "Token",
                         principalColumn: "Value",
@@ -99,37 +77,33 @@ namespace Rebus.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ConceptSignature",
+                name: "Concept",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Priority = table.Column<int>(type: "INTEGER", nullable: false),
+                    Q = table.Column<int>(type: "INTEGER", nullable: false),
+                    R = table.Column<int>(type: "INTEGER", nullable: false),
                     ArticleValue = table.Column<string>(type: "TEXT", nullable: true),
                     SubstantiveValue = table.Column<string>(type: "TEXT", nullable: false),
-                    SpacecraftId = table.Column<int>(type: "INTEGER", nullable: true),
-                    PlayerId = table.Column<int>(type: "INTEGER", nullable: true)
+                    PlayerId = table.Column<int>(type: "INTEGER", nullable: true),
+                    Type = table.Column<char>(type: "TEXT", nullable: false, defaultValue: ' ')
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ConceptSignature", x => x.Id);
+                    table.PrimaryKey("PK_Concept", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ConceptSignature_Player_PlayerId",
+                        name: "FK_Concept_Player_PlayerId",
                         column: x => x.PlayerId,
                         principalTable: "Player",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_ConceptSignature_Spacecraft_SpacecraftId",
-                        column: x => x.SpacecraftId,
-                        principalTable: "Spacecraft",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ConceptSignature_Token_ArticleValue",
+                        name: "FK_Concept_Token_ArticleValue",
                         column: x => x.ArticleValue,
                         principalTable: "Token",
                         principalColumn: "Value");
                     table.ForeignKey(
-                        name: "FK_ConceptSignature_Token_SubstantiveValue",
+                        name: "FK_Concept_Token_SubstantiveValue",
                         column: x => x.SubstantiveValue,
                         principalTable: "Token",
                         principalColumn: "Value",
@@ -137,68 +111,63 @@ namespace Rebus.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ConceptSignatureToken",
+                name: "Adjective",
                 columns: table => new
                 {
-                    AdjectivesValue = table.Column<string>(type: "TEXT", nullable: false),
-                    SignaturesId = table.Column<int>(type: "INTEGER", nullable: false)
+                    TokenValue = table.Column<string>(type: "TEXT", nullable: false),
+                    ConceptId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ConceptSignatureToken", x => new { x.AdjectivesValue, x.SignaturesId });
+                    table.PrimaryKey("PK_Adjective", x => new { x.TokenValue, x.ConceptId });
                     table.ForeignKey(
-                        name: "FK_ConceptSignatureToken_ConceptSignature_SignaturesId",
-                        column: x => x.SignaturesId,
-                        principalTable: "ConceptSignature",
+                        name: "FK_Adjective_Concept_ConceptId",
+                        column: x => x.ConceptId,
+                        principalTable: "Concept",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ConceptSignatureToken_Token_AdjectivesValue",
-                        column: x => x.AdjectivesValue,
+                        name: "FK_Adjective_Token_TokenValue",
+                        column: x => x.TokenValue,
                         principalTable: "Token",
                         principalColumn: "Value",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CommandSignature_AdverbValue",
-                table: "CommandSignature",
+                name: "IX_Adjective_ConceptId",
+                table: "Adjective",
+                column: "ConceptId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Command_AdverbValue",
+                table: "Command",
                 column: "AdverbValue");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CommandSignature_VerbValue",
-                table: "CommandSignature",
+                name: "IX_Command_VerbValue",
+                table: "Command",
                 column: "VerbValue");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ConceptSignature_ArticleValue",
-                table: "ConceptSignature",
+                name: "IX_Concept_ArticleValue",
+                table: "Concept",
                 column: "ArticleValue");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ConceptSignature_PlayerId",
-                table: "ConceptSignature",
+                name: "IX_Concept_PlayerId",
+                table: "Concept",
                 column: "PlayerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ConceptSignature_Priority",
-                table: "ConceptSignature",
-                column: "Priority");
+                name: "IX_Concept_Q_R",
+                table: "Concept",
+                columns: new[] { "Q", "R" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ConceptSignature_SpacecraftId",
-                table: "ConceptSignature",
-                column: "SpacecraftId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ConceptSignature_SubstantiveValue",
-                table: "ConceptSignature",
+                name: "IX_Concept_SubstantiveValue",
+                table: "Concept",
                 column: "SubstantiveValue");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ConceptSignatureToken_SignaturesId",
-                table: "ConceptSignatureToken",
-                column: "SignaturesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Player_UserId",
@@ -207,33 +176,31 @@ namespace Rebus.Server.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Spacecraft_PlayerId",
-                table: "Spacecraft",
-                column: "PlayerId");
+                name: "IX_Resource_Key_Arguments_Value",
+                table: "Resource",
+                columns: new[] { "Key", "Arguments", "Value" },
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CommandSignature");
+                name: "Adjective");
 
             migrationBuilder.DropTable(
-                name: "ConceptSignatureToken");
+                name: "Command");
 
             migrationBuilder.DropTable(
                 name: "Resource");
 
             migrationBuilder.DropTable(
-                name: "ConceptSignature");
-
-            migrationBuilder.DropTable(
-                name: "Spacecraft");
-
-            migrationBuilder.DropTable(
-                name: "Token");
+                name: "Concept");
 
             migrationBuilder.DropTable(
                 name: "Player");
+
+            migrationBuilder.DropTable(
+                name: "Token");
         }
     }
 }

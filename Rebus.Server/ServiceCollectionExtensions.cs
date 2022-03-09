@@ -24,15 +24,17 @@ namespace Rebus.Server
                     .AddConsole()
                     .SetMinimumLevel(LogLevel.Information))
                 .AddDbContextFactory<RebusDbContext, RebusDbContextFactory>()
+                .AddSingleton(typeof(IEngine<>), typeof(Engine<>))
                 .AddSingleton<IConfiguration>(configurationRoot)
                 .AddSingleton(Random.Shared)
                 .AddSingleton<Parser>()
                 .AddSingleton<IEditDistance, DamerauLevenshteinEditDistance>()
-                .AddSingleton<IEngine, Engine>()
-                .AddSingleton<Command, VisionCommand>()
+                .AddSingleton<Command, NavigationCommand>()
                 .AddSingleton<Command, RedoCommand>()
                 .AddSingleton<Command, ReexecuteCommand>()
-                .AddSingleton<Command, UndoCommand>();
+                .AddSingleton<Command, RenameCommand>()
+                .AddSingleton<Command, UndoCommand>()
+                .AddSingleton<Command, VisionCommand>();
         }
     }
 }

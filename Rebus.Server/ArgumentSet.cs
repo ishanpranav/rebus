@@ -4,13 +4,12 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Rebus.Server.Concepts;
 
 namespace Rebus.Server
 {
-    internal sealed class ArgumentSet : IArgumentSet
+    internal sealed class ArgumentSet
     {
-        private readonly IDictionary<Argument, object> _values;
+        private readonly Dictionary<Argument, object> _values = new Dictionary<Argument, object>();
 
 #nullable disable
         private Player _player;
@@ -22,7 +21,7 @@ namespace Rebus.Server
             }
             set
             {
-                _values.TryAdd(Argument.Subject, value.Signature);
+                _values.TryAdd(Argument.Subject, true);
 
                 _player = value;
             }
@@ -37,24 +36,19 @@ namespace Rebus.Server
             }
         }
 
-        public ArgumentSet()
-        {
-            _values = new Dictionary<Argument, object>();
-        }
-
         public void SetReflexive(Argument argument)
         {
             _values[argument] = _values[Argument.Subject];
         }
 
-        public void SetConceptSignature(Argument argument, ConceptSignature value)
+        public string GetQuotation(Argument argument)
         {
-            _values[argument] = value;
+            return (string)_values[argument];
         }
 
-        public void SetNumber(Argument argument, int value)
+        public bool IsQuotation(Argument argument)
         {
-            _values[argument] = value;
+            return _values.TryGetValue(argument, out object? value) && value is string;
         }
 
         public void SetQuotation(Argument argument, string value)
@@ -64,22 +58,52 @@ namespace Rebus.Server
 
         public bool IsPlayer(Argument argument)
         {
-            return TryGetConceptSignature(argument, out ConceptSignature? result) && result.PlayerId == Player.Id;
+            return _values.TryGetValue(argument, out object? value) && value is true;
         }
 
-        public bool TryGetConceptSignature(
-            Argument argument,
-            [NotNullWhen(true)] out ConceptSignature? result)
+        public bool IsConcept(Argument subject)
         {
-            if (_values.TryGetValue(argument, out object? value) && value is ConceptSignature conceptSignature)
+            return _values.TryGetValue(subject, out object? value) && value is IReadOnlyCollection<Concept>;
+        }
+
+        public bool IsPlayerOrConcept(Argument argument)
+        {
+            return _values.TryGetValue(argument, out object? value) && (value is true || value is IReadOnlyCollection<Concept>);
+        }
+
+        public void AddConcept(Argument argument, Concept value)
+        {
+            if (_values.TryGetValue(argument, out object? list) && list is ICollection<Concept> concepts)
             {
-                result = conceptSignature;
+                concepts.Add(value);
+            }
+            else
+            {
+                _values[argument] = new HashSet<Concept>()
+                {
+                    value
+                };
+            }
+        }
+
+        public IReadOnlyCollection<Concept> GetConcepts(Argument argument)
+        {
+            return (IReadOnlyCollection<Concept>)_values[argument];
+        }
+
+        public bool TryGetConcepts(
+            Argument argument,
+            [NotNullWhen(true)] out IReadOnlyCollection<Concept>? results)
+        {
+            if (_values.TryGetValue(argument, out object? value) && value is IReadOnlyCollection<Concept> concepts)
+            {
+                results = concepts;
 
                 return true;
             }
             else
             {
-                result = null;
+                results = null;
 
                 return false;
             }
@@ -101,22 +125,9 @@ namespace Rebus.Server
             }
         }
 
-        public bool TryGetQuotation(
-            Argument argument,
-            [NotNullWhen(true)] out string? result)
+        public void SetNumber(Argument argument, int value)
         {
-            if (_values.TryGetValue(argument, out object? value) && value is string quotation)
-            {
-                result = quotation;
-
-                return true;
-            }
-            else
-            {
-                result = null;
-
-                return false;
-            }
+            _values[argument] = value;
         }
     }
 }

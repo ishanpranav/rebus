@@ -11,14 +11,18 @@ Although each type of cargo is uniquely identified by its _mass_, this property 
 ## Navigation
 The game universe is a grid of _regions of space_ which may be
 - _empty_, containing no permanent features;
-- _stellar_, containing one or more _stars_; or
-- _planetary_, containing one or more _planets_.
+- _stellar_, containing a _star_; or
+- _planetary_, containing an _inhabited_ or an _uninhabited planet_.
 
 Stars are _impassible_: Spacecraft may not enter stellar regions.
 
 All other celestial bodies are planets [[1](#1)].
 ### Exploration
 To explore, a player instructs a spacecraft to travel to one of up to six regions adjacent to it.
+
+_Wealth_ is a game currency stored virtually within the microcomputer. Every time a wealth is added to a player\'s negative balance, 10% of the income is levied as an interest penalty.
+
+Every movee of a spacecraft into an adjacent region incurs a fuel cost measured in wealth.
 
 Exploration is blind: Any prior information about a destination and its contents may be incomplete, unreliable, or outdated until a spacecraft enters and observes the region. The positions and properties of all stars in a stellar region are available from any region adjacent to it. [[2](#2)]
 ### Autopilot
@@ -52,19 +56,17 @@ Spacecraft are destroyed in descending order based on the mass of their cargo [[
 
 The remaining spacecraft in the minor fleet are captured and join the major fleet. During combat, the major fleet always captures at least one spacecraft [[6](#6)].
 ## Commerce
-A player with a spacecraft in a region may conduct _commerce_ with any planet within that region by exchanging _wealth_ for _commodities_ stored as cargo.
+A player with a spacecraft in a region may conduct _commerce_ with any planet within that region by exchanging wealth for _commodities_ stored as cargo. [[7](#7)]. 
 
-Wealth is game currency stored virtually within the microcomputer. [[7](#7)]
-
-At an _inhabited_ planet, a player may
+At an inhabited planet, a player may
 - _sell_ commodities being imported by the planet <!-- , --> and
 - _purchase_ commodities being exported by the planet<!-- , -->.
 
 Each purchase increases the unit _selling price_ that the exporting planet requests in exchange for the commodity; each sale decreases the unit _purchasing price_ that the importing planet is willing to pay for the commodity.
 
-The quantities supplied and demanded by each planet are unlimited. The amount that a player sells is limited only by their cargo; the amount that a player purchases is limited only by their wealth and the total capacity of their fleet in the region.
+The quantities supplied and demanded by each planet are unlimited. The amount that a player sells is limited only by their cargo; the amount that a player purchases is limited only by their wealth and the total capacity of their fleet. 
 
-At an _uninhabited_ planet, a player may
+At an uninhabited planet, a player may
 - _accept_ cargo,
 - _deposit_ cargo,
 - _download_ navigational information, or
@@ -81,7 +83,7 @@ Navigational information is valuable since the vast universe size may be exploit
 ##### 4
 No feature exists formalizing alliances. Only one player may occupy a region at a time. Inteception stances are indiscriminate: They do not respect informal agreements made by players outside of the game. Thus, they must be pre-arranged and deception is possible.
 ##### 5
-Since planets and players determine demand, the mass of a unit of cargo is not necessarily associated with its value. Since spacecraft carrying the most massive cargo are destroyed first, it may be effective to reserve some spacecraft to carry less expensive, more massive, cargo to avoid the destruction more valuable commodities.
+Since planets and players determine demand, the mass of a unit of cargo is not necessarily associated with its value. Since spacecraft carrying the most massive cargo are destroyed first, it may be effective to reserve some spacecraft to carry less expensive, more massive, cargo to avoid the destruction of more valuable commodities.
 ##### 6
 Let `m` be the initial size of the minor fleet; let `M(0)` be the initial size of the major fleet; let `c` be the number of spacecraft captured by the major fleet; and let `d` be the number of spacecraft destroyed. The final size of the major fleet, `M(1)`, is given by the following process:
 ```python

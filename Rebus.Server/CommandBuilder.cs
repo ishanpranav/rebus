@@ -6,9 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Rebus.Exceptions;
-using Rebus.Server.Concepts;
 
 namespace Rebus.Server
 {
@@ -20,23 +18,16 @@ namespace Rebus.Server
 
         private ArgumentSet _arguments = new ArgumentSet();
 
-        public IArgumentSet Arguments
-        {
-            get
-            {
-                return _arguments;
-            }
-        }
-
         public IToken? Verb { get; set; }
         public IToken? Adverb { get; set; }
+        public Argument Argument { get; set; }
 
         private Player? _player;
 
         public CommandBuilder(RebusDbContext context, IEnumerable<Command> commands)
         {
             _context = context;
-            _commandsByGuid = commands.ToDictionary(x => x.Guid);
+            _commandsByGuid = commands.ToDictionary(x => x.GetType().GUID);
         }
 
         public async Task SetPlayerAsync(int id)
@@ -44,43 +35,66 @@ namespace Rebus.Server
             _commands.Clear();
             _arguments = new ArgumentSet();
 
-            _player = await _context.Players
-                .IncludeSignatures()
-                .SingleAsync(x => x.Id == id);
+            _player = await _context.Players.FindAsync(id);
 
-            if (_player.Signature is not null)
-            {
-                _arguments.Player = _player;
-            }
+            _arguments.Player = _player;
         }
 
-        public void Set(Argument argument, IReadOnlyCollection<IToken> adjectives, IToken substantive)
+
+        public void Include(IReadOnlyCollection<IToken> adjectives, IToken substantive)
         {
-            ConceptSignature? signature;
-
-            try
+            if (_player is null)
             {
-                signature = _context.ConceptSignatures
-                    .Include(signature => signature.Substantive)
-                    .Where(signature => signature.Substantive.Value == substantive.Value)
-                    .Include(signature => signature.Article)
-                    .Include(signature => signature.Adjectives)
-                    .AsEnumerable()
-                    .SingleOrDefault(signature => adjectives.All(adjective => signature.Adjectives.Any(x => adjective.Value == x.Value)));
-            }
-            catch
-            {
-                throw new RebusException(resource: 5);
-            }
-
-            if (signature is null)
-            {
-                throw new RebusException(resource: 8);
+                throw new InvalidOperationException();
             }
             else
             {
-                _arguments.SetConceptSignature(argument, signature);
+                Concept? result;
+
+                try
+                {
+                    IQueryable<Concept> concepts = _context.Concepts
+                        .AsWritable()
+                        .Where(concept => concept.Substantive.Value == substantive.Value);
+
+                    if (Argument is Argument.Subject)
+                    {
+                        concepts = concepts.Where(concept => concept.PlayerId == _player.Id);
+                    }
+
+                    result = concepts
+                        .AsEnumerable()
+                        .SingleOrDefault(concept => adjectives.All(adjective => concept.Adjectives.Any(x => adjective.Value == x.TokenValue)));
+                }
+                catch
+                {
+                    throw new RebusException(resource: 5);
+                }
+
+                if (result is null)
+                {
+                    throw new RebusException(resource: 8);
+                }
+                else
+                {
+                    _arguments.AddConcept(Argument, result);
+                }
             }
+        }
+
+        public void Include(int number)
+        {
+            _arguments.SetNumber(Argument, number);
+        }
+
+        public void Include(string quotation)
+        {
+            _arguments.SetQuotation(Argument, quotation);
+        }
+
+        public void IncludeReflexive()
+        {
+            _arguments.SetReflexive(Argument);
         }
 
         public void MoveNext()

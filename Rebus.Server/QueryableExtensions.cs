@@ -9,16 +9,14 @@ namespace Rebus.Server
 {
     internal static class QueryableExtensions
     {
-        public static IQueryable<TConcept> IncludeSignatures<TConcept>(this IQueryable<TConcept> source) where TConcept : Concept
+        public static IQueryable<TConcept> AsWritable<TConcept>(this IQueryable<TConcept> source) where TConcept : Concept
         {
             return source
-                .Include(x => x.Signatures)
-                .ThenInclude(x => x.Article)
-                .Include(x => x.Signatures)
-                .ThenInclude(x => x.Substantive)
+                .Include(x => x.Article)
+                .Include(x => x.Substantive)
                 .AsSplitQuery()
-                .Include(x => x.Signatures)
-                .ThenInclude(x => x.Adjectives);
+                .Include(x => x.Adjectives)
+                .ThenInclude(x => x.Token);
         }
     }
 }

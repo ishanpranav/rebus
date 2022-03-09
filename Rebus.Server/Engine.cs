@@ -12,147 +12,50 @@ using System.Xml.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Rebus.Exceptions;
-using Rebus.ExpressionWriters;
-using Rebus.Server.Concepts;
 
 namespace Rebus.Server
 {
-    internal sealed class Engine : IEngine
+    internal sealed class Engine<T> : IEngine, IEngine<T> where T : notnull
     {
-        private readonly ILogger<Engine> _logger;
-        private readonly IDbContextFactory<RebusDbContext> _contextFactory;
-        private readonly IEditDistance _editDistance;
-        private readonly IEnumerable<Command> _commands;
         private readonly XmlWriterSettings _xmlWriterSettings = new XmlWriterSettings()
         {
-            Async = true,
             Indent = true,
             IndentChars = "    "
         };
         private readonly XmlSerializer _xmlSerializer = new XmlSerializer(typeof(Expression));
-        private readonly Dictionary<string, Executor> _executorsByUserId = new Dictionary<string, Executor>();
+        private readonly Dictionary<T, EngineContext> _contextsByUser = new Dictionary<T, EngineContext>();
 
-        public Engine(ILogger<Engine> logger, IDbContextFactory<RebusDbContext> contextFactory, IEditDistance editDistance, IEnumerable<Command> commands)
+        public ILogger Logger { get; }
+        public IDbContextFactory<RebusDbContext> DbContextFactory { get; }
+        public IEnumerable<Command> Commands { get; }
+        public IEditDistance EditDistance { get; }
+
+        public Engine(ILogger<Engine<T>> logger, IDbContextFactory<RebusDbContext> dbContextFactory, IEditDistance editDistance, IEnumerable<Command> commands)
         {
-            _logger = logger;
-            _contextFactory = contextFactory;
-            _editDistance = editDistance;
-            _commands = commands;
+            Logger = logger;
+            DbContextFactory = dbContextFactory;
+            EditDistance = editDistance;
+            Commands = commands;
         }
 
-        public async Task InterpretAsync(string userId, string value, ExpressionWriter writer)
+        public async Task InterpretAsync(T user, string value, ExpressionWriter writer)
         {
+            writer.WriteLine();
+
+            if (!_contextsByUser.TryGetValue(user, out EngineContext? context))
+            {
+                context = new EngineContext(engine: this);
+
+                _contextsByUser[user] = context;
+            }
+
             try
             {
-                Executor? executor;
-                IEnumerable<Command> commands;
-
-                await using (RebusDbContext context = await _contextFactory.CreateDbContextAsync())
-                {
-                    if (!_executorsByUserId.TryGetValue(userId, out executor))
-                    {
-                        Player? player = await context.Players.SingleOrDefaultAsync(x => x.UserId == userId);
-
-                        if (player is null)
-                        {
-                            Spacecraft spacecraft = new Spacecraft();
-                            ConceptSignature spacecraftSignature = new ConceptSignature()
-                            {
-                                SubstantiveValue = "Spacecraft"
-                            };
-                            player = new Player()
-                            {
-                                UserId = userId
-                            };
-
-                            spacecraftSignature.Adjectives.Add(new Token()
-                            {
-                                Type = TokenTypes.Adjective,
-                                Value = Guid.NewGuid().ToString()
-                            });
-
-                            spacecraft.Signatures.Add(spacecraftSignature);
-                            player.Spacecraft.Add(spacecraft);
-
-                            ConceptSignature playerSignature = new ConceptSignature()
-                            {
-                                SubstantiveValue = "Player"
-                            };
-
-                            playerSignature.Adjectives.Add(new Token()
-                            {
-                                Type = TokenTypes.Adjective,
-                                Value = userId
-                            });
-
-                            player.Signatures.Add(playerSignature);
-
-                            await context.AddAsync(player);
-                            await context.SaveChangesAsync();
-                        }
-
-                        executor = new Executor(player.Id);
-
-                        _executorsByUserId[userId] = executor;
-                    }
-
-                    IAsyncEnumerable<IToken> tokens = new Tokenizer(context, value).TokenizeAsync();
-                    StringExpressionWriter tokenWriter = new StringExpressionWriter();
-
-                    await foreach (IToken token in tokens)
-                    {
-                        using (tokenWriter.CreateScope(ScopeType.Parenthetical))
-                        {
-                            tokenWriter.Write(token.Type
-                                .ToString()
-                                .ToUpper());
-                            tokenWriter.Write(' ');
-                            tokenWriter.Write(token.Value.ToLower());
-                        }
-
-                        tokenWriter.Write(' ');
-                    }
-
-                    _logger.LogInformation("{Tokens}", tokenWriter);
-
-                    Expression expression = await new Parser(tokens).ParseAsync();
-
-                    expression.WriteLine(writer);
-
-                    CommandBuilder commandBuilder = new CommandBuilder(context, _commands);
-
-                    await commandBuilder.SetPlayerAsync(executor.Id);
-
-                    await using (StringWriter stringWriter = new StringWriter())
-                    {
-                        await using (XmlWriter xmlWriter = XmlWriter.Create(stringWriter, _xmlWriterSettings))
-                        {
-                            _xmlSerializer.Serialize(xmlWriter, expression);
-                        }
-
-                        _logger.LogInformation("{Expression}", stringWriter);
-                    }
-
-                    await expression.InterpretAsync(commandBuilder);
-
-                    commands = commandBuilder.Build();
-                }
-
-                foreach (Command command in commands)
-                {
-                    await foreach (IWritable result in executor.ExecuteAsync(command))
-                    {
-                        result.Write(writer);
-
-                        writer.WriteLine();
-                    }
-
-                    writer.WriteLine();
-                }
+                await context.State.InterpretAsync(context, value, writer);
             }
             catch (RebusSpellingException rebusSpellingException)
             {
-                await using (RebusDbContext context = await _contextFactory.CreateDbContextAsync())
+                await using (RebusDbContext dbContext = await context.Engine.DbContextFactory.CreateDbContextAsync())
                 {
                     Token[]? suggestions = null;
                     TokenTypes? expectedType = rebusSpellingException.ExpectedType;
@@ -161,7 +64,7 @@ namespace Rebus.Server
 
                     if (actualValue is not null)
                     {
-                        IQueryable<Token> tokens = context.Tokens;
+                        IQueryable<Token> tokens = dbContext.Tokens;
 
                         if (expectedType is not null)
                         {
@@ -172,25 +75,38 @@ namespace Rebus.Server
 
                         suggestions = tokens
                             .AsEnumerable()
-                            .GroupBy(x => _editDistance.Calculate(x.Value, actualValue))
+                            .GroupBy(x => context.Engine.EditDistance.Calculate(x.Value, actualValue))
                             .Where(x => x.Key < 3)
                             .MinBy(x => x.Key)?
                             .ToArray();
                     }
 
-                (await context.CreateMessageAsync(resource, expectedType, suggestions)).Write(writer);
+                (await dbContext.CreateMessageAsync(resource, expectedType, suggestions)).Write(writer);
                 }
             }
             catch (RebusException rebusException)
             {
-                await using (RebusDbContext context = await _contextFactory.CreateDbContextAsync())
+                await using (RebusDbContext dbContext = await context.Engine.DbContextFactory.CreateDbContextAsync())
                 {
-                    (await context.CreateMessageAsync(rebusException.Resource, rebusException.GetArguments())).Write(writer);
+                    (await dbContext.CreateMessageAsync(rebusException.Resource, rebusException.GetArguments())).Write(writer);
                 }
             }
             catch (Exception exception)
             {
-                _logger.LogError(exception, "Exception");
+                context.Engine.Logger.LogError(exception, "Exception");
+            }
+        }
+
+        public void LogExpression(Expression value)
+        {
+            using (StringWriter stringWriter = new StringWriter())
+            {
+                using (XmlWriter xmlWriter = XmlWriter.Create(stringWriter, _xmlWriterSettings))
+                {
+                    _xmlSerializer.Serialize(xmlWriter, value);
+                }
+
+                Logger.LogInformation("{Expression}", stringWriter);
             }
         }
     }

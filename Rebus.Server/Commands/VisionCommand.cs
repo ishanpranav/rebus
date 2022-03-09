@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Rebus.Server.Concepts;
 
@@ -26,17 +27,39 @@ namespace Rebus.Server.Commands
             _contextFactory = contextFactory;
         }
 
-        public override async IAsyncEnumerable<IWritable> ExecuteAsync()
+        public override bool Matches(ArgumentSet arguments)
+        {
+            return arguments.Count == 1 && arguments.IsPlayerOrConcept(Argument.Subject);
+        }
+
+        public override async Task ExecuteAsync(ExpressionWriter writer)
         {
             await using (RebusDbContext context = await _contextFactory.CreateDbContextAsync())
             {
-                foreach (IGrouping<HexPoint, Spacecraft> grouping in context.Spacecraft
-                    .Where(x => x.PlayerId == Arguments.Player.Id)
-                    .IncludeSignatures()
-                    .AsEnumerable()
-                    .GroupBy(x => x.Location))
+                IEnumerable<Concept> subjects;
+
+                if (Arguments.IsPlayer(Argument.Subject))
                 {
-                    yield return await context.CreateMessageAsync(resource: 1, grouping.Key, grouping.ToArray());
+                    subjects = context
+                        .GetKnownViewers()
+                        .Where(x => x.PlayerId == Arguments.Player.Id)
+                        .OrderBy(x => x.SubstantiveValue)
+                        .AsWritable();
+                }
+                else
+                {
+                    subjects = Arguments.GetConcepts(Argument.Subject);
+                }
+
+                foreach (IGrouping<HexPoint, IViewer> grouping in subjects
+                    .OfType<IViewer>()
+                    .GroupBy(x => x.Region))
+                {
+                    (await context.CreateMessageAsync(resource: 19, grouping)).Write(writer);
+
+                    await grouping
+                        .First()
+                        .ViewAsync(writer, context);
                 }
             }
         }

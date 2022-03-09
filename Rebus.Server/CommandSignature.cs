@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Rebus.Server
 {
-    [Table(nameof(CommandSignature))]
+    [Table("Command")]
     internal sealed class CommandSignature
     {
         public int Id { get; set; }

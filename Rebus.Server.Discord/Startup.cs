@@ -2,7 +2,6 @@
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
-using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
@@ -18,9 +17,9 @@ namespace Rebus.Server.Discord
         private readonly ILogger<Startup> _logger;
         private readonly DiscordOptions _options;
         private readonly DiscordSocketClient _discordSocketClient;
-        private readonly IEngine _engine;
+        private readonly IEngine<SocketUser> _engine;
 
-        public Startup(ILogger<Startup> logger, DiscordOptions options, DiscordSocketClient discordSocketClient, IEngine engine)
+        public Startup(ILogger<Startup> logger, DiscordOptions options, DiscordSocketClient discordSocketClient, IEngine<SocketUser> engine)
         {
             _logger = logger;
             _options = options;
@@ -61,14 +60,13 @@ namespace Rebus.Server.Discord
                                 }
 
                                 SocketCommandContext context = new SocketCommandContext(_discordSocketClient, socketUserMessage);
-                                SocketUser user = context.User;
                                 MarkdownExpressionWriter writer = new MarkdownExpressionWriter();
 
-                                await _engine.InterpretAsync(user.Id.ToString(CultureInfo.InvariantCulture), content.Substring(start), writer);
+                                await _engine.InterpretAsync(context.User, content.Substring(start), writer);
 
                                 string message = writer.ToString();
 
-                                await user.SendMessageAsync(message);
+                                await context.User.SendMessageAsync(message);
                             }
                         }
                     });

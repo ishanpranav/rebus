@@ -16,7 +16,7 @@ namespace Rebus.Server
         [Key]
         public string Value { get; set; } = string.Empty;
 
-        public ICollection<ConceptSignature> Signatures { get; set; } = new HashSet<ConceptSignature>();
+        public ICollection<Adjective> Adjectives { get; set; } = new HashSet<Adjective>();
 
         public override void Write(ExpressionWriter writer)
         {

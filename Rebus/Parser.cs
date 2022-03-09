@@ -2,6 +2,7 @@
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Rebus.Exceptions;
@@ -37,18 +38,7 @@ namespace Rebus
 
                 if (await acceptAsync(TokenTypes.Conjunction) is not null)
                 {
-                    List<Expression> sentences = new List<Expression>(2)
-                    {
-                        result,
-                        await parseSentenceAsync()
-                    };
-
-                    while (await acceptAsync(TokenTypes.Conjunction) is not null)
-                    {
-                        sentences.Add(await parseSentenceAsync());
-                    }
-
-                    result = new ParagraphExpression(sentences);
+                    result = await parseRequiredCollectionAsync(parseSentenceAsync);
                 }
 
                 if (complete)
@@ -91,16 +81,34 @@ namespace Rebus
 
                 async Task<Expression> parseSentenceAsync()
                 {
-                    Expression subject = await parseSubjectAsync();
+                    Expression subject = await parseRequiredCollectionAsync(parseSubjectAsync);
+                    Dictionary<Argument, Expression> nouns = new Dictionary<Argument, Expression>()
+                    {
+                        { Argument.Subject, subject }
+                    };
 
                     while ((await acceptAsync(TokenTypes.Interjection)) is not null) { }
 
                     IToken verb = await acceptAsync(TokenTypes.Verb) ?? throw new RebusSpellingException(TokenTypes.Verb, actualValue);
                     IToken? adverb = await acceptAsync(TokenTypes.Adverb);
 
-                    Expression? directObject = await parseDirectObjectAsync();
+                    Expression? firstObject = await parseCollectionAsync(parseObjectAsync);
+                    Expression? secondObject = await parseCollectionAsync(parseObjectAsync);
 
-                    return new SentenceExpression(subject, new VerbPhraseExpression(verb, adverb ?? await acceptAsync(TokenTypes.Adverb)), directObject);
+                    if (firstObject is not null)
+                    {
+                        if (secondObject is null)
+                        {
+                            nouns.Add(Argument.DirectObject, firstObject);
+                        }
+                        else
+                        {
+                            nouns.Add(Argument.IndirectObject, firstObject);
+                            nouns.Add(Argument.DirectObject, secondObject);
+                        }
+                    }
+
+                    return new SentenceExpression(nouns, new VerbPhraseExpression(verb, adverb ?? await acceptAsync(TokenTypes.Adverb)));
                 }
 
                 async Task<Expression> parseSubjectAsync()
@@ -128,14 +136,56 @@ namespace Rebus
                         }
                         else
                         {
-                            return new NounExpression(Argument.Subject, article: null, adjectives, substantive);
+                            return new NounExpression(article: null, adjectives, substantive);
                         }
                     }
 
-                    return new ReflexiveExpression(Argument.Subject, firstPerson: true);
+                    return new ReflexiveExpression(firstPerson: true);
                 }
 
-                async Task<Expression?> parseDirectObjectAsync()
+                async Task<Expression> parseRequiredCollectionAsync(Func<Task<Expression>> parseItemAsyncFunction)
+                {
+                    List<Expression> sentences = new List<Expression>();
+
+                    do
+                    {
+                        sentences.Add(await parseItemAsyncFunction());
+                    }
+                    while (await acceptAsync(TokenTypes.Conjunction) is not null);
+
+                    return new CollectionExpression(sentences);
+                }
+
+                async Task<Expression?> parseCollectionAsync(Func<Task<Expression?>> parseItemAsyncFunction)
+                {
+                    List<Expression> sentences = new List<Expression>();
+
+                    do
+                    {
+                        Expression? item = await parseItemAsyncFunction();
+
+                        if (item is null)
+                        {
+                            if (sentences.Count == 0)
+                            {
+                                return null;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            sentences.Add(item);
+                        }
+                    }
+                    while (await acceptAsync(TokenTypes.Conjunction) is not null);
+
+                    return new CollectionExpression(sentences);
+                }
+
+                async Task<Expression?> parseObjectAsync()
                 {
                     if (await acceptAsync(TokenTypes.FirstPersonObject) is null)
                     {
@@ -173,27 +223,27 @@ namespace Rebus
                                     }
                                     else
                                     {
-                                        return new NounExpression(Argument.DirectObject, article, adjectives, substantive);
+                                        return new NounExpression(article, adjectives, substantive);
                                     }
                                 }
                                 else
                                 {
-                                    return new QuotationExpression(Argument.DirectObject, quotation.Value);
+                                    return new QuotationExpression(quotation.Value);
                                 }
                             }
                             else
                             {
-                                return new NumberExpression(Argument.DirectObject, int.Parse(number.Value));
+                                return new NumberExpression(int.Parse(number.Value));
                             }
                         }
                         else
                         {
-                            return new ReflexiveExpression(Argument.DirectObject, firstPerson: false);
+                            return new ReflexiveExpression(firstPerson: false);
                         }
                     }
                     else
                     {
-                        return new ReflexiveExpression(Argument.DirectObject, firstPerson: true);
+                        return new ReflexiveExpression(firstPerson: true);
                     }
                 }
             }

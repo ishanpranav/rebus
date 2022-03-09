@@ -2,6 +2,7 @@
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -9,76 +10,45 @@ namespace Rebus.Expressions
 {
     internal sealed class SentenceExpression : Expression
     {
-        private readonly Expression _subject;
+        private readonly IDictionary<Argument, Expression> _nouns;
         private readonly Expression _verbPhrase;
-        private readonly Expression? _directObject;
 
-        public override char Punctuation
+        public SentenceExpression(IDictionary<Argument, Expression> nouns, Expression verbPhrase)
         {
-            get
-            {
-                return _subject.Punctuation;
-            }
-        }
-
-        public SentenceExpression(Expression subject, Expression verbPhrase, Expression? directObject)
-        {
-            _subject = subject;
             _verbPhrase = verbPhrase;
-            _directObject = directObject;
+            _nouns = nouns;
         }
 
         public override async Task InterpretAsync(ICommandBuilder context)
         {
             await _verbPhrase.InterpretAsync(context);
-            await _subject.InterpretAsync(context);
 
-            if (_directObject is not null)
+            foreach (KeyValuePair<Argument, Expression> noun in _nouns)
             {
-                await _directObject.InterpretAsync(context);
+                context.Argument = noun.Key;
+
+                await noun.Value.InterpretAsync(context);
             }
 
             context.MoveNext();
         }
 
-        public override void Write(ExpressionWriter writer)
-        {
-            _subject.Write(writer);
-
-            writer.Write(' ');
-
-            _verbPhrase.Write(writer);
-
-            if (_directObject is not null)
-            {
-                writer.Write(' ');
-
-                _directObject.Write(writer);
-            }
-        }
-
         public override void WriteXml(XmlWriter writer)
         {
-            writer.WriteStartElement("Subject");
+            foreach (KeyValuePair<Argument, Expression> noun in _nouns)
+            {
+                writer.WriteStartElement(noun.Key.ToString());
 
-            _subject.WriteXml(writer);
+                noun.Value.WriteXml(writer);
 
-            writer.WriteEndElement();
+                writer.WriteEndElement();
+            }
 
             writer.WriteStartElement("VerbPhrase");
 
             _verbPhrase.WriteXml(writer);
 
             writer.WriteEndElement();
-
-            if (_directObject is not null)
-            {
-                writer.WriteStartElement("DirectObject");
-
-                _directObject.WriteXml(writer);
-
-                writer.WriteEndElement();
-            }
         }
     }
 }
