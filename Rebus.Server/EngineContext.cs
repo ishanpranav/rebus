@@ -10,7 +10,7 @@ namespace Rebus.Server
     {
         public IEngine Engine { get; }
         public IEngineState State { get; set; } = new InitialEngineState();
-        public Executor? Executor { get; set; } = new Executor();
+        public Executor Executor { get; set; } = new Executor();
 
         public EngineContext(IEngine engine)
         {

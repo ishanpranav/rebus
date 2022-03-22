@@ -2,17 +2,24 @@
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Rebus.Server.Concepts
 {
-    internal sealed class Planet : Concept, ILocation
+    [Table(nameof(Planet))]
+    [Index(nameof(Q), nameof(R), IsUnique = true)]
+    internal sealed class Planet : Concept
     {
-        public async IAsyncEnumerable<HexPoint> NavigateAsync(ExpressionWriter writer, RebusDbContext context, HexPoint source)
-        {
-            (await context.CreateMessageAsync(resource: 20, Region)).Write(writer);
+        public int Q { get; set; }
+        public int R { get; set; }
 
-            yield return Region;
+        public override HexPoint Region
+        {
+            get
+            {
+                return new HexPoint(Q, R);
+            }
         }
     }
 }

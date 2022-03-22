@@ -2,8 +2,6 @@
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
-using Rebus.ExpressionWriters;
-
 namespace Rebus
 {
     public abstract class Writable : IWritable
@@ -12,7 +10,7 @@ namespace Rebus
 
         public override string ToString()
         {
-            StringExpressionWriter writer = new StringExpressionWriter();
+            ExpressionWriter writer = new ExpressionWriter();
 
             Write(writer);
 

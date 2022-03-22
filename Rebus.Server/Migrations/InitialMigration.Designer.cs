@@ -11,13 +11,13 @@ using Rebus.Server;
 namespace Rebus.Server.Migrations
 {
     [DbContext(typeof(RebusDbContext))]
-    [Migration("20220309080427_InitialMigration")]
+    [Migration("20220322182304_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.2");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.3");
 
             modelBuilder.Entity("Rebus.Server.Adjective", b =>
                 {
@@ -68,7 +68,26 @@ namespace Rebus.Server.Migrations
                     b.Property<string>("ArticleValue")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("PlayerId")
+                    b.Property<string>("SubstantiveValue")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArticleValue");
+
+                    b.HasIndex("SubstantiveValue");
+
+                    b.ToTable("Concept");
+                });
+
+            modelBuilder.Entity("Rebus.Server.Navigation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PlayerId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Q")
@@ -77,26 +96,12 @@ namespace Rebus.Server.Migrations
                     b.Property<int>("R")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("SubstantiveValue")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<char>("Type")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
-                        .HasDefaultValue(' ');
-
                     b.HasKey("Id");
 
-                    b.HasIndex("ArticleValue");
+                    b.HasIndex("PlayerId", "Q", "R")
+                        .IsUnique();
 
-                    b.HasIndex("SubstantiveValue");
-
-                    b.HasIndex("Q", "R");
-
-                    b.ToTable("Concept");
-
-                    b.HasDiscriminator<char>("Type");
+                    b.ToTable("Navigation");
                 });
 
             modelBuilder.Entity("Rebus.Server.Player", b =>
@@ -107,13 +112,25 @@ namespace Rebus.Server.Migrations
 
                     b.Property<string>("Credential")
                         .IsRequired()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
+                        .HasDefaultValue("")
                         .UseCollation("NOCASE");
+
+                    b.Property<int>("Sequence")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(1);
 
                     b.Property<string>("UserId")
                         .IsRequired()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
+                        .HasDefaultValue("")
                         .UseCollation("NOCASE");
+
+                    b.Property<int>("Wealth")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -132,12 +149,18 @@ namespace Rebus.Server.Migrations
                     b.Property<int>("Arguments")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Key")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValue("")
+                        .UseCollation("NOCASE");
 
                     b.Property<string>("Value")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValue("");
 
                     b.HasKey("Id");
 
@@ -161,48 +184,56 @@ namespace Rebus.Server.Migrations
                     b.ToTable("Token");
                 });
 
-            modelBuilder.Entity("Rebus.Server.Concepts.Direction", b =>
-                {
-                    b.HasBaseType("Rebus.Server.Concept");
-
-                    b.HasIndex("PlayerId");
-
-                    b.ToTable("Concept");
-
-                    b.HasDiscriminator().HasValue('D');
-                });
-
             modelBuilder.Entity("Rebus.Server.Concepts.Planet", b =>
                 {
                     b.HasBaseType("Rebus.Server.Concept");
 
-                    b.HasIndex("PlayerId");
+                    b.Property<int>("Q")
+                        .HasColumnType("INTEGER");
 
-                    b.ToTable("Concept");
+                    b.Property<int>("R")
+                        .HasColumnType("INTEGER");
 
-                    b.HasDiscriminator().HasValue('P');
+                    b.HasIndex("Q", "R")
+                        .IsUnique();
+
+                    b.ToTable("Planet");
                 });
 
             modelBuilder.Entity("Rebus.Server.Concepts.Spacecraft", b =>
                 {
                     b.HasBaseType("Rebus.Server.Concept");
 
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Q")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("R")
+                        .HasColumnType("INTEGER");
+
                     b.HasIndex("PlayerId");
 
-                    b.ToTable("Concept");
+                    b.HasIndex("Q", "R");
 
-                    b.HasDiscriminator().HasValue('S');
+                    b.ToTable("Spacecraft");
                 });
 
             modelBuilder.Entity("Rebus.Server.Concepts.Star", b =>
                 {
                     b.HasBaseType("Rebus.Server.Concept");
 
-                    b.HasIndex("PlayerId");
+                    b.Property<int>("Q")
+                        .HasColumnType("INTEGER");
 
-                    b.ToTable("Concept");
+                    b.Property<int>("R")
+                        .HasColumnType("INTEGER");
 
-                    b.HasDiscriminator().HasValue('T');
+                    b.HasIndex("Q", "R")
+                        .IsUnique();
+
+                    b.ToTable("Star");
                 });
 
             modelBuilder.Entity("Rebus.Server.Adjective", b =>
@@ -252,40 +283,48 @@ namespace Rebus.Server.Migrations
                     b.Navigation("Substantive");
                 });
 
-            modelBuilder.Entity("Rebus.Server.Concepts.Direction", b =>
+            modelBuilder.Entity("Rebus.Server.Navigation", b =>
                 {
-                    b.HasOne("Rebus.Server.Player", "Player")
-                        .WithMany()
-                        .HasForeignKey("PlayerId");
-
-                    b.Navigation("Player");
+                    b.HasOne("Rebus.Server.Player", null)
+                        .WithMany("Navigations")
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Rebus.Server.Concepts.Planet", b =>
                 {
-                    b.HasOne("Rebus.Server.Player", "Player")
-                        .WithMany()
-                        .HasForeignKey("PlayerId");
-
-                    b.Navigation("Player");
+                    b.HasOne("Rebus.Server.Concept", null)
+                        .WithOne()
+                        .HasForeignKey("Rebus.Server.Concepts.Planet", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Rebus.Server.Concepts.Spacecraft", b =>
                 {
+                    b.HasOne("Rebus.Server.Concept", null)
+                        .WithOne()
+                        .HasForeignKey("Rebus.Server.Concepts.Spacecraft", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Rebus.Server.Player", "Player")
                         .WithMany("Spacecraft")
-                        .HasForeignKey("PlayerId");
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Player");
                 });
 
             modelBuilder.Entity("Rebus.Server.Concepts.Star", b =>
                 {
-                    b.HasOne("Rebus.Server.Player", "Player")
-                        .WithMany()
-                        .HasForeignKey("PlayerId");
-
-                    b.Navigation("Player");
+                    b.HasOne("Rebus.Server.Concept", null)
+                        .WithOne()
+                        .HasForeignKey("Rebus.Server.Concepts.Star", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Rebus.Server.Concept", b =>
@@ -295,6 +334,8 @@ namespace Rebus.Server.Migrations
 
             modelBuilder.Entity("Rebus.Server.Player", b =>
                 {
+                    b.Navigation("Navigations");
+
                     b.Navigation("Spacecraft");
                 });
 

@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Rebus.Server.Concepts;
 
 namespace Rebus.Server.Commands
@@ -15,16 +14,19 @@ namespace Rebus.Server.Commands
     [Guid("6C4E330D-29AD-498B-B6A9-CB45724B0A32")]
     internal sealed class VisionCommand : Command
     {
-        private readonly IDbContextFactory<RebusDbContext> _contextFactory;
+        private readonly Controller _controller;
+        private readonly Repository _repository;
 
-        public VisionCommand(IDbContextFactory<RebusDbContext> contextFactory)
+        public VisionCommand(Controller controller, Repository repository)
         {
-            _contextFactory = contextFactory;
+            _controller = controller;
+            _repository = repository;
         }
 
-        private VisionCommand(ArgumentSet arguments, IDbContextFactory<RebusDbContext> contextFactory) : base(arguments)
+        private VisionCommand(ArgumentSet arguments, Controller controller, Repository repository) : base(arguments)
         {
-            _contextFactory = contextFactory;
+            _controller = controller;
+            _repository = repository;
         }
 
         public override bool Matches(ArgumentSet arguments)
@@ -34,39 +36,32 @@ namespace Rebus.Server.Commands
 
         public override async Task ExecuteAsync(ExpressionWriter writer)
         {
-            await using (RebusDbContext context = await _contextFactory.CreateDbContextAsync())
+            IEnumerable<Fleet> fleets;
+
+            if (Arguments.IsPlayer(Argument.Subject))
             {
-                IEnumerable<Concept> subjects;
+                fleets = _repository.GetFleets(Arguments.Player.Id);
+            }
+            else
+            {
+                fleets = Arguments
+                    .GetConcepts(Argument.Subject)
+                    .OfType<Spacecraft>()
+                    .GroupBy(x => x.Region)
+                    .Select(x => new Fleet(Arguments.Player.Id, x));
+            }
 
-                if (Arguments.IsPlayer(Argument.Subject))
-                {
-                    subjects = context
-                        .GetKnownViewers()
-                        .Where(x => x.PlayerId == Arguments.Player.Id)
-                        .OrderBy(x => x.SubstantiveValue)
-                        .AsWritable();
-                }
-                else
-                {
-                    subjects = Arguments.GetConcepts(Argument.Subject);
-                }
+            foreach (Fleet fleet in fleets)
+            {
+                _controller.Report(writer, fleet);
 
-                foreach (IGrouping<HexPoint, IViewer> grouping in subjects
-                    .OfType<IViewer>()
-                    .GroupBy(x => x.Region))
-                {
-                    (await context.CreateMessageAsync(resource: 19, grouping)).Write(writer);
-
-                    await grouping
-                        .First()
-                        .ViewAsync(writer, context);
-                }
+                await _controller.ViewAsync(writer, fleet.Region);
             }
         }
 
         public override Command CreateCommand(ArgumentSet arguments)
         {
-            return new VisionCommand(arguments, _contextFactory);
+            return new VisionCommand(arguments, _controller, _repository);
         }
     }
 }

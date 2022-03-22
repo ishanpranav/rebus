@@ -4,7 +4,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Localization;
 using Rebus.Exceptions;
 using Rebus.Expressions;
 
@@ -19,26 +19,28 @@ namespace Rebus
     /// <seealso href="https://en.wikipedia.org/wiki/Recursive_descent_parser">Recursive descent parser - Wikipedia</seealso>
     public class Parser
     {
-        private readonly IAsyncEnumerable<IToken> _tokens;
+        private readonly IEnumerable<IToken> _tokens;
+        private readonly IStringLocalizer _localizer;
 
-        public Parser(IAsyncEnumerable<IToken> tokens)
+        public Parser(IEnumerable<IToken> tokens, IStringLocalizer localizer)
         {
             _tokens = tokens;
+            _localizer = localizer;
         }
 
-        public async Task<Expression> ParseAsync()
+        public Expression Parse()
         {
-            await using (IAsyncEnumerator<IToken> enumerator = _tokens.GetAsyncEnumerator())
+            using (IEnumerator<IToken> enumerator = _tokens.GetEnumerator())
             {
-                await enumerator.MoveNextAsync();
+                enumerator.MoveNext();
 
                 bool complete = false;
                 string? actualValue = null;
-                Expression? result = await parseSentenceAsync();
+                Expression? result = parseSentence();
 
-                if (await acceptAsync(TokenTypes.Conjunction) is not null)
+                if (accept(TokenTypes.Conjunction) is not null)
                 {
-                    result = await parseRequiredCollectionAsync(parseSentenceAsync);
+                    result = parseRequiredCollection(parseSentence);
                 }
 
                 if (complete)
@@ -50,7 +52,7 @@ namespace Rebus
                     throw new RebusSpellingException(actualValue);
                 }
 
-                async Task<IToken?> acceptAsync(TokenTypes tokenType)
+                IToken? accept(TokenTypes tokenType)
                 {
                     if (!complete)
                     {
@@ -58,7 +60,7 @@ namespace Rebus
 
                         if (result is null)
                         {
-                            throw new RebusException(resource: 2);
+                            throw new RebusException(_localizer["EmptyParsingError"]);
                         }
                         else
                         {
@@ -66,7 +68,7 @@ namespace Rebus
 
                             if (result.Type.HasFlag(tokenType))
                             {
-                                if (!await enumerator.MoveNextAsync())
+                                if (!enumerator.MoveNext())
                                 {
                                     complete = true;
                                 }
@@ -79,21 +81,21 @@ namespace Rebus
                     return null;
                 }
 
-                async Task<Expression> parseSentenceAsync()
+                Expression parseSentence()
                 {
-                    Expression subject = await parseRequiredCollectionAsync(parseSubjectAsync);
+                    Expression subject = parseRequiredCollection(parseSubject);
                     Dictionary<Argument, Expression> nouns = new Dictionary<Argument, Expression>()
                     {
                         { Argument.Subject, subject }
                     };
 
-                    while ((await acceptAsync(TokenTypes.Interjection)) is not null) { }
+                    while ((accept(TokenTypes.Interjection)) is not null) { }
 
-                    IToken verb = await acceptAsync(TokenTypes.Verb) ?? throw new RebusSpellingException(TokenTypes.Verb, actualValue);
-                    IToken? adverb = await acceptAsync(TokenTypes.Adverb);
+                    IToken verb = accept(TokenTypes.Verb) ?? throw new RebusSpellingException(TokenTypes.Verb, actualValue);
+                    IToken? adverb = accept(TokenTypes.Adverb);
 
-                    Expression? firstObject = await parseCollectionAsync(parseObjectAsync);
-                    Expression? secondObject = await parseCollectionAsync(parseObjectAsync);
+                    Expression? firstObject = parseCollection(parseObject);
+                    Expression? secondObject = parseCollection(parseObject);
 
                     if (firstObject is not null)
                     {
@@ -108,24 +110,24 @@ namespace Rebus
                         }
                     }
 
-                    return new SentenceExpression(nouns, new VerbPhraseExpression(verb, adverb ?? await acceptAsync(TokenTypes.Adverb)));
+                    return new SentenceExpression(nouns, new VerbPhraseExpression(verb, adverb ?? accept(TokenTypes.Adverb)));
                 }
 
-                async Task<Expression> parseSubjectAsync()
+                Expression parseSubject()
                 {
-                    IToken? subject = await acceptAsync(TokenTypes.FirstPersonSubject);
+                    IToken? subject = accept(TokenTypes.FirstPersonSubject);
 
                     if (subject is null)
                     {
                         List<IToken> adjectives = new List<IToken>();
                         IToken? adjective;
 
-                        while ((adjective = await acceptAsync(TokenTypes.Adjective)) is not null)
+                        while ((adjective = accept(TokenTypes.Adjective)) is not null)
                         {
                             adjectives.Add(adjective);
                         }
 
-                        IToken? substantive = await acceptAsync(TokenTypes.Substantive);
+                        IToken? substantive = accept(TokenTypes.Substantive);
 
                         if (substantive is null)
                         {
@@ -143,26 +145,26 @@ namespace Rebus
                     return new ReflexiveExpression(firstPerson: true);
                 }
 
-                async Task<Expression> parseRequiredCollectionAsync(Func<Task<Expression>> parseItemAsyncFunction)
+                Expression parseRequiredCollection(Func<Expression> itemParser)
                 {
                     List<Expression> sentences = new List<Expression>();
 
                     do
                     {
-                        sentences.Add(await parseItemAsyncFunction());
+                        sentences.Add(itemParser());
                     }
-                    while (await acceptAsync(TokenTypes.Conjunction) is not null);
+                    while (accept(TokenTypes.Conjunction) is not null);
 
                     return new CollectionExpression(sentences);
                 }
 
-                async Task<Expression?> parseCollectionAsync(Func<Task<Expression?>> parseItemAsyncFunction)
+                Expression? parseCollection(Func<Expression?> itemParser)
                 {
                     List<Expression> sentences = new List<Expression>();
 
                     do
                     {
-                        Expression? item = await parseItemAsyncFunction();
+                        Expression? item = itemParser();
 
                         if (item is null)
                         {
@@ -180,35 +182,35 @@ namespace Rebus
                             sentences.Add(item);
                         }
                     }
-                    while (await acceptAsync(TokenTypes.Conjunction) is not null);
+                    while (accept(TokenTypes.Conjunction) is not null);
 
                     return new CollectionExpression(sentences);
                 }
 
-                async Task<Expression?> parseObjectAsync()
+                Expression? parseObject()
                 {
-                    if (await acceptAsync(TokenTypes.FirstPersonObject) is null)
+                    if (accept(TokenTypes.FirstPersonObject) is null)
                     {
-                        if (await acceptAsync(TokenTypes.SecondPersonObject) is null)
+                        if (accept(TokenTypes.SecondPersonObject) is null)
                         {
-                            IToken? number = await acceptAsync(TokenTypes.Number);
+                            IToken? number = accept(TokenTypes.Number);
 
                             if (number is null)
                             {
-                                IToken? quotation = await acceptAsync(TokenTypes.Quotation);
+                                IToken? quotation = accept(TokenTypes.Quotation);
 
                                 if (quotation is null)
                                 {
-                                    IToken? article = await acceptAsync(TokenTypes.Article);
+                                    IToken? article = accept(TokenTypes.Article);
                                     List<IToken> adjectives = new List<IToken>();
                                     IToken? adjective;
 
-                                    while ((adjective = await acceptAsync(TokenTypes.Adjective)) is not null)
+                                    while ((adjective = accept(TokenTypes.Adjective)) is not null)
                                     {
                                         adjectives.Add(adjective);
                                     }
 
-                                    IToken? substantive = await acceptAsync(TokenTypes.Substantive);
+                                    IToken? substantive = accept(TokenTypes.Substantive);
 
                                     if (substantive is null)
                                     {

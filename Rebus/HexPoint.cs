@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Rebus
 {
@@ -15,9 +16,9 @@ namespace Rebus
     /// </remarks>
     /// <seealso href="https://www.redblobgames.com/grids/hexagons/">Red Blob Games - Hexagonal Grids</seealso>
     /// <seealso href="http://www-cs-students.stanford.edu/~amitp/">Amit Patel's Home Page</seealso>
-    public readonly struct HexPoint : IEquatable<HexPoint>, IFormattable
+    public readonly struct HexPoint : IEquatable<HexPoint>, IFormattable, IWritable
     {
-        public static readonly HexPoint Zero = new HexPoint();
+        public static readonly HexPoint Zero;
 
         private static readonly HexPoint[] s_directions = new HexPoint[]
         {
@@ -91,9 +92,9 @@ namespace Rebus
 
         public IEnumerable<HexPoint> Neighbors()
         {
-            foreach (HexPoint direction in s_directions)
+            for (int i = 0; i < s_directions.Length; i++)
             {
-                yield return this + direction;
+                yield return this + s_directions[i];
             }
         }
 
@@ -159,6 +160,137 @@ namespace Rebus
             result.Add(R);
 
             return result.ToHashCode();
+        }
+
+        public static bool TryParse(string value, out HexPoint result)
+        {
+            try
+            {
+                int state = 0;
+                int qSign = 1;
+                int rSign = 1;
+                int qAbs = 0;
+                int rAbs = 0;
+                int qFactor = 1;
+                int rFactor = 1;
+
+                for (int i = value.Length - 1; i >= 0; i--)
+                {
+                    char current = char.ToUpper(value[i]);
+
+                    switch (state)
+                    {
+                        case 0:
+                            if (current >= 'A' && current <= 'C')
+                            {
+                                rSign = -1;
+                            }
+
+                            switch (current)
+                            {
+                                case 'A':
+                                case 'D':
+                                case 'G':
+                                    qSign = -1;
+                                    break;
+                            }
+
+                            if (i > 0 && char.IsDigit(value[i - 1]))
+                            {
+                                state++;
+
+                                break;
+                            }
+                            else
+                            {
+                                result = Zero;
+
+                                return false;
+                            }
+
+                        case 1:
+                            if (char.IsDigit(current) && i > 0)
+                            {
+                                rAbs += (current - '0') * rFactor;
+                                rFactor *= 10;
+
+                                if (char.IsLetter(value[i - 1]))
+                                {
+                                    state++;
+                                }
+
+                                break;
+                            }
+                            else
+                            {
+                                result = Zero;
+
+                                return false;
+                            }
+
+                        case 2:
+                            if (char.IsLetter(current))
+                            {
+                                if (current != 'Z')
+                                {
+                                    qAbs += (current - 'A' + 1) * qFactor;
+                                }
+
+                                if (i == 0)
+                                {
+                                    result = new HexPoint(qSign * qAbs, rSign * rAbs);
+
+                                    return true;
+                                }
+                                else
+                                {
+                                    qFactor *= 26;
+                                }
+                            }
+                            else
+                            {
+                                result = Zero;
+
+                                return false;
+                            }
+                            break;
+                    }
+                }
+            }
+            catch (ArithmeticException) { }
+
+            result = Zero;
+
+            return false;
+        }
+
+        public void Write(ExpressionWriter writer)
+        {
+            StringBuilder result = new StringBuilder();
+            int q = Math.Abs(Q);
+            int ones;
+
+            do
+            {
+                ones = q % 26;
+
+                if (ones == 0)
+                {
+                    result.Insert(index: 0, 'Z');
+                }
+                else
+                {
+                    result.Insert(index: 0, (char)(ones + 'A' - 1));
+                }
+
+                q = (q - ones) / 26;
+            }
+            while (q > 0);
+
+            writer.Write(result
+                .Append('-')
+                .Append(Math.Abs(R))
+                .Append((char)('a' + 4 + Math.Sign(Q) + (3 * Math.Sign(R)))));
         }
 
         public static bool operator ==(HexPoint left, HexPoint right)

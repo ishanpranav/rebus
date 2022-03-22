@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace Rebus.Expressions
 {
-    internal sealed class QuotationExpression : Expression
+    public class QuotationExpression : Expression
     {
         private readonly string _value;
 

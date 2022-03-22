@@ -4,34 +4,47 @@
 
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Localization;
 
 namespace Rebus.Server.Commands
 {
     [Guid("86EEE5CE-5FFF-4420-9B3F-5A4DC96B54A0")]
     internal sealed class UndoCommand : Command, IExecutorProvider
     {
+        private readonly Repository _repository;
+        private readonly IStringLocalizer _localizer;
+
 #nullable disable
         public Executor Executor { get; set; }
 #nullable enable
 
-        public UndoCommand() { }
-        private UndoCommand(ArgumentSet arguments) : base(arguments) { }
-
-        public override Task ExecuteAsync(ExpressionWriter writer)
+        public UndoCommand(Repository repository, IStringLocalizer localizer)
         {
-            if (Executor.Unexecutables.TryPop(out IUnexecutable? result))
+            _repository = repository;
+            _localizer = localizer;
+        }
+
+        private UndoCommand(ArgumentSet arguments, Repository repository, IStringLocalizer localizer) : base(arguments)
+        {
+            _repository = repository;
+            _localizer = localizer;
+        }
+
+        public override async Task ExecuteAsync(ExpressionWriter writer)
+        {
+            if (await Executor.UndoAsync(writer))
             {
-                return result.UnexecuteAsync(writer);
+                writer.Write(_localizer["UndoSuccess"]);
             }
             else
             {
-                return Task.CompletedTask;
+                writer.Write(_localizer["UndoFailure"]);
             }
         }
 
         public override Command CreateCommand(ArgumentSet arguments)
         {
-            return new UndoCommand(arguments);
+            return new UndoCommand(arguments, _repository, _localizer);
         }
     }
 }

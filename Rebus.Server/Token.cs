@@ -13,8 +13,10 @@ namespace Rebus.Server
     {
         public TokenTypes Type { get; set; }
 
+#nullable disable
         [Key]
-        public string Value { get; set; } = string.Empty;
+        public string Value { get; set; }
+#nullable enable
 
         public ICollection<Adjective> Adjectives { get; set; } = new HashSet<Adjective>();
 

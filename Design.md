@@ -9,7 +9,7 @@ A player may order a spacecraft to _jettison_ its cargo at any time. Jettisoned 
 
 Although each type of cargo is uniquely identified by its _mass_, this property does not affect a spacecraft\'s ability to carry it.
 ## Navigation
-The game universe is a grid of _regions of space_ which may be
+The game universe is a grid of hexagonal _regions of space_ which may be
 - _empty_, containing no permanent features;
 - _stellar_, containing a _star_; or
 - _planetary_, containing an _inhabited_ or an _uninhabited planet_.
@@ -18,33 +18,33 @@ Stars are _impassible_: Spacecraft may not enter stellar regions.
 
 All other celestial bodies are planets [[1](#1)].
 ### Exploration
-To explore, a player instructs a spacecraft to travel to one of up to six regions adjacent to it.
+To explore, a player instructs a spacecraft to travel to one of six regions adjacent to it.
 
-_Wealth_ is a game currency stored virtually within the microcomputer. Every time a wealth is added to a player\'s negative balance, 10% of the income is levied as an interest penalty.
+_Wealth_ is a game currency stored virtually within the microcomputer. Every time wealth is added to a player\'s negative balance, 10% of the income is levied as an interest penalty.
 
-Every movee of a spacecraft into an adjacent region incurs a fuel cost measured in wealth.
+Attempting to move a spacecraft into a region incurs a fuel cost measured in wealth.
 
-Exploration is blind: Any prior information about a destination and its contents may be incomplete, unreliable, or outdated until a spacecraft enters and observes the region. The positions and properties of all stars in a stellar region are available from any region adjacent to it. [[2](#2)]
+Exploration is blind: Any prior information about a destination and its contents may be incomplete, unreliable, or outdated until a spacecraft enters and observes the region. A star may be observed from any region adjacent to its own. [[2](#2)]
 ### Autopilot
-When a player\'s spacecraft encounters a planet for the first time, the microcomputer memorizes its location and may travel to it upon request using _autopilot_ technology.
+A player may use _autopilot technology_ to automate journeys to regions or planets which the player has previously explored. The autopilot always uses the shortest route through non-stellar regions already visited by the player. If multiple routes of equal length exist, then one is selected arbitrarily but deterministically. 
 
 Data saved in the microcomputer function as a transferable currency: _navigational information_ [[3](#3)].
 
-Even while autopilot is enabled, a spacecraft must enter and exit each intermediate region along the course before reaching its intended destination.
+Even while autopilot is enabled, a spacecraft must enter and exit each intermediate region on the route before reaching its intended destination.
 ## Interception
 When a player\'s spacecraft attempts to enter a region _occupied_ by an _adversary\'s_ spacecraft (all other players are considered adversaries), then the adversarial spacecraft _intercepts_ the player\'s, which must stop. The autopilot is immediately disabled.
 
-Each _fleet_ (collective grouping of all spacecraft belonging to a player in a given region) maintains an _interception stance_ assigned by the owning player. These orders are _asynchronous_: They remain in effect even while the player is disconnected from the game server. When a player enters an adversary-occupied region, the occupant\'s regional stance determines the consequences. [[4](#4)]
+Each maintains an _interception stance_ assigned by the owning player. These orders are _asynchronous_: They remain in effect even while the player is disconnected from the game server. When a player enters an adversary-occupied region, the occupant\'s regional stance determines the consequences. [[4](#4)]
 
 ### Passive stance
-A player may order a fleet to remain _passive_ by designating an adjacent non-stellar _sanctuary_ region to which the spacecraft will _retreat_ if an adversary attempts to enter and occupy the region.
+A player may order a spacecraft to remain _passive_ by designating an adjacent non-stellar _sanctuary_ region to which they will _retreat_ if an adversary attempts to enter and occupy the region.
 
-If the sanctuary region is occupied by the same or another adversary, then the attempt to retreat fails and the passive fleet defaults to _protective_ behavior.
+If the sanctuary region is occupied by the same or another adversary, then the attempt to retreat fails and the passive spacecraft defaults to _protective_ behavior, joining any other spacecraft in the region that the player did not order to retreat.
 
 ### Protective stance
 Spacecraft ordered to protect their region attempt to prevent adversaries from entering it.
 
-The _sizes_ of the occupying and _entering_ fleets are given by the number of spacecraft  they contain. The fleet with fewer is the _minor fleet_; the other is the _major fleet_.
+The _sizes_ of the _occupying_ and _entering_ fleets are given by the number of spacecraft they contain. The fleet with fewer is the _minor fleet_; the other is the _major fleet_.
 
 #### Standoff
 If the occupying fleet and the entering fleet are of the same size, a _standoff_ occurs: The entering fleet holds its position and may not enter the adversary-occupied region.
@@ -106,6 +106,5 @@ I intend to keep the software and game design as simple as possible to craft a p
 Potential planetary facilities under consideration include
 - **terminals** offering passengers as an alternative form of cargo (this facilitates colonization -- players may accept passengers from inhabited planets and deposit them onto uninhabited ones to inhabit them or evacuate one planet and migrate its population to another; population size may have an impact on the economy, and passengers cannot be jettisoned; passengers have zero mass)
 - **banks** that allow a player to accept or deposit wealth into a common pool for any player to collect (this facilitates contracts, transfers of wealth between players, and races between players to arrive at the bank to withdraw first),
-- **shipyards** that allow players to purchase spacecraft,
-- **fuel stations** that allow players to purchase fuel required for movement, and
+- **shipyards** that allow players to purchase spacecraft, and
 - **embassies** that allow players to negotiate government intervention in the planet\'s economic system (via price floors and ceilings).

@@ -3,33 +3,89 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Rebus.WritingStates;
 
 namespace Rebus
 {
-    public abstract class ExpressionWriter : IWritingContext
+    public class ExpressionWriter
     {
-        private IWritingState _state;
+        private readonly StringBuilder _stringBuilder = new StringBuilder();
 
-        protected ExpressionWriter() : this(new InitialWritingState()) { }
+        public WritingState State { get; set; }
 
-        private protected ExpressionWriter(IWritingState state)
+        public void Write(char value)
         {
-            _state = state;
-        }
+            switch (State)
+            {
+                case WritingState.Initial:
+                    writeInitial();
+                    break;
 
-        IWritingState IWritingContext.State
-        {
-            get
-            {
-                return _state;
-            }
-            set
-            {
-                _state = value;
+                case WritingState.Sentence:
+                    _stringBuilder.Append(value);
+
+                    if (char.IsWhiteSpace(value))
+                    {
+                        State = WritingState.WhiteSpace;
+                    }
+                    else
+                    {
+                        switch (value)
+                        {
+                            case ',':
+                                _stringBuilder.Append(' ');
+
+                                State = WritingState.WhiteSpace;
+                                break;
+
+                            case '.':
+                                State = WritingState.FullStop;
+                                break;
+
+                            case ':':
+                            case '!':
+                            case '?':
+                                _stringBuilder.Append(' ');
+
+                                State = WritingState.Initial;
+                                break;
+                        }
+                    }
+                    break;
+
+                case WritingState.WhiteSpace:
+                    if (!char.IsWhiteSpace(value))
+                    {
+                        _stringBuilder.Append(value);
+
+                        if (char.IsLetterOrDigit(value))
+                        {
+                            State = WritingState.Sentence;
+                        }
+                    }
+                    break;
+
+                case WritingState.FullStop:
+                    if (!char.IsDigit(value) && !char.IsWhiteSpace(value))
+                    {
+                        _stringBuilder.Append(' ');
+                    }
+
+                    writeInitial();
+                    break;
+
+                    void writeInitial()
+                    {
+                        if (!char.IsWhiteSpace(value))
+                        {
+                            _stringBuilder.Append(char.ToUpper(value));
+
+                            State = WritingState.Sentence;
+                        }
+                    }
             }
         }
 
@@ -46,37 +102,23 @@ namespace Rebus
                 {
                     writable.Write(writer: this);
                 }
-                else if (value is char @char)
+                else if (value is Enum @enum)
                 {
-                    Write(@char);
+                    Write(@enum);
                 }
                 else if (value is string @string)
                 {
                     Write(@string);
                 }
-                else if (value is Argument argument)
+                else if (value is IEnumerable list)
                 {
-                    Write(argument);
+                    Write(list
+                        .Cast<object>()
+                        .ToArray(), format);
                 }
-                else if (value is Enum @enum)
+                else if (value is char @char)
                 {
-                    Write(@enum);
-                }
-                else if (value is IReadOnlyList<object> readOnlyList)
-                {
-                    Write(readOnlyList, format);
-                }
-                else if (value is ICollection<object> collection)
-                {
-                    Write(collection, format);
-                }
-                else if (value is IEnumerable<object> enumerable)
-                {
-                    Write(enumerable, format);
-                }
-                else if (value is HexPoint hexPoint)
-                {
-                    Write(hexPoint);
+                    Write(@char);
                 }
                 else if (value is IFormattable formattable)
                 {
@@ -94,24 +136,9 @@ namespace Rebus
             }
         }
 
-        public void Write(char value)
-        {
-            _state.Write(context: this, value);
-        }
-
         public void Write(int value)
         {
             Write(value.ToString("n0"));
-        }
-
-        public void Write(Argument value)
-        {
-            switch (value)
-            {
-                case Argument.IndirectObject:
-                    Write(" to ");
-                    break;
-            }
         }
 
         public void Write(Enum value)
@@ -119,22 +146,6 @@ namespace Rebus
             Write(value
                 .ToString()
                 .ToLower());
-        }
-
-        public void Write<T>(IEnumerable<T> values, string? conjunction)
-        {
-            T[] array = values.ToArray();
-
-            Write((IReadOnlyList<T>)array, conjunction);
-        }
-
-        public void Write<T>(ICollection<T> values, string? conjunction)
-        {
-            T[] array = new T[values.Count];
-
-            values.CopyTo(array, arrayIndex: 0);
-
-            Write((IReadOnlyList<T>)array, conjunction);
         }
 
         public void Write<T>(IReadOnlyList<T> values, string? conjunction)
@@ -171,45 +182,11 @@ namespace Rebus
             }
         }
 
-        /// <summary>
-        /// Writes the string representation of the specified <see cref="HexPoint"/> value to this instance.
-        /// </summary>
-        /// <param name="value">The <see cref="HexPoint"/> value to write.</param>
-        /// <remarks>This method converts the given <see cref="HexPoint"/> value to a specialized region notation. The first section of the resulting string is the <see cref="HexPoint.Q"/> coordinate formatted as a base-26 (hexavigesimal) number where each digit represents an uppercase letter of the English alphabet (e.g., <c>'A'</c> is zero, <c>'Z'</c> is 25, <c>'AA'</c> is 26, <c>ZZ</c> is 675, etc.). The second section of the string is the Arabic-numeral representation of the <see cref="HexPoint.R"/> coordinate.</remarks>
-        public void Write(HexPoint value)
-        {
-            int q = value.Q;
-            int ones;
-            Stack<char> chars = new Stack<char>();
-
-            do
-            {
-                ones = q % 26;
-
-                chars.Push((char)(ones + 'A'));
-
-                q = (q - ones) / 26;
-            }
-            while (q > 0);
-
-            while (chars.TryPop(out char result))
-            {
-                Write(result);
-            }
-
-            Write(value.R.ToString());
-        }
-
-        void IWritingContext.Write(char value)
-        {
-            WriteCore(value);
-        }
-
         public void Write(string value)
         {
             foreach (char @char in value)
             {
-                _state.Write(context: this, @char);
+                Write(@char);
             }
         }
 
@@ -217,23 +194,25 @@ namespace Rebus
         {
             for (int i = 0; i < value.Length; i++)
             {
-                _state.Write(context: this, value[i]);
+                Write(value[i]);
             }
         }
 
-        protected abstract void WriteCore(char value);
-
         public void WriteLine()
         {
-            WriteLineCore();
+            _stringBuilder.AppendLine();
 
-            _state = new InitialWritingState();
+            State = WritingState.Initial;
         }
 
-        protected abstract void WriteLineCore();
+        public void Wrap(IWrapper wrapper)
+        {
+            wrapper.Wrap(_stringBuilder);
+        }
 
-        public abstract ExpressionWriter CreateFragment();
-
-        public abstract override string ToString();
+        public override string ToString()
+        {
+            return _stringBuilder.ToString();
+        }
     }
 }

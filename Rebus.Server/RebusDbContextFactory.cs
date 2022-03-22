@@ -11,8 +11,7 @@ namespace Rebus.Server
 {
     internal sealed class RebusDbContextFactory : IDbContextFactory<RebusDbContext>, IDesignTimeDbContextFactory<RebusDbContext>
     {
-        private readonly ILoggerFactory? _loggerFactory;
-        private readonly IConfiguration _configuration;
+        private readonly DbContextOptions<RebusDbContext> _options;
 
         public RebusDbContextFactory() : this(
             LoggerFactory.Create(x => x.AddConsole()),
@@ -23,15 +22,14 @@ namespace Rebus.Server
 
         public RebusDbContextFactory(ILoggerFactory loggerFactory, IConfiguration configuration)
         {
-            _loggerFactory = loggerFactory;
-            _configuration = configuration;
+            _options = new DbContextOptionsBuilder<RebusDbContext>()
+                .UseLoggerFactory(loggerFactory)
+                .UseSqlite(configuration.GetConnectionString(nameof(RebusDbContext)), x => x.MigrationsHistoryTable("dotnet_migration")).Options;
         }
 
         public RebusDbContext CreateDbContext()
         {
-            return new RebusDbContext(new DbContextOptionsBuilder<RebusDbContext>()
-                .UseLoggerFactory(_loggerFactory)
-                .UseSqlite(_configuration.GetConnectionString(nameof(RebusDbContext)), x => x.MigrationsHistoryTable("dotnet_migration")).Options);
+            return new RebusDbContext(_options);
         }
 
         public RebusDbContext CreateDbContext(string[] args)

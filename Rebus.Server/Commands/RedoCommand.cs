@@ -4,39 +4,47 @@
 
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Localization;
 
 namespace Rebus.Server.Commands
 {
     [Guid("5A0EE5FA-D968-49A2-AA29-8131A6B39AA9")]
     internal sealed class RedoCommand : Command, IExecutorProvider
     {
-        public RedoCommand() { }
-        private RedoCommand(ArgumentSet arguments) : base(arguments) { }
+        private readonly Repository _repository;
+        private readonly IStringLocalizer _localizer;
+
+        public RedoCommand(Repository repository, IStringLocalizer localizer)
+        {
+            _repository = repository;
+            _localizer = localizer;
+        }
+
+        private RedoCommand(ArgumentSet arguments, Repository repository, IStringLocalizer localizer) : base(arguments)
+        {
+            _repository = repository;
+            _localizer = localizer;
+        }
 
 #nullable disable
         public Executor Executor { get; set; }
 #nullable enable
 
-        public override Task ExecuteAsync(ExpressionWriter writer)
+        public override async Task ExecuteAsync(ExpressionWriter writer)
         {
-            if (Executor.Executables.TryPop(out IExecutable? result))
+            if (await Executor.RedoAsync(writer))
             {
-                if (result is IUnexecutable unexecutable)
-                {
-                    Executor.Unexecutables.Push(unexecutable);
-                }
-
-                return result.ExecuteAsync(writer);
+                writer.Write(_localizer["RedoSuccess"]);
             }
             else
             {
-                return Task.CompletedTask;
+                writer.Write(_localizer["RedoFailure"]);
             }
         }
 
         public override Command CreateCommand(ArgumentSet arguments)
         {
-            return new RedoCommand(arguments);
+            return new RedoCommand(arguments, _repository, _localizer);
         }
     }
 }

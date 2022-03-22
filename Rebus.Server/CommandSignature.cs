@@ -3,6 +3,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Rebus.Server
@@ -13,7 +14,12 @@ namespace Rebus.Server
         public int Id { get; set; }
         public Guid Guid { get; set; }
 
-        public string VerbValue { get; set; } = string.Empty;
+#nullable disable
+        [Required]
+        public string VerbValue { get; set; }
+#nullable enable
+
         public string? AdverbValue { get; set; }
+
     }
 }

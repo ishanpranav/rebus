@@ -5,11 +5,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Rebus.Exceptions;
 
@@ -24,24 +23,26 @@ namespace Rebus.Server
         };
         private readonly XmlSerializer _xmlSerializer = new XmlSerializer(typeof(Expression));
         private readonly Dictionary<T, EngineContext> _contextsByUser = new Dictionary<T, EngineContext>();
+        private readonly ILogger<Engine<T>> _logger;
+        private readonly IEnumerable<Command> _commands;
+        private readonly ITokenFactory _tokenFactory;
 
-        public ILogger Logger { get; }
-        public IDbContextFactory<RebusDbContext> DbContextFactory { get; }
-        public IEnumerable<Command> Commands { get; }
-        public IEditDistance EditDistance { get; }
+        public Repository Repository { get; }
+        public Controller Controller { get; }
+        public IStringLocalizer Localizer { get; }
 
-        public Engine(ILogger<Engine<T>> logger, IDbContextFactory<RebusDbContext> dbContextFactory, IEditDistance editDistance, IEnumerable<Command> commands)
+        public Engine(ILogger<Engine<T>> logger, Repository repository, Controller controller, IEnumerable<Command> commands, ITokenFactory tokenFactory, IStringLocalizer localizer)
         {
-            Logger = logger;
-            DbContextFactory = dbContextFactory;
-            EditDistance = editDistance;
-            Commands = commands;
+            _logger = logger;
+            Repository = repository;
+            Controller = controller;
+            _commands = commands;
+            _tokenFactory = tokenFactory;
+            Localizer = localizer;
         }
 
         public async Task InterpretAsync(T user, string value, ExpressionWriter writer)
         {
-            writer.WriteLine();
-
             if (!_contextsByUser.TryGetValue(user, out EngineContext? context))
             {
                 context = new EngineContext(engine: this);
@@ -55,58 +56,100 @@ namespace Rebus.Server
             }
             catch (RebusSpellingException rebusSpellingException)
             {
-                await using (RebusDbContext dbContext = await context.Engine.DbContextFactory.CreateDbContextAsync())
+                if (rebusSpellingException.ActualValue is null)
                 {
-                    Token[]? suggestions = null;
-                    TokenTypes? expectedType = rebusSpellingException.ExpectedType;
-                    string? actualValue = rebusSpellingException.ActualValue;
-                    int resource = 4;
-
-                    if (actualValue is not null)
+                    if (rebusSpellingException.ExpectedType is null)
                     {
-                        IQueryable<Token> tokens = dbContext.Tokens;
-
-                        if (expectedType is not null)
-                        {
-                            tokens = tokens.Where(x => x.Type.HasFlag(expectedType.Value));
-
-                            resource = 3;
-                        }
-
-                        suggestions = tokens
-                            .AsEnumerable()
-                            .GroupBy(x => context.Engine.EditDistance.Calculate(x.Value, actualValue))
-                            .Where(x => x.Key < 3)
-                            .MinBy(x => x.Key)?
-                            .ToArray();
+                        writer.Write(Localizer["UnexpectedParsingError"]);
                     }
+                    else
+                    {
+                        writer.Write(Localizer["UnexpectedParsingError", rebusSpellingException.ExpectedType]);
+                    }
+                }
+                else
+                {
+                    IEnumerable<Token>? suggestions = Repository.GetSuggestions(rebusSpellingException.ExpectedType, rebusSpellingException.ActualValue);
 
-                (await dbContext.CreateMessageAsync(resource, expectedType, suggestions)).Write(writer);
+                    if (rebusSpellingException.ExpectedType is null)
+                    {
+                        if (suggestions is null)
+                        {
+                            writer.Write(Localizer["UnexpectedParsingError"]);
+                        }
+                        else
+                        {
+                            writer.Write(Localizer["UnexpectedParsingError", suggestions]);
+                        }
+                    }
+                    else
+                    {
+                        if (suggestions is null)
+                        {
+                            writer.Write(Localizer["ExpectedParsingError", rebusSpellingException.ExpectedType]);
+                        }
+                        else
+                        {
+                            writer.Write(Localizer["ExpectedParsingError", rebusSpellingException.ExpectedType, suggestions]);
+                        }
+                    }
                 }
             }
             catch (RebusException rebusException)
             {
-                await using (RebusDbContext dbContext = await context.Engine.DbContextFactory.CreateDbContextAsync())
-                {
-                    (await dbContext.CreateMessageAsync(rebusException.Resource, rebusException.GetArguments())).Write(writer);
-                }
+                writer.Write(rebusException.Message);
             }
             catch (Exception exception)
             {
-                context.Engine.Logger.LogError(exception, "Exception");
+                writer.Write(exception.Message);
+
+                _logger.LogError(exception, "Exception");
             }
         }
 
-        public void LogExpression(Expression value)
+        public async Task InterpretAsync(int playerId, Executor executor, string value, ExpressionWriter writer)
         {
+            List<IToken> tokens = new List<IToken>();
+            ExpressionWriter tokenWriter = new ExpressionWriter();
+
+            await foreach (IToken token in new Tokenizer(_tokenFactory, value).TokenizeAsync())
+            {
+                tokenWriter.Write('(');
+                tokenWriter.Write(token.Type
+                    .ToString()
+                    .ToUpper());
+                tokenWriter.Write(' ');
+                tokenWriter.Write(token.Value.ToLower());
+                tokenWriter.Write(") ");
+
+                tokens.Add(token);
+            }
+
+            _logger.LogInformation("{Tokens}", tokenWriter);
+
+            Expression expression = new Parser(tokens, Localizer).Parse();
+
+            CommandBuilder commandBuilder = new CommandBuilder(Repository, _commands, Localizer);
+
+            await commandBuilder.SetPlayerAsync(playerId);
+
             using (StringWriter stringWriter = new StringWriter())
             {
                 using (XmlWriter xmlWriter = XmlWriter.Create(stringWriter, _xmlWriterSettings))
                 {
-                    _xmlSerializer.Serialize(xmlWriter, value);
+                    _xmlSerializer.Serialize(xmlWriter, expression);
                 }
 
-                Logger.LogInformation("{Expression}", stringWriter);
+                _logger.LogInformation("{Expression}", stringWriter);
+            }
+
+            await expression.InterpretAsync(commandBuilder);
+
+            foreach (Command command in commandBuilder.Build())
+            {
+                await executor.ExecuteAsync(command, writer);
+
+                writer.WriteLine();
             }
         }
     }

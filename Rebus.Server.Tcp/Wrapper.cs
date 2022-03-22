@@ -1,21 +1,17 @@
-﻿// Ishan Pranav's REBUS: WrappedExpressionWriter.cs
+﻿// Ishan Pranav's REBUS: Wrapper.cs
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
 using System.Text;
 using System.Text.RegularExpressions;
-using Rebus.WritingStates;
 
-namespace Rebus.ExpressionWriters
+namespace Rebus.Server.Tcp
 {
-    public class WrappedExpressionWriter : StringExpressionWriter
+    internal sealed class Wrapper : IWrapper
     {
         public int Width { get; set; } = 80;
 
-        public WrappedExpressionWriter() { }
-        private protected WrappedExpressionWriter(IWritingState state) : base(state) { }
-
-        /// <summary>Wraps the text contained in the writer.</summary>
+        /// <summary>Wraps the text contained in the string builder.</summary>
         /// <remarks>
         /// The implementation of this method was inspired by and based on <see href="https://stackoverflow.com/questions/52605996/c-sharp-console-word-wrap">this</see> Stack Overflow question asked by <see href="https://stackoverflow.com/users/8853235/alasdair-c">Alasdair C</see> and the answer provided by <see href="https://stackoverflow.com/users/2224523/mike">Mike</see>. The software code is licensed under the Creative Commons <see href="https://creativecommons.org/licenses/by-sa/3.0/">Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)</see> license.
         /// </remarks>
@@ -23,17 +19,17 @@ namespace Rebus.ExpressionWriters
         /// <seealso href="https://stackoverflow.com/users/8853235/alasdair-c">Alasdair C</seealso>
         /// <seealso href="https://stackoverflow.com/users/2224523/mike">Mike</seealso>
         /// <seealso href="https://creativecommons.org/licenses/by-sa/3.0/">Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)</seealso>
-        public void Wrap()
+        /// <param name="value">The string builder to wrap.</param>
+        public void Wrap(StringBuilder value)
         {
-            string text = StringBuilder.ToString();
+            string text = value.ToString();
             int index = 0;
-            int length = text.Length;
             MatchCollection strongBreakMatches = Regex.Matches(text, pattern: @"\n", RegexOptions.Compiled);
             MatchCollection weakBreakMatches = Regex.Matches(text, pattern: @"\s+|(?<=[-,.;])|$", RegexOptions.Compiled);
 
-            StringBuilder.Clear();
+            value.Clear();
 
-            while (index < length)
+            while (index < text.Length)
             {
                 Match? match = null;
 
@@ -64,17 +60,15 @@ namespace Rebus.ExpressionWriters
 
                 if (match is null)
                 {
-                    StringBuilder.AppendLine(text.Substring(index, Width));
+                    value.AppendLine(text.Substring(index, Width));
 
                     index += Width;
                 }
                 else
                 {
-                    int matchIndex = match.Index;
+                    value.AppendLine(text.Substring(index, match.Index - index));
 
-                    StringBuilder.AppendLine(text.Substring(index, matchIndex - index));
-
-                    index = matchIndex + match.Length;
+                    index = match.Index + match.Length;
                 }
             }
 
@@ -82,11 +76,6 @@ namespace Rebus.ExpressionWriters
             {
                 return match.Index >= index && match.Index <= index + Width;
             }
-        }
-
-        public override ExpressionWriter CreateFragment()
-        {
-            return new WrappedExpressionWriter(new SentenceWritingState());
         }
     }
 }

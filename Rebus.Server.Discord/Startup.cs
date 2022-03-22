@@ -8,7 +8,6 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.Logging;
-using Rebus.ExpressionWriters;
 
 namespace Rebus.Server.Discord
 {
@@ -17,9 +16,9 @@ namespace Rebus.Server.Discord
         private readonly ILogger<Startup> _logger;
         private readonly DiscordOptions _options;
         private readonly DiscordSocketClient _discordSocketClient;
-        private readonly IEngine<SocketUser> _engine;
+        private readonly IEngine<ulong> _engine;
 
-        public Startup(ILogger<Startup> logger, DiscordOptions options, DiscordSocketClient discordSocketClient, IEngine<SocketUser> engine)
+        public Startup(ILogger<Startup> logger, DiscordOptions options, DiscordSocketClient discordSocketClient, IEngine<ulong> engine)
         {
             _logger = logger;
             _options = options;
@@ -60,9 +59,9 @@ namespace Rebus.Server.Discord
                                 }
 
                                 SocketCommandContext context = new SocketCommandContext(_discordSocketClient, socketUserMessage);
-                                MarkdownExpressionWriter writer = new MarkdownExpressionWriter();
+                                ExpressionWriter writer = new ExpressionWriter();
 
-                                await _engine.InterpretAsync(context.User, content.Substring(start), writer);
+                                await _engine.InterpretAsync(context.User.Id, content.Substring(start), writer);
 
                                 string message = writer.ToString();
 

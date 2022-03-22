@@ -6,7 +6,6 @@ using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace Rebus.Server.EngineStates
 {
@@ -14,37 +13,25 @@ namespace Rebus.Server.EngineStates
     {
         public async Task InterpretAsync(EngineContext context, string value, ExpressionWriter writer)
         {
-            await using (RebusDbContext dbContext = await context.Engine.DbContextFactory.CreateDbContextAsync())
+            Version? version = Assembly
+                .GetEntryAssembly()?
+                .GetName().Version ?? new Version();
+
+            writer.Write(context.Engine.Localizer["Header", version.Major, version.Minor, version.Build, RuntimeInformation.FrameworkDescription]);
+
+            Player player = await context.Engine.Repository.CreatePlayerAsync(value);
+
+            if (string.IsNullOrWhiteSpace(player.Credential))
             {
-                (await dbContext.CreateMessageAsync(resource: 6)).Write(writer);
-                (await dbContext.CreateMessageAsync(resource: 7)).Write(writer);
+                writer.Write(context.Engine.Localizer["FirstWelcome", player.UserId]);
 
-                Version? version = Assembly
-                    .GetEntryAssembly()?
-                    .GetName().Version ?? new Version();
+                context.State = new SetCredentialEngineState(player);
+            }
+            else
+            {
+                writer.Write(context.Engine.Localizer["SecondWelcome", player.UserId]);
 
-                (await dbContext.CreateMessageAsync(resource: 11, version.Major, version.Minor, version.Build, RuntimeInformation.FrameworkDescription)).Write(writer);
-                (await dbContext.CreateMessageAsync(resource: 12)).Write(writer);
-
-                Player? player = await dbContext.Players.SingleOrDefaultAsync(x => x.UserId == value);
-
-                if (player is null)
-                {
-                    player = new Player()
-                    {
-                        UserId = value
-                    };
-
-                    (await dbContext.CreateMessageAsync(resource: 13, value)).Write(writer);
-
-                    context.State = new SetCredentialEngineState(player);
-                }
-                else
-                {
-                    (await dbContext.CreateMessageAsync(resource: 14, value)).Write(writer);
-
-                    context.State = new CredentialEngineState(player);
-                }
+                context.State = new GetCredentialEngineState(player);
             }
         }
     }

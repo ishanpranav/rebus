@@ -17,6 +17,7 @@ namespace Rebus.Server.Tcp
             await using (ServiceProvider serviceProvider = services
                  .AddRebus()
                  .AddSingleton<Startup>()
+                 .AddSingleton<IWrapper, Wrapper>()
                  .AddSingleton(x => x
                     .GetRequiredService<IConfiguration>()
                     .GetRequiredSection(nameof(TcpOptions))

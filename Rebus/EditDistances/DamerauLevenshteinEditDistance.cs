@@ -10,7 +10,7 @@ namespace Rebus.EditDistances
     /// An <see cref="IEditDistance"/> used to calculate the edit distance between two strings using the Damerau–Levenshtein algorithm.
     /// </summary>
     /// <remarks>
-    /// The implementation of this class was inspired by and based on <see href=" https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance">this</see> Wikipedia article.
+    /// The implementation of this class was inspired by and based on <see href="https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance">this</see> Wikipedia article.
     /// </remarks>
     /// <seealso href="https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance">Damerau–Levenshtein distance - Wikipedia</seealso>
     public class DamerauLevenshteinEditDistance : LevenshteinEditDistance

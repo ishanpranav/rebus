@@ -2,35 +2,33 @@
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
-using System;
 using System.Threading.Tasks;
 
 namespace Rebus.Server.EngineStates
 {
-    internal sealed class CredentialEngineState : IEngineState
+    internal abstract class CredentialEngineState : IEngineState
     {
-        private readonly Player _player;
+        protected Player Player { get; }
 
-        public CredentialEngineState(Player player)
+        protected CredentialEngineState(Player player)
         {
-            _player = player;
+            Player = player;
         }
 
-        public async Task InterpretAsync(EngineContext context, string value, ExpressionWriter writer)
+        public async Task IntroduceAsync(EngineContext context, ExpressionWriter writer)
         {
-            await using (RebusDbContext dbContext = await context.Engine.DbContextFactory.CreateDbContextAsync())
+            foreach (Fleet fleet in context.Engine.Repository.GetFleets(Player.Id))
             {
-                if (_player.Credential.Equals(value, StringComparison.OrdinalIgnoreCase))
-                {
-                    context.State = new InterpretationEngineState(_player);
+                context.Engine.Controller.Report(writer, fleet);
 
-                    (await dbContext.CreateMessageAsync(resource: 15)).Write(writer);
-                }
-                else
-                {
-                    (await dbContext.CreateMessageAsync(resource: 16)).Write(writer);
-                }
+                await context.Engine.Controller.ViewAsync(writer, fleet.Region);
             }
+
+            writer.Write(context.Engine.Localizer["EmptyParsingError"]);
+
+            context.State = new InterpretationEngineState(Player);
         }
+
+        public abstract Task InterpretAsync(EngineContext context, string value, ExpressionWriter writer);
     }
 }

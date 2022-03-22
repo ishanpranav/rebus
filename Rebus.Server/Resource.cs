@@ -12,7 +12,7 @@ namespace Rebus.Server
     internal sealed class Resource
     {
         public int Id { get; set; }
-        public int Key { get; set; }
+        public string Key { get; set; } = string.Empty;
         public int Arguments { get; set; }
         public string Value { get; set; } = string.Empty;
     }

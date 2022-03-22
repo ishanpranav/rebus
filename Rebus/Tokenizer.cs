@@ -16,7 +16,7 @@ namespace Rebus
         public Tokenizer(ITokenFactory tokenFactory, string value)
         {
             _tokenFactory = tokenFactory;
-            _matches = Regex.Matches(value, pattern: @"(\w+)|\""([\w\s]*)""", RegexOptions.Compiled);
+            _matches = Regex.Matches(value.Replace("-", string.Empty), pattern: @"(\w+)|\""([\w\s]*)""", RegexOptions.Compiled);
         }
 
         public async IAsyncEnumerable<IToken> TokenizeAsync()
@@ -36,6 +36,10 @@ namespace Rebus
                     if (int.TryParse(lexeme, out int number))
                     {
                         yield return new NumberToken(number);
+                    }
+                    else if (HexPoint.TryParse(lexeme, out HexPoint hexPoint))
+                    {
+                        yield return new HexPointToken(hexPoint);
                     }
                     else
                     {

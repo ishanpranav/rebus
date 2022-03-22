@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace Rebus.Expressions
 {
-    internal sealed class ReflexiveExpression : Expression
+    public class ReflexiveExpression : Expression
     {
         private readonly bool _firstPerson;
 

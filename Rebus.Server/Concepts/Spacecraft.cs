@@ -2,29 +2,44 @@
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace Rebus.Server.Concepts
 {
-    internal sealed class Spacecraft : Concept, IMobile, IViewer
+    [Table(nameof(Spacecraft))]
+    [Index(nameof(Q), nameof(R))]
+    internal sealed class Spacecraft : Concept, ISpacecraft
     {
-        public async Task ViewAsync(ExpressionWriter writer, RebusDbContext context)
+        public int Q { get; set; }
+        public int R { get; set; }
+
+#nullable disable
+        [Required]
+        public Player Player { get; set; }
+#nullable enable
+
+        public int PlayerId { get; set; }
+
+        public override HexPoint Region
         {
-            (await context.CreateMessageAsync(resource: 17, await context.Planets
-                .AsWritable()
-                .SingleOrDefaultAsync(x => x.Q == Q && x.R == R))).Write(writer);
-
-            foreach (HexPoint neighbor in Region.Neighbors())
+            get
             {
-                Star? star = await context.Stars
-                    .AsWritable()
-                    .SingleOrDefaultAsync(x => x.Q == neighbor.Q && x.R == neighbor.R);
+                return new HexPoint(Q, R);
+            }
+        }
 
-                if (star is not null)
-                {
-                    (await context.CreateMessageAsync(resource: 18, star)).Write(writer);
-                }
+        HexPoint ISpacecraft.Region
+        {
+            get
+            {
+                return Region;
+            }
+            set
+            {
+                Q = value.Q;
+                R = value.R;
             }
         }
     }

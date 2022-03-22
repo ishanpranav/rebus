@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Rebus.Server.Concepts;
 
 namespace Rebus.Server.Commands
@@ -15,57 +14,46 @@ namespace Rebus.Server.Commands
     [Guid("58D34F6D-B48D-49BC-88D7-0777E9039ABF")]
     internal sealed class NavigationCommand : Command
     {
-        private readonly IDbContextFactory<RebusDbContext> _contextFactory;
+        private readonly Controller _controller;
 
-        public NavigationCommand(IDbContextFactory<RebusDbContext> contextFactory)
+        public NavigationCommand(Controller controller)
         {
-            _contextFactory = contextFactory;
+            _controller = controller;
         }
 
-        private NavigationCommand(ArgumentSet arguments, IDbContextFactory<RebusDbContext> contextFactory) : base(arguments)
+        private NavigationCommand(ArgumentSet arguments, Controller controller) : base(arguments)
         {
-            _contextFactory = contextFactory;
+            _controller = controller;
         }
 
         public override bool Matches(ArgumentSet arguments)
         {
-            return arguments.Count == 2 && arguments.IsConcept(Argument.Subject) && arguments.TryGetConcepts(Argument.DirectObject, out IReadOnlyCollection<Concept>? directObjects) && directObjects.Count == 1 && directObjects.First() is ILocation;
+            return arguments.Count == 2 && arguments.TryGetConcepts(Argument.Subject, out IReadOnlyCollection<Concept>? subjects) && subjects.All(x => x is Spacecraft) && arguments.TryGetConcepts(Argument.DirectObject, out IReadOnlyCollection<Concept>? directObjects) && directObjects.Count == 1;
         }
 
         public override async Task ExecuteAsync(ExpressionWriter writer)
         {
-            await using (RebusDbContext context = await _contextFactory.CreateDbContextAsync())
+            foreach (IGrouping<HexPoint, Spacecraft> grouping in Arguments
+                .GetConcepts(Argument.Subject)
+                .OfType<Spacecraft>()
+                .GroupBy(x => x.Region))
             {
-                ILocation location = Arguments
-                    .GetConcepts(Argument.DirectObject)
-                    .OfType<ILocation>()
-                    .First();
+                Fleet fleet = new Fleet(Arguments.Player.Id, grouping);
 
-                foreach (IGrouping<HexPoint, IMobile> grouping in Arguments
-                    .GetConcepts(Argument.Subject)
-                    .OfType<IMobile>()
-                    .GroupBy(x => x.Region))
-                {
-                    (await context.CreateMessageAsync(resource: 19, grouping)).Write(writer);
+                _controller.Report(writer, fleet);
 
-                    await foreach (HexPoint region in location.NavigateAsync(writer, context, grouping.Key))
-                    {
-                        foreach (IMobile mobile in grouping)
-                        {
-                            mobile.Region = region;
-
-                            context.Update(mobile);
-                        }
-                    }
-                }
-
-                await context.SaveChangesAsync();
+                await _controller.NavigateAsync(
+                    writer,
+                    fleet,
+                    Arguments
+                        .GetConcepts(Argument.DirectObject)
+                        .First().Region);
             }
         }
 
         public override Command CreateCommand(ArgumentSet arguments)
         {
-            return new NavigationCommand(arguments, _contextFactory);
+            return new NavigationCommand(arguments, _controller);
         }
     }
 }

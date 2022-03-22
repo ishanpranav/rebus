@@ -2,19 +2,17 @@
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Localization;
 
 namespace Rebus.Server
 {
     internal interface IEngine
     {
-        ILogger Logger { get; }
-        IDbContextFactory<RebusDbContext> DbContextFactory { get; }
-        IEnumerable<Command> Commands { get; }
-        IEditDistance EditDistance { get; }
+        Repository Repository { get; }
+        Controller Controller { get; }
+        IStringLocalizer Localizer { get; }
 
-        void LogExpression(Expression value);
+        Task InterpretAsync(int playerId, Executor executor, string value, ExpressionWriter writer);
     }
 }

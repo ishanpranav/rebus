@@ -2,50 +2,30 @@
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 
 namespace Rebus.Server
 {
     [Table(nameof(Concept))]
-    [Index(nameof(Q), nameof(R))]
-    internal abstract class Concept : Writable
+    internal abstract class Concept : Writable, IFeature
     {
         public int Id { get; set; }
-        public int Q { get; set; }
-        public int R { get; set; }
-
-        [NotMapped]
-        public HexPoint Region
-        {
-            get
-            {
-                return new HexPoint(Q, R);
-            }
-            set
-            {
-                Q = value.Q;
-                R = value.R;
-            }
-        }
+        public abstract HexPoint Region { get; }
 
         public Token? Article { get; set; }
 
 #nullable disable
         [Required]
         public Token Substantive { get; set; }
+
+        [Required]
+        public string SubstantiveValue { get; set; }
 #nullable enable
 
-        public string SubstantiveValue { get; set; } = string.Empty;
-
         public ICollection<Adjective> Adjectives { get; set; } = new HashSet<Adjective>();
-
-        public Player? Player { get; set; }
-        public int? PlayerId { get; set; }
 
         public override void Write(ExpressionWriter writer)
         {

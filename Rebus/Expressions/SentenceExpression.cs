@@ -8,7 +8,7 @@ using System.Xml;
 
 namespace Rebus.Expressions
 {
-    internal sealed class SentenceExpression : Expression
+    public class SentenceExpression : Expression
     {
         private readonly IDictionary<Argument, Expression> _nouns;
         private readonly Expression _verbPhrase;

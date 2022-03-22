@@ -1,23 +1,19 @@
-﻿// Ishan Pranav's REBUS: MessageFormatProvider.cs
+﻿// Ishan Pranav's REBUS: ExpressionFormatProvider.cs
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
 
-namespace Rebus.Server
+namespace Rebus
 {
-    internal sealed class MessageFormatProvider : ICustomFormatter, IFormatProvider
+    public class ExpressionFormatProvider : ICustomFormatter, IFormatProvider
     {
-        private readonly ExpressionWriter _writer;
-
-        public MessageFormatProvider(ExpressionWriter writer)
-        {
-            _writer = writer;
-        }
-
         public string Format(string? format, object? arg, IFormatProvider? formatProvider)
         {
-            ExpressionWriter writer = _writer.CreateFragment();
+            ExpressionWriter writer = new ExpressionWriter()
+            {
+                State = WritingState.Sentence
+            };
 
             writer.Write(arg, format);
 

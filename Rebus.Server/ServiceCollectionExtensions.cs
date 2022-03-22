@@ -5,6 +5,7 @@
 using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Rebus.EditDistances;
 using Rebus.Server.Commands;
@@ -23,12 +24,19 @@ namespace Rebus.Server
                 .AddLogging(x => x
                     .AddConsole()
                     .SetMinimumLevel(LogLevel.Information))
+                .AddLocalization()
                 .AddDbContextFactory<RebusDbContext, RebusDbContextFactory>()
                 .AddSingleton(typeof(IEngine<>), typeof(Engine<>))
+                .AddSingleton<IFormatProvider, ExpressionFormatProvider>()
+                .AddSingleton<IStringLocalizer, DbStringLocalizer>()
                 .AddSingleton<IConfiguration>(configurationRoot)
-                .AddSingleton(Random.Shared)
                 .AddSingleton<Parser>()
+                .AddSingleton<Repository>()
+                .AddSingleton<IRepository>(x => x.GetRequiredService<Repository>())
+                .AddSingleton<Controller>()
+                .AddSingleton<ITokenFactory, TokenFactory>()
                 .AddSingleton<IEditDistance, DamerauLevenshteinEditDistance>()
+                .AddSingleton<IPathfinderFactory<HexPoint>, DbPathfinderFactory>()
                 .AddSingleton<Command, NavigationCommand>()
                 .AddSingleton<Command, RedoCommand>()
                 .AddSingleton<Command, ReexecuteCommand>()

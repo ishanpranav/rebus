@@ -6,13 +6,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Localization;
 using Rebus.Exceptions;
 
 namespace Rebus.Server
 {
     internal sealed class CommandBuilder : ICommandBuilder
     {
-        private readonly RebusDbContext _context;
+        private readonly Repository _repository;
+        private readonly IStringLocalizer _localizer;
         private readonly List<Command> _commands = new List<Command>();
         private readonly Dictionary<Guid, Command> _commandsByGuid;
 
@@ -24,9 +26,10 @@ namespace Rebus.Server
 
         private Player? _player;
 
-        public CommandBuilder(RebusDbContext context, IEnumerable<Command> commands)
+        public CommandBuilder(Repository repository, IEnumerable<Command> commands, IStringLocalizer localizer)
         {
-            _context = context;
+            _repository = repository;
+            _localizer = localizer;
             _commandsByGuid = commands.ToDictionary(x => x.GetType().GUID);
         }
 
@@ -35,7 +38,7 @@ namespace Rebus.Server
             _commands.Clear();
             _arguments = new ArgumentSet();
 
-            _player = await _context.Players.FindAsync(id);
+            _player = await _repository.GetPlayerAsync(id);
 
             _arguments.Player = _player;
         }
@@ -49,35 +52,18 @@ namespace Rebus.Server
             }
             else
             {
-                Concept? result;
+                IEnumerable<Concept> concepts = _repository.GetConcepts(Argument, _player.Id, adjectives, substantive);
 
-                try
+                if (concepts.Any())
                 {
-                    IQueryable<Concept> concepts = _context.Concepts
-                        .AsWritable()
-                        .Where(concept => concept.Substantive.Value == substantive.Value);
-
-                    if (Argument is Argument.Subject)
+                    foreach (Concept concept in concepts)
                     {
-                        concepts = concepts.Where(concept => concept.PlayerId == _player.Id);
+                        _arguments.AddConcept(Argument, concept);
                     }
-
-                    result = concepts
-                        .AsEnumerable()
-                        .SingleOrDefault(concept => adjectives.All(adjective => concept.Adjectives.Any(x => adjective.Value == x.TokenValue)));
-                }
-                catch
-                {
-                    throw new RebusException(resource: 5);
-                }
-
-                if (result is null)
-                {
-                    throw new RebusException(resource: 8);
                 }
                 else
                 {
-                    _arguments.AddConcept(Argument, result);
+                    throw new RebusException(_localizer["UndefinedConcept"]);
                 }
             }
         }
@@ -109,21 +95,14 @@ namespace Rebus.Server
 
                 try
                 {
-                    string? adverb = Adverb?.Value;
-
-                    prototype = _context.CommandSignatures
-                        .Where(signature => signature.VerbValue == Verb.Value && signature.AdverbValue == adverb)
-                        .Select(x => x.Guid)
-                        .AsEnumerable()
-                        .Select(x => _commandsByGuid[x])
-                        .SingleOrDefault(x => x.Matches(_arguments));
+                    prototype = _repository.GetCommand(Verb.Value, Adverb?.Value, _commandsByGuid, _arguments);
                 }
                 catch
                 {
-                    throw new RebusException(resource: 9);
+                    throw new RebusException(_localizer["AmbiguousCommand"]);
                 }
 
-                _commands.Add((prototype ?? throw new RebusException(resource: 10)).CreateCommand(_arguments));
+                _commands.Add((prototype ?? throw new RebusException(_localizer["UndefinedCommand"])).CreateCommand(_arguments));
             }
 
             Verb = null;
