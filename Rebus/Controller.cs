@@ -2,6 +2,7 @@
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Localization;
@@ -37,11 +38,12 @@ namespace Rebus
 
                 if (wealth < 0)
                 {
-                    int penalty = value / 10;
+                    const double interestRate = 0.1;
+                    int penalty = (int)Math.Round(value * interestRate);
 
                     wealth -= penalty;
 
-                    writer.Write(_localizer["WealthPenalty", penalty]);
+                    writer.Write(_localizer["WealthPenalty", interestRate, penalty]);
                 }
             }
             else

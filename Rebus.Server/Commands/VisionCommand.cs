@@ -40,7 +40,7 @@ namespace Rebus.Server.Commands
 
             if (Arguments.IsPlayer(Argument.Subject))
             {
-                fleets = _repository.GetFleets(Arguments.Player.Id);
+                fleets = _repository.GetFleets(Arguments.PlayerId);
             }
             else
             {
@@ -48,7 +48,7 @@ namespace Rebus.Server.Commands
                     .GetConcepts(Argument.Subject)
                     .OfType<Spacecraft>()
                     .GroupBy(x => x.Region)
-                    .Select(x => new Fleet(Arguments.Player.Id, x));
+                    .Select(x => new Fleet(Arguments.PlayerId, x));
             }
 
             foreach (Fleet fleet in fleets)

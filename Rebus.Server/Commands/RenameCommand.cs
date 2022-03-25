@@ -37,7 +37,7 @@ namespace Rebus.Server.Commands
                 Arguments
                     .GetConcepts(Argument.IndirectObject)
                     .OfType<Spacecraft>()
-                    .First(x => x.PlayerId == Arguments.Player.Id),
+                    .First(x => x.PlayerId == Arguments.PlayerId),
                 Arguments.GetQuotation(Argument.DirectObject));
         }
 

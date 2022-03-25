@@ -10,8 +10,6 @@ namespace Rebus.Server
     {
         public ArgumentSet Arguments { get; }
 
-        public abstract Task ExecuteAsync(ExpressionWriter writer);
-
         protected Command()
         {
             Arguments = new ArgumentSet();
@@ -26,6 +24,8 @@ namespace Rebus.Server
         {
             return arguments.Count == 1 && arguments.IsPlayer(Argument.Subject);
         }
+
+        public abstract Task ExecuteAsync(ExpressionWriter writer);
 
         public abstract Command CreateCommand(ArgumentSet arguments);
     }

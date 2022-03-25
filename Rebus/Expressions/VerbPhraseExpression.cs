@@ -2,7 +2,6 @@
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace Rebus.Expressions
@@ -18,12 +17,10 @@ namespace Rebus.Expressions
             _adverb = adverb;
         }
 
-        public override Task InterpretAsync(ICommandBuilder context)
+        public override void Interpret(ICommandBuilder context)
         {
             context.Verb = _verb;
             context.Adverb = _adverb;
-
-            return Task.CompletedTask;
         }
 
         public override void WriteXml(XmlWriter writer)

@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Ishan Pranav's REBUS: InitialMigration.cs
+// Copyright (c) Ishan Pranav. All rights reserved.
+// Licensed under the MIT License.
+
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable

@@ -3,7 +3,6 @@
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace Rebus.Expressions
@@ -21,11 +20,9 @@ namespace Rebus.Expressions
             _substantive = substantive;
         }
 
-        public override Task InterpretAsync(ICommandBuilder context)
+        public override void Interpret(ICommandBuilder context)
         {
             context.Include(_adjectives, _substantive);
-
-            return Task.CompletedTask;
         }
 
         public override void WriteXml(XmlWriter writer)

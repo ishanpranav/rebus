@@ -2,7 +2,6 @@
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace Rebus.Expressions
@@ -16,11 +15,9 @@ namespace Rebus.Expressions
             _value = value;
         }
 
-        public override Task InterpretAsync(ICommandBuilder context)
+        public override void Interpret(ICommandBuilder context)
         {
             context.Include(_value);
-
-            return Task.CompletedTask;
         }
 
         public override void WriteXml(XmlWriter writer)

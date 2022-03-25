@@ -12,18 +12,18 @@ namespace Rebus.Server
         private readonly Dictionary<Argument, object> _values = new Dictionary<Argument, object>();
 
 #nullable disable
-        private Player _player;
-        public Player Player
+        private int _playerId;
+        public int PlayerId
         {
             get
             {
-                return _player;
+                return _playerId;
             }
             set
             {
-                _values.TryAdd(Argument.Subject, true);
+                _values.TryAdd(Argument.Subject, value: true);
 
-                _player = value;
+                _playerId = value;
             }
         }
 #nullable enable
@@ -128,6 +128,22 @@ namespace Rebus.Server
         public void SetNumber(Argument argument, int value)
         {
             _values[argument] = value;
+        }
+
+        public bool Empty()
+        {
+            foreach (object value in _values.Values)
+            {
+                if (value is IReadOnlyCollection<Concept> concepts)
+                {
+                    if (concepts.Count > 0)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
         }
     }
 }

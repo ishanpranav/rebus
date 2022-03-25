@@ -3,7 +3,6 @@
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Rebus
 {
@@ -12,8 +11,6 @@ namespace Rebus
         IToken? Verb { get; set; }
         IToken? Adverb { get; set; }
         Argument Argument { get; set; }
-
-        Task SetPlayerAsync(int id);
 
         void Include(IReadOnlyCollection<IToken> adjectives, IToken substantive);
         void Include(int number);

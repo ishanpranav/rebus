@@ -20,7 +20,7 @@ All other celestial bodies are planets [[1](#1)].
 ### Exploration
 To explore, a player instructs a spacecraft to travel to one of six regions adjacent to it.
 
-_Wealth_ is a game currency stored virtually within the microcomputer. Every time wealth is added to a player\'s negative balance, 10% of the income is levied as an interest penalty.
+_Wealth_ is a game currency stored virtually within the microcomputer. Every time wealth is added to a player\'s negative balance, ten percent of the income is levied as an interest penalty. Banker\'s rounding is used to approximate interest amounts to the nearest integer.
 
 Attempting to move a spacecraft into a region incurs a fuel cost measured in wealth.
 
@@ -85,7 +85,7 @@ No feature exists formalizing alliances. Only one player may occupy a region at 
 ##### 5
 Since planets and players determine demand, the mass of a unit of cargo is not necessarily associated with its value. Since spacecraft carrying the most massive cargo are destroyed first, it may be effective to reserve some spacecraft to carry less expensive, more massive, cargo to avoid the destruction of more valuable commodities.
 ##### 6
-Let `m` be the initial size of the minor fleet; let `M(0)` be the initial size of the major fleet; let `c` be the number of spacecraft captured by the major fleet; and let `d` be the number of spacecraft destroyed. The final size of the major fleet, `M(1)`, is given by the following process:
+Let `m` be the initial size of the minor fleet, let `M(0)` be the initial size of the major fleet, let `c` be the number of spacecraft captured by the major fleet, and let `d` be the number of spacecraft destroyed. The final size of the major fleet, `M(1)`, is given by the following process:
 ```python
 c = max(1, m / 4).
 d = m - c.

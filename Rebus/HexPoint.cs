@@ -85,11 +85,6 @@ namespace Rebus
             return new HexPoint(Q * factor, R * factor);
         }
 
-        public int Length()
-        {
-            return (Math.Abs(Q) + Math.Abs(R) + Math.Abs(S)) / 2;
-        }
-
         public IEnumerable<HexPoint> Neighbors()
         {
             for (int i = 0; i < s_directions.Length; i++)
@@ -139,7 +134,9 @@ namespace Rebus
 
         public static int Distance(HexPoint value1, HexPoint value2)
         {
-            return (value1 - value2).Length();
+            HexPoint difference = value1 - value2;
+
+            return (Math.Abs(difference.Q) + Math.Abs(difference.R) + Math.Abs(difference.S)) / 2;
         }
 
         public override bool Equals(object? obj)

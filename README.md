@@ -11,7 +11,7 @@ The game is implemented with a server (either users communicating with a Discord
 
 The software tokenizes user input, parses the tokens to construct an abstract syntax tree, and executes the given instructions. The interpreter responds with well-formed English sentences that describe the situations that player-controlled spacecraft face and provide context to aid the player\'s decision-making.
 ## License
-This repository is licensed with the [MIT](LICENSE) license.
+This repository is licensed with the [MIT](LICENSE.txt) license.
 ## Attribution
 This software uses third-party libraries or other resources that may be
 distributed under licenses different than the software. Please see the third-party notices included [here](THIRD-PARTY-NOTICES.txt).

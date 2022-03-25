@@ -3,7 +3,6 @@
 // Licensed under the MIT License.
 
 using System;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -12,7 +11,7 @@ namespace Rebus
 {
     public abstract class Expression : IXmlSerializable
     {
-        public abstract Task InterpretAsync(ICommandBuilder context);
+        public abstract void Interpret(ICommandBuilder context);
 
         XmlSchema? IXmlSerializable.GetSchema()
         {

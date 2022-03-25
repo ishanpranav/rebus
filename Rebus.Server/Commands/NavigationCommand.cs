@@ -38,7 +38,7 @@ namespace Rebus.Server.Commands
                 .OfType<Spacecraft>()
                 .GroupBy(x => x.Region))
             {
-                Fleet fleet = new Fleet(Arguments.Player.Id, grouping);
+                Fleet fleet = new Fleet(Arguments.PlayerId, grouping);
 
                 _controller.Report(writer, fleet);
 

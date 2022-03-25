@@ -129,9 +129,7 @@ namespace Rebus.Server
 
             Expression expression = new Parser(tokens, Localizer).Parse();
 
-            CommandBuilder commandBuilder = new CommandBuilder(Repository, _commands, Localizer);
-
-            await commandBuilder.SetPlayerAsync(playerId);
+            CommandBuilder commandBuilder = new CommandBuilder(playerId, Repository, _commands, Localizer);
 
             using (StringWriter stringWriter = new StringWriter())
             {
@@ -143,7 +141,7 @@ namespace Rebus.Server
                 _logger.LogInformation("{Expression}", stringWriter);
             }
 
-            await expression.InterpretAsync(commandBuilder);
+            expression.Interpret(commandBuilder);
 
             foreach (Command command in commandBuilder.Build())
             {

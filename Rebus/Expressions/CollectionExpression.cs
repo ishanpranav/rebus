@@ -3,7 +3,6 @@
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace Rebus.Expressions
@@ -17,11 +16,11 @@ namespace Rebus.Expressions
             _items = items;
         }
 
-        public override async Task InterpretAsync(ICommandBuilder context)
+        public override void Interpret(ICommandBuilder context)
         {
             foreach (Expression item in _items)
             {
-                await item.InterpretAsync(context);
+                item.Interpret(context);
             }
         }
 
