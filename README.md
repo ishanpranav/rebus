@@ -16,8 +16,8 @@ This repository is licensed with the [MIT](LICENSE.txt) license.
 This software uses third-party libraries or other resources that may be
 distributed under licenses different than the software. Please see the third-party notices included [here](THIRD-PARTY-NOTICES.txt).
 ## References
-- The implementation of the [recursive descent parser](Rebus/Parser.cs) was inspired by and based on [this](https://en.wikipedia.org/wiki/Recursive_descent_parser) Wikipedia article.
-- The implementation of the [word wrap algorithm](Rebus.Server.Tcp/Wrapper.cs) was inspired by and based on [this](https://stackoverflow.com/questions/52605996/c-sharp-console-word-wrap) Stack Overflow question. Please see the full attribution in the code file [here](Rebus.Server.Tcp/Wrapper.cs).
-- The implementation of the [Levenshtein](Rebus/EditDistances/LevenshteinEditDistance.cs) and [Damerau–Levenshtein edit distance algorithms](Rebus/EditDistances/DamerauLevenshteinEditDistance.cs) were inspired by and based on [this](https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance) Wikipedia article.
-- The implementation of the [hexagonal coordinate system](Rebus/HexPoint.cs) was inspired by and based on [this](https://www.redblobgames.com/grids/hexagons/) article by [Amit Patel](http://www-cs-students.stanford.edu/~amitp/).
-- The implementation of the [A* search algorithm](Rebus/Pathfinders/AStarPathfinder.cs) was inspired by and based on [this](https://en.wikipedia.org/wiki/A*_search_algorithm) Wikipedia article.
+- The implementation of the [recursive descent parser](src/Rebus/Parser.cs) was inspired by and based on [this](https://en.wikipedia.org/wiki/Recursive_descent_parser) Wikipedia article.
+- The implementation of the [word wrap algorithm](src/Rebus.Server.Tcp/Wrapper.cs) was inspired by and based on [this](https://stackoverflow.com/questions/52605996/c-sharp-console-word-wrap) Stack Overflow question. Please see the full attribution in the code file [here](src/Rebus.Server.Tcp/Wrapper.cs).
+- The implementation of the [Levenshtein](src/Rebus/EditDistances/LevenshteinEditDistance.cs) and [Damerau–Levenshtein edit distance algorithms](src/Rebus/EditDistances/DamerauLevenshteinEditDistance.cs) were inspired by and based on [this](https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance) Wikipedia article.
+- The implementation of the [hexagonal coordinate system](src/Rebus/HexPoint.cs) was inspired by and based on [this](https://www.redblobgames.com/grids/hexagons/) article by [Amit Patel](http://www-cs-students.stanford.edu/~amitp/).
+- The implementation of the [A* search algorithm](src/Rebus/Pathfinders/AStarPathfinder.cs) was inspired by and based on [this](https://en.wikipedia.org/wiki/A*_search_algorithm) Wikipedia article.
