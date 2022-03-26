@@ -1,0 +1,200 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Design </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Design ">
+    <meta name="generator" content="docfx 2.59.0.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="design">Design</h1>
+
+<p>Ishan Pranav's REBUS simulates a dialogue between a <em>player's character</em> and their <em>microcomputer</em> assistant. The player works with their character's microcomputer to issue <em>orders</em> to <em>spacecraft</em> under their control.</p>
+<h2 id="spacecraft">Spacecraft</h2>
+<p>All spacecraft are functionally identical.</p>
+<p>Each has the <em>capacity</em> to carry at most one unit of <em>cargo</em>  at any moment.</p>
+<p>A player may order a spacecraft to <em>jettison</em> its cargo at any time. Jettisoned units of cargo are destroyed.</p>
+<p>Although each type of cargo is uniquely identified by its <em>mass</em>, this property does not affect a spacecraft's ability to carry it.</p>
+<h2 id="navigation">Navigation</h2>
+<p>The game universe is a grid of hexagonal <em>regions of space</em> which may be</p>
+<ul>
+<li><em>empty</em>, containing no permanent features;</li>
+<li><em>stellar</em>, containing a <em>star</em>; or</li>
+<li><em>planetary</em>, containing an <em>inhabited</em> or an <em>uninhabited planet</em>.</li>
+</ul>
+<p>Stars are <em>impassible</em>: Spacecraft may not enter stellar regions.</p>
+<p>All other celestial bodies are planets [<a href="#1">1</a>].</p>
+<h3 id="exploration">Exploration</h3>
+<p>To explore, a player instructs a spacecraft to travel to one of six regions adjacent to it.</p>
+<p><em>Wealth</em> is a game currency stored virtually within the microcomputer. Every time wealth is added to a player's negative balance, ten percent of the income is levied as an interest penalty. Banker's rounding is used to approximate interest amounts to the nearest integer.</p>
+<p>Attempting to move a spacecraft into a region incurs a fuel cost measured in wealth.</p>
+<p>Exploration is blind: Any prior information about a destination and its contents may be incomplete, unreliable, or outdated until a spacecraft enters and observes the region. A star may be observed from any region adjacent to its own. [<a href="#2">2</a>]</p>
+<h3 id="autopilot">Autopilot</h3>
+<p>A player may use <em>autopilot technology</em> to automate journeys to regions or planets which the player has previously explored. The autopilot always uses the shortest route through non-stellar regions already visited by the player. If multiple routes of equal length exist, then one is selected arbitrarily but deterministically.</p>
+<p>Data saved in the microcomputer function as a transferable currency: <em>navigational information</em> [<a href="#3">3</a>].</p>
+<p>Even while autopilot is enabled, a spacecraft must enter and exit each intermediate region on the route before reaching its intended destination.</p>
+<h2 id="interception">Interception</h2>
+<p>When a player's spacecraft attempts to enter a region <em>occupied</em> by an <em>adversary's</em> spacecraft (all other players are considered adversaries), then the adversarial spacecraft <em>intercepts</em> the player's, which must stop. The autopilot is immediately disabled.</p>
+<p>Each maintains an <em>interception stance</em> assigned by the owning player. These orders are <em>asynchronous</em>: They remain in effect even while the player is disconnected from the game server. When a player enters an adversary-occupied region, the occupant's regional stance determines the consequences. [<a href="#4">4</a>]</p>
+<h3 id="passive-stance">Passive stance</h3>
+<p>A player may order a spacecraft to remain <em>passive</em> by designating an adjacent non-stellar <em>sanctuary</em> region to which they will <em>retreat</em> if an adversary attempts to enter and occupy the region.</p>
+<p>If the sanctuary region is occupied by the same or another adversary, then the attempt to retreat fails and the passive spacecraft defaults to <em>protective</em> behavior, joining any other spacecraft in the region that the player did not order to retreat.</p>
+<h3 id="protective-stance">Protective stance</h3>
+<p>Spacecraft ordered to protect their region attempt to prevent adversaries from entering it.</p>
+<p>The <em>sizes</em> of the <em>occupying</em> and <em>entering</em> fleets are given by the number of spacecraft they contain. The fleet with fewer is the <em>minor fleet</em>; the other is the <em>major fleet</em>.</p>
+<h4 id="standoff">Standoff</h4>
+<p>If the occupying fleet and the entering fleet are of the same size, a <em>standoff</em> occurs: The entering fleet holds its position and may not enter the adversary-occupied region.</p>
+<h4 id="conflict">Conflict</h4>
+<p>If no standoff occurs, each fleet loses a number of spacecraft equaling three-fourths of the minor fleet's size.</p>
+<p>Spacecraft are destroyed in descending order based on the mass of their cargo [<a href="#5">5</a>].</p>
+<p>The remaining spacecraft in the minor fleet are captured and join the major fleet. During combat, the major fleet always captures at least one spacecraft [<a href="#6">6</a>].</p>
+<h2 id="commerce">Commerce</h2>
+<p>A player with a spacecraft in a region may conduct <em>commerce</em> with any planet within that region by exchanging wealth for <em>commodities</em> stored as cargo. [<a href="#7">7</a>].</p>
+<p>At an inhabited planet, a player may</p>
+<ul>
+<li><em>sell</em> commodities being imported by the planet <!-- , --> and</li>
+<li><em>purchase</em> commodities being exported by the planet<!-- , -->.</li>
+</ul>
+<p>Each purchase increases the unit <em>selling price</em> that the exporting planet requests in exchange for the commodity; each sale decreases the unit <em>purchasing price</em> that the importing planet is willing to pay for the commodity.</p>
+<p>The quantities supplied and demanded by each planet are unlimited. The amount that a player sells is limited only by their cargo; the amount that a player purchases is limited only by their wealth and the total capacity of their fleet.</p>
+<p>At an uninhabited planet, a player may</p>
+<ul>
+<li><em>accept</em> cargo,</li>
+<li><em>deposit</em> cargo,</li>
+<li><em>download</em> navigational information, or</li>
+<li><em>upload</em> navigational information.</li>
+</ul>
+<h2 id="notes">Notes</h2>
+<p>These comments are not essential to the specification of the game design but seek to provide clarifying examples and emergent functionality.</p>
+<h5 id="1">1</h5>
+<p>Within the software and its design documentation, the term &quot;planet&quot; is defined more broadly than in astronomy. It may refer to moons, dwarf planets, space stations, satellites, and asteroids.</p>
+<h5 id="2">2</h5>
+<p>Empty spacecraft may be used as scouts to avoid entering traps.</p>
+<h5 id="3">3</h5>
+<p>Navigational information is valuable since the vast universe size may be exploited by weaker players to escape stronger ones' areas of control. A &quot;hide-and-seek&quot; mechanic emerges.</p>
+<h5 id="4">4</h5>
+<p>No feature exists formalizing alliances. Only one player may occupy a region at a time. Inteception stances are indiscriminate: They do not respect informal agreements made by players outside of the game. Thus, they must be pre-arranged and deception is possible.</p>
+<h5 id="5">5</h5>
+<p>Since planets and players determine demand, the mass of a unit of cargo is not necessarily associated with its value. Since spacecraft carrying the most massive cargo are destroyed first, it may be effective to reserve some spacecraft to carry less expensive, more massive, cargo to avoid the destruction of more valuable commodities.</p>
+<h5 id="6">6</h5>
+<p>Let <code>m</code> be the initial size of the minor fleet, let <code>M(0)</code> be the initial size of the major fleet, let <code>c</code> be the number of spacecraft captured by the major fleet, and let <code>d</code> be the number of spacecraft destroyed. The final size of the major fleet, <code>M(1)</code>, is given by the following process:</p>
+<pre><code class="lang-python">c = max(1, m / 4).
+d = m - c.
+M(1) = M(0) - d + c
+     = M(0) - (m - c) + c
+     = M(0) - m + (2 * max(1, m / 4)).
+</code></pre>
+<p>The final size of the minor fleet is always zero.</p>
+<p>This system exhibits no randomness and can indirectly facilitate cargo exchanges.</p>
+<h5 id="7">7</h5>
+<p>No feature exists allowing one player to directly transfer wealth to another. Trades may be simulated via cargo deposits on uninhabited planets. This offers an incentive to discover remote uninhabited planets for undisturbed bartering.</p>
+<p>Piracy is possible by accepting unclaimed units of cargo before their intended recipient. A &quot;treasure hunt&quot; mechanic emerges. Such meetings also encourage traps and betrayals, limiting excessive player cooperation in favor of fairer competition (see <a href="#4">note 4</a>).</p>
+<h2 id="future-considerations">Future considerations</h2>
+<p>I intend to keep the software and game design as simple as possible to craft a polished prototype. However, I am currently evaluating certain additional features which, while entertaining, are not essential.</p>
+<p>Potential planetary facilities under consideration include</p>
+<ul>
+<li><strong>terminals</strong> offering passengers as an alternative form of cargo (this facilitates colonization -- players may accept passengers from inhabited planets and deposit them onto uninhabited ones to inhabit them or evacuate one planet and migrate its population to another; population size may have an impact on the economy, and passengers cannot be jettisoned; passengers have zero mass)</li>
+<li><strong>banks</strong> that allow a player to accept or deposit wealth into a common pool for any player to collect (this facilitates contracts, transfers of wealth between players, and races between players to arrive at the bank to withdraw first),</li>
+<li><strong>shipyards</strong> that allow players to purchase spacecraft, and</li>
+<li><strong>embassies</strong> that allow players to negotiate government intervention in the planet's economic system (via price floors and ceilings).</li>
+</ul>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus.Documentation/articles/intro.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

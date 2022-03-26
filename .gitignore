@@ -386,3 +386,10 @@ FodyWeavers.xsd
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+# DocFx
+src/Rebus.Documentation/log.txt
+src/Rebus.Documentation/api/*.yml
+src/Rebus.Documentation/api/.manifest
+docs/fonts/
+docs/styles/lunr.js
