@@ -393,3 +393,6 @@ src/Rebus.Documentation/api/*.yml
 src/Rebus.Documentation/api/.manifest
 docs/fonts/
 docs/styles/lunr.js
+
+# SQLite
+*.db

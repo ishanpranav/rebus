@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\LICENSE.txt = ..\LICENSE.txt
 		..\README.md = ..\README.md
 		..\Rebus.db = ..\Rebus.db
+		Rebus.Database\Rebus.sql = Rebus.Database\Rebus.sql
 		..\THIRD-PARTY-NOTICES.txt = ..\THIRD-PARTY-NOTICES.txt
 	EndProjectSection
 EndProject

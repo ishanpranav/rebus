@@ -2012,6 +2012,32 @@ references:
   fullName.vb: Rebus.Pathfinders.AStarPathfinder(Of T).Search
   nameWithType: AStarPathfinder<T>.Search
   nameWithType.vb: AStarPathfinder(Of T).Search
+- uid: Rebus.Pathfinders.DijkstraPathfinder`1
+  name: DijkstraPathfinder<T>
+  href: api/Rebus.Pathfinders.DijkstraPathfinder-1.html
+  commentId: T:Rebus.Pathfinders.DijkstraPathfinder`1
+  name.vb: DijkstraPathfinder(Of T)
+  fullName: Rebus.Pathfinders.DijkstraPathfinder<T>
+  fullName.vb: Rebus.Pathfinders.DijkstraPathfinder(Of T)
+  nameWithType: DijkstraPathfinder<T>
+  nameWithType.vb: DijkstraPathfinder(Of T)
+- uid: Rebus.Pathfinders.DijkstraPathfinder`1.Heuristic(`0,`0)
+  name: Heuristic(T, T)
+  href: api/Rebus.Pathfinders.DijkstraPathfinder-1.html#Rebus_Pathfinders_DijkstraPathfinder_1_Heuristic__0__0_
+  commentId: M:Rebus.Pathfinders.DijkstraPathfinder`1.Heuristic(`0,`0)
+  fullName: Rebus.Pathfinders.DijkstraPathfinder<T>.Heuristic(T, T)
+  fullName.vb: Rebus.Pathfinders.DijkstraPathfinder(Of T).Heuristic(T, T)
+  nameWithType: DijkstraPathfinder<T>.Heuristic(T, T)
+  nameWithType.vb: DijkstraPathfinder(Of T).Heuristic(T, T)
+- uid: Rebus.Pathfinders.DijkstraPathfinder`1.Heuristic*
+  name: Heuristic
+  href: api/Rebus.Pathfinders.DijkstraPathfinder-1.html#Rebus_Pathfinders_DijkstraPathfinder_1_Heuristic_
+  commentId: Overload:Rebus.Pathfinders.DijkstraPathfinder`1.Heuristic
+  isSpec: "True"
+  fullName: Rebus.Pathfinders.DijkstraPathfinder<T>.Heuristic
+  fullName.vb: Rebus.Pathfinders.DijkstraPathfinder(Of T).Heuristic
+  nameWithType: DijkstraPathfinder<T>.Heuristic
+  nameWithType.vb: DijkstraPathfinder(Of T).Heuristic
 - uid: Rebus.Pathfinders.HexPointPathfinder
   name: HexPointPathfinder
   href: api/Rebus.Pathfinders.HexPointPathfinder.html

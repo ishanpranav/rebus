@@ -2,7 +2,6 @@
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
-#if DEBUG
 using System;
 
 namespace Rebus.Pathfinders
@@ -25,4 +24,3 @@ namespace Rebus.Pathfinders
         }
     }
 }
-#endif
