@@ -4,10 +4,14 @@
 
 namespace Rebus.Tokens
 {
+    /// <summary>
+    /// Represents a token containing a numeric literal.
+    /// </summary>
     public class NumberToken : IToken
     {
         private readonly int _number;
 
+        /// <inheritdoc/>
         public TokenTypes Type
         {
             get
@@ -16,6 +20,7 @@ namespace Rebus.Tokens
             }
         }
 
+        /// <inheritdoc/>
         public string Value
         {
             get
@@ -24,14 +29,19 @@ namespace Rebus.Tokens
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NumberToken"/> class.
+        /// </summary>
+        /// <param name="value">The numeric literal.</param>
         public NumberToken(int value)
         {
             _number = value;
         }
 
+        /// <inheritdoc/>
         public void Write(ExpressionWriter writer)
         {
-            writer.Write(_number, word: null);
+            writer.Write(_number, format: null);
         }
     }
 }

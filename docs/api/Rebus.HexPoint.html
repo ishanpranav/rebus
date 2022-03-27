@@ -73,13 +73,12 @@
   
   <h1 id="Rebus_HexPoint" data-uid="Rebus.HexPoint" class="text-break">Struct HexPoint
   </h1>
-  <div class="markdown level0 summary"><p>Represents a cubic coordinate used to identify tiles in a grid of hexagons.</p>
+  <div class="markdown level0 summary"><p>Represents a cubic coordinate in three dimensions (Q, R, and S) used to identify tiles in a grid of hexagons.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div classs="implements">
     <h5>Implements</h5>
     <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Rebus.HexPoint.html">HexPoint</a>&gt;</div>
-    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.iformattable">IFormattable</a></div>
     <div><a class="xref" href="Rebus.IWritable.html">IWritable</a></div>
   </div>
   <div class="inheritedMembers">
@@ -98,7 +97,7 @@
   <h6><strong>Assembly</strong>: Rebus.dll</h6>
   <h5 id="Rebus_HexPoint_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly struct HexPoint : IEquatable&lt;HexPoint&gt;, IFormattable, IWritable</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly struct HexPoint : IEquatable&lt;HexPoint&gt;, IWritable</code></pre>
   </div>
   <h5 id="Rebus_HexPoint_remarks"><strong>Remarks</strong></h5>
   <div class="markdown level0 remarks"><p>The implementation of this structure was inspired by and based on <a href="https://www.redblobgames.com/grids/hexagons/">this</a> article by <a href="http://www-cs-students.stanford.edu/~amitp/">Amit Patel</a>.</p>
@@ -110,11 +109,12 @@
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_HexPoint__ctor_System_Int32_System_Int32_.md&amp;value=---%0Auid%3A%20Rebus.HexPoint.%23ctor(System.Int32%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L44">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L66">View Source</a>
   </span>
   <a id="Rebus_HexPoint__ctor_" data-uid="Rebus.HexPoint.#ctor*"></a>
   <h4 id="Rebus_HexPoint__ctor_System_Int32_System_Int32_" data-uid="Rebus.HexPoint.#ctor(System.Int32,System.Int32)">HexPoint(Int32, Int32)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Rebus.HexPoint.html">HexPoint</a> struct.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -133,12 +133,14 @@
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
         <td><span class="parametername">q</span></td>
-        <td></td>
+        <td><p>The Q coordinate.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
         <td><span class="parametername">r</span></td>
-        <td></td>
+        <td><p>The R coordinate.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -149,10 +151,11 @@
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_HexPoint_Zero.md&amp;value=---%0Auid%3A%20Rebus.HexPoint.Zero%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L21">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L25">View Source</a>
   </span>
   <h4 id="Rebus_HexPoint_Zero" data-uid="Rebus.HexPoint.Zero">Zero</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Specifies the coordinate whose three axes are zero.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -169,7 +172,8 @@
     <tbody>
       <tr>
         <td><a class="xref" href="Rebus.HexPoint.html">HexPoint</a></td>
-        <td></td>
+        <td><p>The coordinate (0, 0, 0).</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -180,11 +184,12 @@
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_HexPoint_Q.md&amp;value=---%0Auid%3A%20Rebus.HexPoint.Q%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L33">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L41">View Source</a>
   </span>
   <a id="Rebus_HexPoint_Q_" data-uid="Rebus.HexPoint.Q*"></a>
   <h4 id="Rebus_HexPoint_Q" data-uid="Rebus.HexPoint.Q">Q</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the Q coordinate.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -201,7 +206,8 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
-        <td></td>
+        <td><p>The Q coordinate. The default is 0.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -210,11 +216,12 @@
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_HexPoint_R.md&amp;value=---%0Auid%3A%20Rebus.HexPoint.R%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L34">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L47">View Source</a>
   </span>
   <a id="Rebus_HexPoint_R_" data-uid="Rebus.HexPoint.R*"></a>
   <h4 id="Rebus_HexPoint_R" data-uid="Rebus.HexPoint.R">R</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the R coordinate.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -231,7 +238,8 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
-        <td></td>
+        <td><p>The R coordinate. The default is 0.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -240,11 +248,12 @@
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_HexPoint_S.md&amp;value=---%0Auid%3A%20Rebus.HexPoint.S%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L36">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L53">View Source</a>
   </span>
   <a id="Rebus_HexPoint_S_" data-uid="Rebus.HexPoint.S*"></a>
   <h4 id="Rebus_HexPoint_S" data-uid="Rebus.HexPoint.S">S</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the S coordinate.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -261,7 +270,8 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
-        <td></td>
+        <td><p>The S coordinate. The default is 0.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -272,11 +282,12 @@
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_HexPoint_Add_Rebus_HexPoint_.md&amp;value=---%0Auid%3A%20Rebus.HexPoint.Add(Rebus.HexPoint)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L73">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L83">View Source</a>
   </span>
   <a id="Rebus_HexPoint_Add_" data-uid="Rebus.HexPoint.Add*"></a>
   <h4 id="Rebus_HexPoint_Add_Rebus_HexPoint_" data-uid="Rebus.HexPoint.Add(Rebus.HexPoint)">Add(HexPoint)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Returns a new <a class="xref" href="Rebus.HexPoint.html">HexPoint</a> that adds the value of the specified <a class="xref" href="Rebus.HexPoint.html">HexPoint</a> to the value of this instance.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -295,7 +306,8 @@
       <tr>
         <td><a class="xref" href="Rebus.HexPoint.html">HexPoint</a></td>
         <td><span class="parametername">other</span></td>
-        <td></td>
+        <td><p>A positive or negative hexagonal coordinate.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -310,7 +322,8 @@
     <tbody>
       <tr>
         <td><a class="xref" href="Rebus.HexPoint.html">HexPoint</a></td>
-        <td></td>
+        <td><p>An object whose value is the sum of the hexagonal coordinates represented by this instance and the <code data-dev-comment-type="paramref" class="paramref">other</code> value.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -319,11 +332,12 @@
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_HexPoint_Distance_Rebus_HexPoint_Rebus_HexPoint_.md&amp;value=---%0Auid%3A%20Rebus.HexPoint.Distance(Rebus.HexPoint%2CRebus.HexPoint)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L135">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L180">View Source</a>
   </span>
   <a id="Rebus_HexPoint_Distance_" data-uid="Rebus.HexPoint.Distance*"></a>
   <h4 id="Rebus_HexPoint_Distance_Rebus_HexPoint_Rebus_HexPoint_" data-uid="Rebus.HexPoint.Distance(Rebus.HexPoint,Rebus.HexPoint)">Distance(HexPoint, HexPoint)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the distance between two hexagonal coordinates.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -342,12 +356,14 @@
       <tr>
         <td><a class="xref" href="Rebus.HexPoint.html">HexPoint</a></td>
         <td><span class="parametername">value1</span></td>
-        <td></td>
+        <td><p>The first value.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="Rebus.HexPoint.html">HexPoint</a></td>
         <td><span class="parametername">value2</span></td>
-        <td></td>
+        <td><p>The second value.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -362,7 +378,8 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
-        <td></td>
+        <td><p>The distance between <code data-dev-comment-type="paramref" class="paramref">value1</code> and <code data-dev-comment-type="paramref" class="paramref">value2</code>.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -371,7 +388,7 @@
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_HexPoint_Equals_Rebus_HexPoint_.md&amp;value=---%0Auid%3A%20Rebus.HexPoint.Equals(Rebus.HexPoint)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L147">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L194">View Source</a>
   </span>
   <a id="Rebus_HexPoint_Equals_" data-uid="Rebus.HexPoint.Equals*"></a>
   <h4 id="Rebus_HexPoint_Equals_Rebus_HexPoint_" data-uid="Rebus.HexPoint.Equals(Rebus.HexPoint)">Equals(HexPoint)</h4>
@@ -418,7 +435,7 @@
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_HexPoint_Equals_System_Object_.md&amp;value=---%0Auid%3A%20Rebus.HexPoint.Equals(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L142">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L188">View Source</a>
   </span>
   <a id="Rebus_HexPoint_Equals_" data-uid="Rebus.HexPoint.Equals*"></a>
   <h4 id="Rebus_HexPoint_Equals_System_Object_" data-uid="Rebus.HexPoint.Equals(System.Object)">Equals(Object)</h4>
@@ -467,7 +484,7 @@
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_HexPoint_GetHashCode.md&amp;value=---%0Auid%3A%20Rebus.HexPoint.GetHashCode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L152">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L200">View Source</a>
   </span>
   <a id="Rebus_HexPoint_GetHashCode_" data-uid="Rebus.HexPoint.GetHashCode*"></a>
   <h4 id="Rebus_HexPoint_GetHashCode" data-uid="Rebus.HexPoint.GetHashCode">GetHashCode()</h4>
@@ -499,11 +516,12 @@
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_HexPoint_Multiply_System_Int32_.md&amp;value=---%0Auid%3A%20Rebus.HexPoint.Multiply(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L83">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L103">View Source</a>
   </span>
   <a id="Rebus_HexPoint_Multiply_" data-uid="Rebus.HexPoint.Multiply*"></a>
   <h4 id="Rebus_HexPoint_Multiply_System_Int32_" data-uid="Rebus.HexPoint.Multiply(System.Int32)">Multiply(Int32)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Returns the value that results from multiplying the specified factor by the value of this instance.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -522,7 +540,8 @@
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
         <td><span class="parametername">factor</span></td>
-        <td></td>
+        <td><p>The factor to multiply.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -537,7 +556,8 @@
     <tbody>
       <tr>
         <td><a class="xref" href="Rebus.HexPoint.html">HexPoint</a></td>
-        <td></td>
+        <td><p>A hexagonal coordinate that is equal to this instance times the <code data-dev-comment-type="paramref" class="paramref">factor</code>.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -546,11 +566,12 @@
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_HexPoint_Neighbors.md&amp;value=---%0Auid%3A%20Rebus.HexPoint.Neighbors%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L88">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L112">View Source</a>
   </span>
   <a id="Rebus_HexPoint_Neighbors_" data-uid="Rebus.HexPoint.Neighbors*"></a>
   <h4 id="Rebus_HexPoint_Neighbors" data-uid="Rebus.HexPoint.Neighbors">Neighbors()</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the six coordinates adjacent to this instance.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -567,7 +588,8 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="Rebus.HexPoint.html">HexPoint</a>&gt;</td>
-        <td></td>
+        <td><p>The neighboring coordinates.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -576,11 +598,12 @@
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_HexPoint_Range_System_Int32_.md&amp;value=---%0Auid%3A%20Rebus.HexPoint.Range(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L96">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L125">View Source</a>
   </span>
   <a id="Rebus_HexPoint_Range_" data-uid="Rebus.HexPoint.Range*"></a>
   <h4 id="Rebus_HexPoint_Range_System_Int32_" data-uid="Rebus.HexPoint.Range(System.Int32)">Range(Int32)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the coordinates within a hexagonal range.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -599,7 +622,8 @@
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
         <td><span class="parametername">radius</span></td>
-        <td></td>
+        <td><p>The radius of the range.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -614,7 +638,8 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="Rebus.HexPoint.html">HexPoint</a>&gt;</td>
-        <td></td>
+        <td><p>The coordinates within the range defined by the given <code data-dev-comment-type="paramref" class="paramref">radius</code>.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -623,11 +648,12 @@
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_HexPoint_Ring_System_Int32_.md&amp;value=---%0Auid%3A%20Rebus.HexPoint.Ring(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L107">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L141">View Source</a>
   </span>
   <a id="Rebus_HexPoint_Ring_" data-uid="Rebus.HexPoint.Ring*"></a>
   <h4 id="Rebus_HexPoint_Ring_System_Int32_" data-uid="Rebus.HexPoint.Ring(System.Int32)">Ring(Int32)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the coordinates within a hexagonal ring.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -646,7 +672,8 @@
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
         <td><span class="parametername">radius</span></td>
-        <td></td>
+        <td><p>The radius of the ring.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -661,7 +688,8 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="Rebus.HexPoint.html">HexPoint</a>&gt;</td>
-        <td></td>
+        <td><p>The coordinates within the ring defined by the given <code data-dev-comment-type="paramref" class="paramref">radius</code>.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -670,11 +698,12 @@
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_HexPoint_Spiral_System_Int32_.md&amp;value=---%0Auid%3A%20Rebus.HexPoint.Spiral(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L122">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L161">View Source</a>
   </span>
   <a id="Rebus_HexPoint_Spiral_" data-uid="Rebus.HexPoint.Spiral*"></a>
   <h4 id="Rebus_HexPoint_Spiral_System_Int32_" data-uid="Rebus.HexPoint.Spiral(System.Int32)">Spiral(Int32)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the coordinates within a hexagonal spiral.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -693,7 +722,8 @@
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
         <td><span class="parametername">radius</span></td>
-        <td></td>
+        <td><p>The radius of the spiral.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -708,7 +738,8 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="Rebus.HexPoint.html">HexPoint</a>&gt;</td>
-        <td></td>
+        <td><p>The coordinates within the spiral defined by the given <code data-dev-comment-type="paramref" class="paramref">radius</code>.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -717,11 +748,12 @@
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_HexPoint_Subtract_Rebus_HexPoint_.md&amp;value=---%0Auid%3A%20Rebus.HexPoint.Subtract(Rebus.HexPoint)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L78">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L93">View Source</a>
   </span>
   <a id="Rebus_HexPoint_Subtract_" data-uid="Rebus.HexPoint.Subtract*"></a>
   <h4 id="Rebus_HexPoint_Subtract_Rebus_HexPoint_" data-uid="Rebus.HexPoint.Subtract(Rebus.HexPoint)">Subtract(HexPoint)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Returns the value that results from subtracting the specified hexagonal coordinate from the value of this instance.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -740,7 +772,8 @@
       <tr>
         <td><a class="xref" href="Rebus.HexPoint.html">HexPoint</a></td>
         <td><span class="parametername">other</span></td>
-        <td></td>
+        <td><p>The hexagonal coordinate to subtract.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -755,7 +788,8 @@
     <tbody>
       <tr>
         <td><a class="xref" href="Rebus.HexPoint.html">HexPoint</a></td>
-        <td></td>
+        <td><p>A hexagonal coordinate that is equal to this instance minus the <code data-dev-comment-type="paramref" class="paramref">other</code> value.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -764,7 +798,7 @@
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_HexPoint_ToString.md&amp;value=---%0Auid%3A%20Rebus.HexPoint.ToString%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L50">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L73">View Source</a>
   </span>
   <a id="Rebus_HexPoint_ToString_" data-uid="Rebus.HexPoint.ToString*"></a>
   <h4 id="Rebus_HexPoint_ToString" data-uid="Rebus.HexPoint.ToString">ToString()</h4>
@@ -793,113 +827,15 @@
   <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.valuetype.tostring#system-valuetype-tostring">ValueType.ToString()</a></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_HexPoint_ToString_System_String_.md&amp;value=---%0Auid%3A%20Rebus.HexPoint.ToString(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L55">View Source</a>
-  </span>
-  <a id="Rebus_HexPoint_ToString_" data-uid="Rebus.HexPoint.ToString*"></a>
-  <h4 id="Rebus_HexPoint_ToString_System_String_" data-uid="Rebus.HexPoint.ToString(System.String)">ToString(String)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly string ToString(string format)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
-        <td><span class="parametername">format</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_HexPoint_ToString_System_String_System_IFormatProvider_.md&amp;value=---%0Auid%3A%20Rebus.HexPoint.ToString(System.String%2CSystem.IFormatProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L60">View Source</a>
-  </span>
-  <a id="Rebus_HexPoint_ToString_" data-uid="Rebus.HexPoint.ToString*"></a>
-  <h4 id="Rebus_HexPoint_ToString_System_String_System_IFormatProvider_" data-uid="Rebus.HexPoint.ToString(System.String,System.IFormatProvider)">ToString(String, IFormatProvider)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly string ToString(string format, IFormatProvider formatProvider)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
-        <td><span class="parametername">format</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.iformatprovider">IFormatProvider</a></td>
-        <td><span class="parametername">formatProvider</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_HexPoint_TryParse_System_String_Rebus_HexPoint__.md&amp;value=---%0Auid%3A%20Rebus.HexPoint.TryParse(System.String%2CRebus.HexPoint%40)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L162">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L216">View Source</a>
   </span>
   <a id="Rebus_HexPoint_TryParse_" data-uid="Rebus.HexPoint.TryParse*"></a>
   <h4 id="Rebus_HexPoint_TryParse_System_String_Rebus_HexPoint__" data-uid="Rebus.HexPoint.TryParse(System.String,Rebus.HexPoint@)">TryParse(String, out HexPoint)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Converts the string representation of a region specifier to its hexagonal coordinate equivalent. A return value indicates whether the operation succeeded.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -918,12 +854,14 @@
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
         <td><span class="parametername">value</span></td>
-        <td></td>
+        <td><p>A string containing a region specifier to convert.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="Rebus.HexPoint.html">HexPoint</a></td>
         <td><span class="parametername">result</span></td>
-        <td></td>
+        <td><p>When this method returns, contains the hexagonal coordinate value equivalent of the region specifier contained in <code data-dev-comment-type="paramref" class="paramref">value</code>, if the conversion succeeded, or <a class="xref" href="Rebus.HexPoint.html#Rebus_HexPoint_Zero">Zero</a> if the conversion failed. This parameter is treated as uninitialized.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -938,7 +876,8 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
-        <td></td>
+        <td><p><span class="xref">true</span> if the <code data-dev-comment-type="paramref" class="paramref">value</code> was converted successfully; otherwise, <span class="xref">false</span>.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -947,11 +886,12 @@
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_HexPoint_Write_Rebus_ExpressionWriter_.md&amp;value=---%0Auid%3A%20Rebus.HexPoint.Write(Rebus.ExpressionWriter)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L264">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L319">View Source</a>
   </span>
   <a id="Rebus_HexPoint_Write_" data-uid="Rebus.HexPoint.Write*"></a>
   <h4 id="Rebus_HexPoint_Write_Rebus_ExpressionWriter_" data-uid="Rebus.HexPoint.Write(Rebus.ExpressionWriter)">Write(ExpressionWriter)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Writes the string representation of the current object too an expression writer.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -970,7 +910,8 @@
       <tr>
         <td><a class="xref" href="Rebus.ExpressionWriter.html">ExpressionWriter</a></td>
         <td><span class="parametername">writer</span></td>
-        <td></td>
+        <td><p>The expression writer.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -981,11 +922,12 @@
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_HexPoint_op_Addition_Rebus_HexPoint_Rebus_HexPoint_.md&amp;value=---%0Auid%3A%20Rebus.HexPoint.op_Addition(Rebus.HexPoint%2CRebus.HexPoint)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L303">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L376">View Source</a>
   </span>
   <a id="Rebus_HexPoint_op_Addition_" data-uid="Rebus.HexPoint.op_Addition*"></a>
   <h4 id="Rebus_HexPoint_op_Addition_Rebus_HexPoint_Rebus_HexPoint_" data-uid="Rebus.HexPoint.op_Addition(Rebus.HexPoint,Rebus.HexPoint)">Addition(HexPoint, HexPoint)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Adds a specified coordinate to another specified coordinate.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -1004,12 +946,14 @@
       <tr>
         <td><a class="xref" href="Rebus.HexPoint.html">HexPoint</a></td>
         <td><span class="parametername">left</span></td>
-        <td></td>
+        <td><p>The first coordinate to add.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="Rebus.HexPoint.html">HexPoint</a></td>
         <td><span class="parametername">right</span></td>
-        <td></td>
+        <td><p>The second coordinate to add.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -1024,7 +968,8 @@
     <tbody>
       <tr>
         <td><a class="xref" href="Rebus.HexPoint.html">HexPoint</a></td>
-        <td></td>
+        <td><p>The sum of <code data-dev-comment-type="paramref" class="paramref">left</code> and <code data-dev-comment-type="paramref" class="paramref">right</code>.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -1033,11 +978,12 @@
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_HexPoint_op_Equality_Rebus_HexPoint_Rebus_HexPoint_.md&amp;value=---%0Auid%3A%20Rebus.HexPoint.op_Equality(Rebus.HexPoint%2CRebus.HexPoint)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L293">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L354">View Source</a>
   </span>
   <a id="Rebus_HexPoint_op_Equality_" data-uid="Rebus.HexPoint.op_Equality*"></a>
   <h4 id="Rebus_HexPoint_op_Equality_Rebus_HexPoint_Rebus_HexPoint_" data-uid="Rebus.HexPoint.op_Equality(Rebus.HexPoint,Rebus.HexPoint)">Equality(HexPoint, HexPoint)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Returns a value that indicates whether two coordinates are equal.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -1056,12 +1002,14 @@
       <tr>
         <td><a class="xref" href="Rebus.HexPoint.html">HexPoint</a></td>
         <td><span class="parametername">left</span></td>
-        <td></td>
+        <td><p>The first coordinate to compare.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="Rebus.HexPoint.html">HexPoint</a></td>
         <td><span class="parametername">right</span></td>
-        <td></td>
+        <td><p>The second coordinate to compare.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -1076,7 +1024,8 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
-        <td></td>
+        <td><p><span class="xref">true</span> if <code data-dev-comment-type="paramref" class="paramref">left</code> and <code data-dev-comment-type="paramref" class="paramref">right</code> are equal; otherwise, <span class="xref">false</span>.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -1085,11 +1034,12 @@
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_HexPoint_op_Inequality_Rebus_HexPoint_Rebus_HexPoint_.md&amp;value=---%0Auid%3A%20Rebus.HexPoint.op_Inequality(Rebus.HexPoint%2CRebus.HexPoint)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L298">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L365">View Source</a>
   </span>
   <a id="Rebus_HexPoint_op_Inequality_" data-uid="Rebus.HexPoint.op_Inequality*"></a>
   <h4 id="Rebus_HexPoint_op_Inequality_Rebus_HexPoint_Rebus_HexPoint_" data-uid="Rebus.HexPoint.op_Inequality(Rebus.HexPoint,Rebus.HexPoint)">Inequality(HexPoint, HexPoint)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Returns a value that indicates whether two coordinates are not equal.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -1108,12 +1058,14 @@
       <tr>
         <td><a class="xref" href="Rebus.HexPoint.html">HexPoint</a></td>
         <td><span class="parametername">left</span></td>
-        <td></td>
+        <td><p>The first coordinate to compare.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="Rebus.HexPoint.html">HexPoint</a></td>
         <td><span class="parametername">right</span></td>
-        <td></td>
+        <td><p>The second coordinate to compare.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -1128,7 +1080,8 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
-        <td></td>
+        <td><p><span class="xref">true</span> if <code data-dev-comment-type="paramref" class="paramref">left</code> and <code data-dev-comment-type="paramref" class="paramref">right</code> are not equal; otherwise, <span class="xref">false</span>.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -1137,11 +1090,12 @@
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_HexPoint_op_Multiply_Rebus_HexPoint_System_Int32_.md&amp;value=---%0Auid%3A%20Rebus.HexPoint.op_Multiply(Rebus.HexPoint%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L313">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L398">View Source</a>
   </span>
   <a id="Rebus_HexPoint_op_Multiply_" data-uid="Rebus.HexPoint.op_Multiply*"></a>
   <h4 id="Rebus_HexPoint_op_Multiply_Rebus_HexPoint_System_Int32_" data-uid="Rebus.HexPoint.op_Multiply(Rebus.HexPoint,System.Int32)">Multiply(HexPoint, Int32)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Multiplies a specified coordinate by a number.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -1160,12 +1114,14 @@
       <tr>
         <td><a class="xref" href="Rebus.HexPoint.html">HexPoint</a></td>
         <td><span class="parametername">left</span></td>
-        <td></td>
+        <td><p>The coordinate to multiply.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
         <td><span class="parametername">right</span></td>
-        <td></td>
+        <td><p>The number to multiply.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -1180,7 +1136,64 @@
     <tbody>
       <tr>
         <td><a class="xref" href="Rebus.HexPoint.html">HexPoint</a></td>
-        <td></td>
+        <td><p>The product of <code data-dev-comment-type="paramref" class="paramref">left</code> and <code data-dev-comment-type="paramref" class="paramref">right</code>, as a hexagonal coordinate.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_HexPoint_op_Multiply_System_Int32_Rebus_HexPoint_.md&amp;value=---%0Auid%3A%20Rebus.HexPoint.op_Multiply(System.Int32%2CRebus.HexPoint)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L409">View Source</a>
+  </span>
+  <a id="Rebus_HexPoint_op_Multiply_" data-uid="Rebus.HexPoint.op_Multiply*"></a>
+  <h4 id="Rebus_HexPoint_op_Multiply_System_Int32_Rebus_HexPoint_" data-uid="Rebus.HexPoint.op_Multiply(System.Int32,Rebus.HexPoint)">Multiply(Int32, HexPoint)</h4>
+  <div class="markdown level1 summary"><p>Multiplies a number by a specified coordinate.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static HexPoint operator *(int left, HexPoint right)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">left</span></td>
+        <td><p>The number to multiply.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Rebus.HexPoint.html">HexPoint</a></td>
+        <td><span class="parametername">right</span></td>
+        <td><p>The coordinate to multiply.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Rebus.HexPoint.html">HexPoint</a></td>
+        <td><p>The product of <code data-dev-comment-type="paramref" class="paramref">left</code> and <code data-dev-comment-type="paramref" class="paramref">right</code>, as a hexagonal coordinate.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -1189,11 +1202,12 @@
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_HexPoint_op_Subtraction_Rebus_HexPoint_Rebus_HexPoint_.md&amp;value=---%0Auid%3A%20Rebus.HexPoint.op_Subtraction(Rebus.HexPoint%2CRebus.HexPoint)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L308">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/HexPoint.cs/#L387">View Source</a>
   </span>
   <a id="Rebus_HexPoint_op_Subtraction_" data-uid="Rebus.HexPoint.op_Subtraction*"></a>
   <h4 id="Rebus_HexPoint_op_Subtraction_Rebus_HexPoint_Rebus_HexPoint_" data-uid="Rebus.HexPoint.op_Subtraction(Rebus.HexPoint,Rebus.HexPoint)">Subtraction(HexPoint, HexPoint)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Subtracts a specified coordinate from another specified coordinate.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -1212,12 +1226,14 @@
       <tr>
         <td><a class="xref" href="Rebus.HexPoint.html">HexPoint</a></td>
         <td><span class="parametername">left</span></td>
-        <td></td>
+        <td><p>The value to subtract from (the minuend).</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="Rebus.HexPoint.html">HexPoint</a></td>
         <td><span class="parametername">right</span></td>
-        <td></td>
+        <td><p>The value to subtract (the subtrahend).</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -1232,16 +1248,14 @@
     <tbody>
       <tr>
         <td><a class="xref" href="Rebus.HexPoint.html">HexPoint</a></td>
-        <td></td>
+        <td><p>The result of subtracting <code data-dev-comment-type="paramref" class="paramref">right</code> from <code data-dev-comment-type="paramref" class="paramref">left</code>.</p>
+</td>
       </tr>
     </tbody>
   </table>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.iequatable-1">System.IEquatable&lt;T&gt;</a>
-  </div>
-  <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.iformattable">System.IFormattable</a>
   </div>
   <div>
       <a class="xref" href="Rebus.IWritable.html">IWritable</a>

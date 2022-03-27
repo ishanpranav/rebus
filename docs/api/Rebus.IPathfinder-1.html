@@ -73,7 +73,8 @@
   
   <h1 id="Rebus_IPathfinder_1" data-uid="Rebus.IPathfinder`1" class="text-break">Interface IPathfinder&lt;T&gt;
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>Defines a method for finding paths between graph nodes.</p>
+</div>
   <div class="markdown level0 conceptual"></div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Rebus.html">Rebus</a></h6>
   <h6><strong>Assembly</strong>: Rebus.dll</h6>
@@ -92,7 +93,8 @@
     <tbody>
       <tr>
         <td><span class="parametername">T</span></td>
-        <td></td>
+        <td><p>The type of each node in the graph.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -100,18 +102,19 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_IPathfinder_1_GetSteps__0__0_.md&amp;value=---%0Auid%3A%20Rebus.IPathfinder%601.GetSteps(%600%2C%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_IPathfinder_1_Search__0__0_.md&amp;value=---%0Auid%3A%20Rebus.IPathfinder%601.Search(%600%2C%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/IPathfinder.cs/#L11">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/IPathfinder.cs/#L21">View Source</a>
   </span>
-  <a id="Rebus_IPathfinder_1_GetSteps_" data-uid="Rebus.IPathfinder`1.GetSteps*"></a>
-  <h4 id="Rebus_IPathfinder_1_GetSteps__0__0_" data-uid="Rebus.IPathfinder`1.GetSteps(`0,`0)">GetSteps(T, T)</h4>
-  <div class="markdown level1 summary"></div>
+  <a id="Rebus_IPathfinder_1_Search_" data-uid="Rebus.IPathfinder`1.Search*"></a>
+  <h4 id="Rebus_IPathfinder_1_Search__0__0_" data-uid="Rebus.IPathfinder`1.Search(`0,`0)">Search(T, T)</h4>
+  <div class="markdown level1 summary"><p>Performs the search.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Stack&lt;T&gt; GetSteps(T source, T destination)</code></pre>
+    <pre><code class="lang-csharp hljs">Stack&lt;T&gt; Search(T source, T destination)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -126,12 +129,14 @@
       <tr>
         <td><span class="xref">T</span></td>
         <td><span class="parametername">source</span></td>
-        <td></td>
+        <td><p>The source node.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">T</span></td>
         <td><span class="parametername">destination</span></td>
-        <td></td>
+        <td><p>The destination node.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -146,7 +151,8 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.stack-1">Stack</a>&lt;T&gt;</td>
-        <td></td>
+        <td><p>A stack containing the ordered set of nodes leading from the <code data-dev-comment-type="paramref" class="paramref">source</code> node to the <code data-dev-comment-type="paramref" class="paramref">destination</code> node, or an empty stack if no such path exists.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -161,7 +167,7 @@
                     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_IPathfinder_1.md&amp;value=---%0Auid%3A%20Rebus.IPathfinder%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/IPathfinder.cs/#L9" class="contribution-link">View Source</a>
+                    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/IPathfinder.cs/#L13" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

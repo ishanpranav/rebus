@@ -8,17 +8,29 @@ using Rebus.Tokens;
 
 namespace Rebus
 {
+    /// <summary>
+    /// Represents a lexer or lexical tokenizer.
+    /// </summary>
     public class Tokenizer
     {
         private readonly ITokenFactory _tokenFactory;
         private readonly MatchCollection _matches;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Tokenizer"/> class.
+        /// </summary>
+        /// <param name="tokenFactory">The token factory.</param>
+        /// <param name="value">The input string.</param>
         public Tokenizer(ITokenFactory tokenFactory, string value)
         {
             _tokenFactory = tokenFactory;
             _matches = Regex.Matches(value.Replace("-", string.Empty), pattern: @"(\w+)|\""([\w\s]*)""", RegexOptions.Compiled);
         }
 
+        /// <summary>
+        /// Asynchronously retrieves a set of tokens.
+        /// </summary>
+        /// <returns>An <see cref="IAsyncEnumerable{IToken}"/> representation of the input string.</returns>
         public async IAsyncEnumerable<IToken> TokenizeAsync()
         {
             foreach (Match match in _matches)

@@ -1,4 +1,4 @@
-﻿// Ishan Pranav's REBUS: SimpleNamer.cs
+﻿// Ishan Pranav's REBUS: Namer.cs
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 

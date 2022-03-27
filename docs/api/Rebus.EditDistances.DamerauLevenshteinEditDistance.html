@@ -73,7 +73,7 @@
   
   <h1 id="Rebus_EditDistances_DamerauLevenshteinEditDistance" data-uid="Rebus.EditDistances.DamerauLevenshteinEditDistance" class="text-break">Class DamerauLevenshteinEditDistance
   </h1>
-  <div class="markdown level0 summary"><p>An <a class="xref" href="Rebus.IEditDistance.html">IEditDistance</a> used to calculate the edit distance between two strings using the Damerau–Levenshtein algorithm.</p>
+  <div class="markdown level0 summary"><p>Computes the Damerau–Levenshtein edit distance.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -89,7 +89,7 @@
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="Rebus.EditDistances.LevenshteinEditDistance.html#Rebus_EditDistances_LevenshteinEditDistance_Calculate_System_String_System_String_">LevenshteinEditDistance.Calculate(String, String)</a>
+      <a class="xref" href="Rebus.EditDistances.LevenshteinEditDistance.html#Rebus_EditDistances_LevenshteinEditDistance_Compute_System_String_System_String_">LevenshteinEditDistance.Compute(String, String)</a>
     </div>
     <div>
       <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">Object.Equals(Object)</a>
@@ -122,6 +122,24 @@
   <h5 id="Rebus_EditDistances_DamerauLevenshteinEditDistance_remarks"><strong>Remarks</strong></h5>
   <div class="markdown level0 remarks"><p>The implementation of this class was inspired by and based on <a href="https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance">this</a> Wikipedia article.</p>
 </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_EditDistances_DamerauLevenshteinEditDistance__ctor.md&amp;value=---%0Auid%3A%20Rebus.EditDistances.DamerauLevenshteinEditDistance.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/EditDistances/DamerauLevenshteinEditDistance.cs/#L21">View Source</a>
+  </span>
+  <a id="Rebus_EditDistances_DamerauLevenshteinEditDistance__ctor_" data-uid="Rebus.EditDistances.DamerauLevenshteinEditDistance.#ctor*"></a>
+  <h4 id="Rebus_EditDistances_DamerauLevenshteinEditDistance__ctor" data-uid="Rebus.EditDistances.DamerauLevenshteinEditDistance.#ctor">DamerauLevenshteinEditDistance()</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Rebus.EditDistances.DamerauLevenshteinEditDistance.html">DamerauLevenshteinEditDistance</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DamerauLevenshteinEditDistance()</code></pre>
+  </div>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
@@ -129,11 +147,12 @@
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_EditDistances_DamerauLevenshteinEditDistance_RestrictedDistance_System_Int32_0__0___System_Int32_System_Int32_System_String_System_String_.md&amp;value=---%0Auid%3A%20Rebus.EditDistances.DamerauLevenshteinEditDistance.RestrictedDistance(System.Int32%5B0%3A%2C0%3A%5D%2CSystem.Int32%2CSystem.Int32%2CSystem.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/EditDistances/DamerauLevenshteinEditDistance.cs/#L18">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/EditDistances/DamerauLevenshteinEditDistance.cs/#L24">View Source</a>
   </span>
   <a id="Rebus_EditDistances_DamerauLevenshteinEditDistance_RestrictedDistance_" data-uid="Rebus.EditDistances.DamerauLevenshteinEditDistance.RestrictedDistance*"></a>
   <h4 id="Rebus_EditDistances_DamerauLevenshteinEditDistance_RestrictedDistance_System_Int32_0__0___System_Int32_System_Int32_System_String_System_String_" data-uid="Rebus.EditDistances.DamerauLevenshteinEditDistance.RestrictedDistance(System.Int32[0:,0:],System.Int32,System.Int32,System.String,System.String)">RestrictedDistance(Int32[,], Int32, Int32, String, String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Performs the restricted distance function.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -152,27 +171,32 @@
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a>[,]</td>
         <td><span class="parametername">matrix</span></td>
-        <td></td>
+        <td><p>The matrix.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
         <td><span class="parametername">i</span></td>
-        <td></td>
+        <td><p>The index in the first dimension.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
         <td><span class="parametername">j</span></td>
-        <td></td>
+        <td><p>The index in the second dimension.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
         <td><span class="parametername">a</span></td>
-        <td></td>
+        <td><p>The first string.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
         <td><span class="parametername">b</span></td>
-        <td></td>
+        <td><p>The second string.</p>
+</td>
       </tr>
     </tbody>
   </table>

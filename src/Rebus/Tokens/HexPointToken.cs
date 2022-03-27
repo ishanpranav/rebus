@@ -4,10 +4,18 @@
 
 namespace Rebus.Tokens
 {
+    /// <summary>
+    /// Represents a token containing a hexagonal coordinate.
+    /// </summary>
     public class HexPointToken : IToken
     {
+        /// <summary>
+        /// Gets the hexagonal coordinate.
+        /// </summary>
+        /// <value>The hexagonal coordinate.</value>
         public HexPoint HexPoint { get; }
 
+        /// <inheritdoc/>
         public TokenTypes Type
         {
             get
@@ -16,8 +24,13 @@ namespace Rebus.Tokens
             }
         }
 
+        /// <inheritdoc/>
         public string Value { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HexPointToken"/> class.
+        /// </summary>
+        /// <param name="value">The hexagonal coordinate.</param>
         public HexPointToken(HexPoint value)
         {
             HexPoint = value;
@@ -29,6 +42,7 @@ namespace Rebus.Tokens
             Value = writer.ToString();
         }
 
+        /// <inheritdoc/>
         public void Write(ExpressionWriter writer)
         {
             writer.Write(HexPoint);

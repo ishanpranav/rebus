@@ -300,7 +300,7 @@ namespace Rebus.Server
 
                 return results
                     .AsEnumerable()
-                    .GroupBy(x => _editDistance.Calculate(x.Value, actualValue))
+                    .GroupBy(x => _editDistance.Compute(x.Value, actualValue))
                     .Where(x => x.Key < 3)
                     .MinBy(x => x.Key);
             }

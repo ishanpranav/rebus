@@ -123,6 +123,19 @@ references:
   commentId: T:Rebus.EditDistances.DamerauLevenshteinEditDistance
   fullName: Rebus.EditDistances.DamerauLevenshteinEditDistance
   nameWithType: DamerauLevenshteinEditDistance
+- uid: Rebus.EditDistances.DamerauLevenshteinEditDistance.#ctor
+  name: DamerauLevenshteinEditDistance()
+  href: api/Rebus.EditDistances.DamerauLevenshteinEditDistance.html#Rebus_EditDistances_DamerauLevenshteinEditDistance__ctor
+  commentId: M:Rebus.EditDistances.DamerauLevenshteinEditDistance.#ctor
+  fullName: Rebus.EditDistances.DamerauLevenshteinEditDistance.DamerauLevenshteinEditDistance()
+  nameWithType: DamerauLevenshteinEditDistance.DamerauLevenshteinEditDistance()
+- uid: Rebus.EditDistances.DamerauLevenshteinEditDistance.#ctor*
+  name: DamerauLevenshteinEditDistance
+  href: api/Rebus.EditDistances.DamerauLevenshteinEditDistance.html#Rebus_EditDistances_DamerauLevenshteinEditDistance__ctor_
+  commentId: Overload:Rebus.EditDistances.DamerauLevenshteinEditDistance.#ctor
+  isSpec: "True"
+  fullName: Rebus.EditDistances.DamerauLevenshteinEditDistance.DamerauLevenshteinEditDistance
+  nameWithType: DamerauLevenshteinEditDistance.DamerauLevenshteinEditDistance
 - uid: Rebus.EditDistances.DamerauLevenshteinEditDistance.RestrictedDistance(System.Int32[0:,0:],System.Int32,System.Int32,System.String,System.String)
   name: RestrictedDistance(Int32[,], Int32, Int32, String, String)
   href: api/Rebus.EditDistances.DamerauLevenshteinEditDistance.html#Rebus_EditDistances_DamerauLevenshteinEditDistance_RestrictedDistance_System_Int32_0__0___System_Int32_System_Int32_System_String_System_String_
@@ -145,19 +158,32 @@ references:
   commentId: T:Rebus.EditDistances.LevenshteinEditDistance
   fullName: Rebus.EditDistances.LevenshteinEditDistance
   nameWithType: LevenshteinEditDistance
-- uid: Rebus.EditDistances.LevenshteinEditDistance.Calculate(System.String,System.String)
-  name: Calculate(String, String)
-  href: api/Rebus.EditDistances.LevenshteinEditDistance.html#Rebus_EditDistances_LevenshteinEditDistance_Calculate_System_String_System_String_
-  commentId: M:Rebus.EditDistances.LevenshteinEditDistance.Calculate(System.String,System.String)
-  fullName: Rebus.EditDistances.LevenshteinEditDistance.Calculate(System.String, System.String)
-  nameWithType: LevenshteinEditDistance.Calculate(String, String)
-- uid: Rebus.EditDistances.LevenshteinEditDistance.Calculate*
-  name: Calculate
-  href: api/Rebus.EditDistances.LevenshteinEditDistance.html#Rebus_EditDistances_LevenshteinEditDistance_Calculate_
-  commentId: Overload:Rebus.EditDistances.LevenshteinEditDistance.Calculate
+- uid: Rebus.EditDistances.LevenshteinEditDistance.#ctor
+  name: LevenshteinEditDistance()
+  href: api/Rebus.EditDistances.LevenshteinEditDistance.html#Rebus_EditDistances_LevenshteinEditDistance__ctor
+  commentId: M:Rebus.EditDistances.LevenshteinEditDistance.#ctor
+  fullName: Rebus.EditDistances.LevenshteinEditDistance.LevenshteinEditDistance()
+  nameWithType: LevenshteinEditDistance.LevenshteinEditDistance()
+- uid: Rebus.EditDistances.LevenshteinEditDistance.#ctor*
+  name: LevenshteinEditDistance
+  href: api/Rebus.EditDistances.LevenshteinEditDistance.html#Rebus_EditDistances_LevenshteinEditDistance__ctor_
+  commentId: Overload:Rebus.EditDistances.LevenshteinEditDistance.#ctor
   isSpec: "True"
-  fullName: Rebus.EditDistances.LevenshteinEditDistance.Calculate
-  nameWithType: LevenshteinEditDistance.Calculate
+  fullName: Rebus.EditDistances.LevenshteinEditDistance.LevenshteinEditDistance
+  nameWithType: LevenshteinEditDistance.LevenshteinEditDistance
+- uid: Rebus.EditDistances.LevenshteinEditDistance.Compute(System.String,System.String)
+  name: Compute(String, String)
+  href: api/Rebus.EditDistances.LevenshteinEditDistance.html#Rebus_EditDistances_LevenshteinEditDistance_Compute_System_String_System_String_
+  commentId: M:Rebus.EditDistances.LevenshteinEditDistance.Compute(System.String,System.String)
+  fullName: Rebus.EditDistances.LevenshteinEditDistance.Compute(System.String, System.String)
+  nameWithType: LevenshteinEditDistance.Compute(String, String)
+- uid: Rebus.EditDistances.LevenshteinEditDistance.Compute*
+  name: Compute
+  href: api/Rebus.EditDistances.LevenshteinEditDistance.html#Rebus_EditDistances_LevenshteinEditDistance_Compute_
+  commentId: Overload:Rebus.EditDistances.LevenshteinEditDistance.Compute
+  isSpec: "True"
+  fullName: Rebus.EditDistances.LevenshteinEditDistance.Compute
+  nameWithType: LevenshteinEditDistance.Compute
 - uid: Rebus.EditDistances.LevenshteinEditDistance.RestrictedDistance(System.Int32[0:,0:],System.Int32,System.Int32,System.String,System.String)
   name: RestrictedDistance(Int32[,], Int32, Int32, String, String)
   href: api/Rebus.EditDistances.LevenshteinEditDistance.html#Rebus_EditDistances_LevenshteinEditDistance_RestrictedDistance_System_Int32_0__0___System_Int32_System_Int32_System_String_System_String_
@@ -326,6 +352,19 @@ references:
   commentId: T:Rebus.Expression
   fullName: Rebus.Expression
   nameWithType: Expression
+- uid: Rebus.Expression.#ctor
+  name: Expression()
+  href: api/Rebus.Expression.html#Rebus_Expression__ctor
+  commentId: M:Rebus.Expression.#ctor
+  fullName: Rebus.Expression.Expression()
+  nameWithType: Expression.Expression()
+- uid: Rebus.Expression.#ctor*
+  name: Expression
+  href: api/Rebus.Expression.html#Rebus_Expression__ctor_
+  commentId: Overload:Rebus.Expression.#ctor
+  isSpec: "True"
+  fullName: Rebus.Expression.Expression
+  nameWithType: Expression.Expression
 - uid: Rebus.Expression.Interpret(Rebus.ICommandBuilder)
   name: Interpret(ICommandBuilder)
   href: api/Rebus.Expression.html#Rebus_Expression_Interpret_Rebus_ICommandBuilder_
@@ -1117,6 +1156,12 @@ references:
   commentId: M:Rebus.HexPoint.op_Multiply(Rebus.HexPoint,System.Int32)
   fullName: Rebus.HexPoint.Multiply(Rebus.HexPoint, System.Int32)
   nameWithType: HexPoint.Multiply(HexPoint, Int32)
+- uid: Rebus.HexPoint.op_Multiply(System.Int32,Rebus.HexPoint)
+  name: Multiply(Int32, HexPoint)
+  href: api/Rebus.HexPoint.html#Rebus_HexPoint_op_Multiply_System_Int32_Rebus_HexPoint_
+  commentId: M:Rebus.HexPoint.op_Multiply(System.Int32,Rebus.HexPoint)
+  fullName: Rebus.HexPoint.Multiply(System.Int32, Rebus.HexPoint)
+  nameWithType: HexPoint.Multiply(Int32, HexPoint)
 - uid: Rebus.HexPoint.op_Multiply*
   name: Multiply
   href: api/Rebus.HexPoint.html#Rebus_HexPoint_op_Multiply_
@@ -1234,18 +1279,6 @@ references:
   commentId: M:Rebus.HexPoint.ToString
   fullName: Rebus.HexPoint.ToString()
   nameWithType: HexPoint.ToString()
-- uid: Rebus.HexPoint.ToString(System.String)
-  name: ToString(String)
-  href: api/Rebus.HexPoint.html#Rebus_HexPoint_ToString_System_String_
-  commentId: M:Rebus.HexPoint.ToString(System.String)
-  fullName: Rebus.HexPoint.ToString(System.String)
-  nameWithType: HexPoint.ToString(String)
-- uid: Rebus.HexPoint.ToString(System.String,System.IFormatProvider)
-  name: ToString(String, IFormatProvider)
-  href: api/Rebus.HexPoint.html#Rebus_HexPoint_ToString_System_String_System_IFormatProvider_
-  commentId: M:Rebus.HexPoint.ToString(System.String,System.IFormatProvider)
-  fullName: Rebus.HexPoint.ToString(System.String, System.IFormatProvider)
-  nameWithType: HexPoint.ToString(String, IFormatProvider)
 - uid: Rebus.HexPoint.ToString*
   name: ToString
   href: api/Rebus.HexPoint.html#Rebus_HexPoint_ToString_
@@ -1393,19 +1426,19 @@ references:
   commentId: T:Rebus.IEditDistance
   fullName: Rebus.IEditDistance
   nameWithType: IEditDistance
-- uid: Rebus.IEditDistance.Calculate(System.String,System.String)
-  name: Calculate(String, String)
-  href: api/Rebus.IEditDistance.html#Rebus_IEditDistance_Calculate_System_String_System_String_
-  commentId: M:Rebus.IEditDistance.Calculate(System.String,System.String)
-  fullName: Rebus.IEditDistance.Calculate(System.String, System.String)
-  nameWithType: IEditDistance.Calculate(String, String)
-- uid: Rebus.IEditDistance.Calculate*
-  name: Calculate
-  href: api/Rebus.IEditDistance.html#Rebus_IEditDistance_Calculate_
-  commentId: Overload:Rebus.IEditDistance.Calculate
+- uid: Rebus.IEditDistance.Compute(System.String,System.String)
+  name: Compute(String, String)
+  href: api/Rebus.IEditDistance.html#Rebus_IEditDistance_Compute_System_String_System_String_
+  commentId: M:Rebus.IEditDistance.Compute(System.String,System.String)
+  fullName: Rebus.IEditDistance.Compute(System.String, System.String)
+  nameWithType: IEditDistance.Compute(String, String)
+- uid: Rebus.IEditDistance.Compute*
+  name: Compute
+  href: api/Rebus.IEditDistance.html#Rebus_IEditDistance_Compute_
+  commentId: Overload:Rebus.IEditDistance.Compute
   isSpec: "True"
-  fullName: Rebus.IEditDistance.Calculate
-  nameWithType: IEditDistance.Calculate
+  fullName: Rebus.IEditDistance.Compute
+  nameWithType: IEditDistance.Compute
 - uid: Rebus.IEngine`1
   name: IEngine<T>
   href: api/Rebus.IEngine-1.html
@@ -1517,23 +1550,23 @@ references:
   fullName.vb: Rebus.IPathfinder(Of T)
   nameWithType: IPathfinder<T>
   nameWithType.vb: IPathfinder(Of T)
-- uid: Rebus.IPathfinder`1.GetSteps(`0,`0)
-  name: GetSteps(T, T)
-  href: api/Rebus.IPathfinder-1.html#Rebus_IPathfinder_1_GetSteps__0__0_
-  commentId: M:Rebus.IPathfinder`1.GetSteps(`0,`0)
-  fullName: Rebus.IPathfinder<T>.GetSteps(T, T)
-  fullName.vb: Rebus.IPathfinder(Of T).GetSteps(T, T)
-  nameWithType: IPathfinder<T>.GetSteps(T, T)
-  nameWithType.vb: IPathfinder(Of T).GetSteps(T, T)
-- uid: Rebus.IPathfinder`1.GetSteps*
-  name: GetSteps
-  href: api/Rebus.IPathfinder-1.html#Rebus_IPathfinder_1_GetSteps_
-  commentId: Overload:Rebus.IPathfinder`1.GetSteps
+- uid: Rebus.IPathfinder`1.Search(`0,`0)
+  name: Search(T, T)
+  href: api/Rebus.IPathfinder-1.html#Rebus_IPathfinder_1_Search__0__0_
+  commentId: M:Rebus.IPathfinder`1.Search(`0,`0)
+  fullName: Rebus.IPathfinder<T>.Search(T, T)
+  fullName.vb: Rebus.IPathfinder(Of T).Search(T, T)
+  nameWithType: IPathfinder<T>.Search(T, T)
+  nameWithType.vb: IPathfinder(Of T).Search(T, T)
+- uid: Rebus.IPathfinder`1.Search*
+  name: Search
+  href: api/Rebus.IPathfinder-1.html#Rebus_IPathfinder_1_Search_
+  commentId: Overload:Rebus.IPathfinder`1.Search
   isSpec: "True"
-  fullName: Rebus.IPathfinder<T>.GetSteps
-  fullName.vb: Rebus.IPathfinder(Of T).GetSteps
-  nameWithType: IPathfinder<T>.GetSteps
-  nameWithType.vb: IPathfinder(Of T).GetSteps
+  fullName: Rebus.IPathfinder<T>.Search
+  fullName.vb: Rebus.IPathfinder(Of T).Search
+  nameWithType: IPathfinder<T>.Search
+  nameWithType.vb: IPathfinder(Of T).Search
 - uid: Rebus.IPathfinderFactory`1
   name: IPathfinderFactory<T>
   href: api/Rebus.IPathfinderFactory-1.html
@@ -1928,23 +1961,23 @@ references:
   fullName.vb: Rebus.Pathfinders.AStarPathfinder(Of T).Cost
   nameWithType: AStarPathfinder<T>.Cost
   nameWithType.vb: AStarPathfinder(Of T).Cost
-- uid: Rebus.Pathfinders.AStarPathfinder`1.GetSteps(`0,`0)
-  name: GetSteps(T, T)
-  href: api/Rebus.Pathfinders.AStarPathfinder-1.html#Rebus_Pathfinders_AStarPathfinder_1_GetSteps__0__0_
-  commentId: M:Rebus.Pathfinders.AStarPathfinder`1.GetSteps(`0,`0)
-  fullName: Rebus.Pathfinders.AStarPathfinder<T>.GetSteps(T, T)
-  fullName.vb: Rebus.Pathfinders.AStarPathfinder(Of T).GetSteps(T, T)
-  nameWithType: AStarPathfinder<T>.GetSteps(T, T)
-  nameWithType.vb: AStarPathfinder(Of T).GetSteps(T, T)
-- uid: Rebus.Pathfinders.AStarPathfinder`1.GetSteps*
-  name: GetSteps
-  href: api/Rebus.Pathfinders.AStarPathfinder-1.html#Rebus_Pathfinders_AStarPathfinder_1_GetSteps_
-  commentId: Overload:Rebus.Pathfinders.AStarPathfinder`1.GetSteps
+- uid: Rebus.Pathfinders.AStarPathfinder`1.GetNeighbors(`0)
+  name: GetNeighbors(T)
+  href: api/Rebus.Pathfinders.AStarPathfinder-1.html#Rebus_Pathfinders_AStarPathfinder_1_GetNeighbors__0_
+  commentId: M:Rebus.Pathfinders.AStarPathfinder`1.GetNeighbors(`0)
+  fullName: Rebus.Pathfinders.AStarPathfinder<T>.GetNeighbors(T)
+  fullName.vb: Rebus.Pathfinders.AStarPathfinder(Of T).GetNeighbors(T)
+  nameWithType: AStarPathfinder<T>.GetNeighbors(T)
+  nameWithType.vb: AStarPathfinder(Of T).GetNeighbors(T)
+- uid: Rebus.Pathfinders.AStarPathfinder`1.GetNeighbors*
+  name: GetNeighbors
+  href: api/Rebus.Pathfinders.AStarPathfinder-1.html#Rebus_Pathfinders_AStarPathfinder_1_GetNeighbors_
+  commentId: Overload:Rebus.Pathfinders.AStarPathfinder`1.GetNeighbors
   isSpec: "True"
-  fullName: Rebus.Pathfinders.AStarPathfinder<T>.GetSteps
-  fullName.vb: Rebus.Pathfinders.AStarPathfinder(Of T).GetSteps
-  nameWithType: AStarPathfinder<T>.GetSteps
-  nameWithType.vb: AStarPathfinder(Of T).GetSteps
+  fullName: Rebus.Pathfinders.AStarPathfinder<T>.GetNeighbors
+  fullName.vb: Rebus.Pathfinders.AStarPathfinder(Of T).GetNeighbors
+  nameWithType: AStarPathfinder<T>.GetNeighbors
+  nameWithType.vb: AStarPathfinder(Of T).GetNeighbors
 - uid: Rebus.Pathfinders.AStarPathfinder`1.Heuristic(`0,`0)
   name: Heuristic(T, T)
   href: api/Rebus.Pathfinders.AStarPathfinder-1.html#Rebus_Pathfinders_AStarPathfinder_1_Heuristic__0__0_
@@ -1962,29 +1995,42 @@ references:
   fullName.vb: Rebus.Pathfinders.AStarPathfinder(Of T).Heuristic
   nameWithType: AStarPathfinder<T>.Heuristic
   nameWithType.vb: AStarPathfinder(Of T).Heuristic
-- uid: Rebus.Pathfinders.AStarPathfinder`1.Neighbors(`0)
-  name: Neighbors(T)
-  href: api/Rebus.Pathfinders.AStarPathfinder-1.html#Rebus_Pathfinders_AStarPathfinder_1_Neighbors__0_
-  commentId: M:Rebus.Pathfinders.AStarPathfinder`1.Neighbors(`0)
-  fullName: Rebus.Pathfinders.AStarPathfinder<T>.Neighbors(T)
-  fullName.vb: Rebus.Pathfinders.AStarPathfinder(Of T).Neighbors(T)
-  nameWithType: AStarPathfinder<T>.Neighbors(T)
-  nameWithType.vb: AStarPathfinder(Of T).Neighbors(T)
-- uid: Rebus.Pathfinders.AStarPathfinder`1.Neighbors*
-  name: Neighbors
-  href: api/Rebus.Pathfinders.AStarPathfinder-1.html#Rebus_Pathfinders_AStarPathfinder_1_Neighbors_
-  commentId: Overload:Rebus.Pathfinders.AStarPathfinder`1.Neighbors
+- uid: Rebus.Pathfinders.AStarPathfinder`1.Search(`0,`0)
+  name: Search(T, T)
+  href: api/Rebus.Pathfinders.AStarPathfinder-1.html#Rebus_Pathfinders_AStarPathfinder_1_Search__0__0_
+  commentId: M:Rebus.Pathfinders.AStarPathfinder`1.Search(`0,`0)
+  fullName: Rebus.Pathfinders.AStarPathfinder<T>.Search(T, T)
+  fullName.vb: Rebus.Pathfinders.AStarPathfinder(Of T).Search(T, T)
+  nameWithType: AStarPathfinder<T>.Search(T, T)
+  nameWithType.vb: AStarPathfinder(Of T).Search(T, T)
+- uid: Rebus.Pathfinders.AStarPathfinder`1.Search*
+  name: Search
+  href: api/Rebus.Pathfinders.AStarPathfinder-1.html#Rebus_Pathfinders_AStarPathfinder_1_Search_
+  commentId: Overload:Rebus.Pathfinders.AStarPathfinder`1.Search
   isSpec: "True"
-  fullName: Rebus.Pathfinders.AStarPathfinder<T>.Neighbors
-  fullName.vb: Rebus.Pathfinders.AStarPathfinder(Of T).Neighbors
-  nameWithType: AStarPathfinder<T>.Neighbors
-  nameWithType.vb: AStarPathfinder(Of T).Neighbors
+  fullName: Rebus.Pathfinders.AStarPathfinder<T>.Search
+  fullName.vb: Rebus.Pathfinders.AStarPathfinder(Of T).Search
+  nameWithType: AStarPathfinder<T>.Search
+  nameWithType.vb: AStarPathfinder(Of T).Search
 - uid: Rebus.Pathfinders.HexPointPathfinder
   name: HexPointPathfinder
   href: api/Rebus.Pathfinders.HexPointPathfinder.html
   commentId: T:Rebus.Pathfinders.HexPointPathfinder
   fullName: Rebus.Pathfinders.HexPointPathfinder
   nameWithType: HexPointPathfinder
+- uid: Rebus.Pathfinders.HexPointPathfinder.GetNeighbors(Rebus.HexPoint)
+  name: GetNeighbors(HexPoint)
+  href: api/Rebus.Pathfinders.HexPointPathfinder.html#Rebus_Pathfinders_HexPointPathfinder_GetNeighbors_Rebus_HexPoint_
+  commentId: M:Rebus.Pathfinders.HexPointPathfinder.GetNeighbors(Rebus.HexPoint)
+  fullName: Rebus.Pathfinders.HexPointPathfinder.GetNeighbors(Rebus.HexPoint)
+  nameWithType: HexPointPathfinder.GetNeighbors(HexPoint)
+- uid: Rebus.Pathfinders.HexPointPathfinder.GetNeighbors*
+  name: GetNeighbors
+  href: api/Rebus.Pathfinders.HexPointPathfinder.html#Rebus_Pathfinders_HexPointPathfinder_GetNeighbors_
+  commentId: Overload:Rebus.Pathfinders.HexPointPathfinder.GetNeighbors
+  isSpec: "True"
+  fullName: Rebus.Pathfinders.HexPointPathfinder.GetNeighbors
+  nameWithType: HexPointPathfinder.GetNeighbors
 - uid: Rebus.Pathfinders.HexPointPathfinder.Heuristic(Rebus.HexPoint,Rebus.HexPoint)
   name: Heuristic(HexPoint, HexPoint)
   href: api/Rebus.Pathfinders.HexPointPathfinder.html#Rebus_Pathfinders_HexPointPathfinder_Heuristic_Rebus_HexPoint_Rebus_HexPoint_
@@ -1998,19 +2044,6 @@ references:
   isSpec: "True"
   fullName: Rebus.Pathfinders.HexPointPathfinder.Heuristic
   nameWithType: HexPointPathfinder.Heuristic
-- uid: Rebus.Pathfinders.HexPointPathfinder.Neighbors(Rebus.HexPoint)
-  name: Neighbors(HexPoint)
-  href: api/Rebus.Pathfinders.HexPointPathfinder.html#Rebus_Pathfinders_HexPointPathfinder_Neighbors_Rebus_HexPoint_
-  commentId: M:Rebus.Pathfinders.HexPointPathfinder.Neighbors(Rebus.HexPoint)
-  fullName: Rebus.Pathfinders.HexPointPathfinder.Neighbors(Rebus.HexPoint)
-  nameWithType: HexPointPathfinder.Neighbors(HexPoint)
-- uid: Rebus.Pathfinders.HexPointPathfinder.Neighbors*
-  name: Neighbors
-  href: api/Rebus.Pathfinders.HexPointPathfinder.html#Rebus_Pathfinders_HexPointPathfinder_Neighbors_
-  commentId: Overload:Rebus.Pathfinders.HexPointPathfinder.Neighbors
-  isSpec: "True"
-  fullName: Rebus.Pathfinders.HexPointPathfinder.Neighbors
-  nameWithType: HexPointPathfinder.Neighbors
 - uid: Rebus.RegionType
   name: RegionType
   href: api/Rebus.RegionType.html
@@ -2441,6 +2474,19 @@ references:
   commentId: T:Rebus.Writable
   fullName: Rebus.Writable
   nameWithType: Writable
+- uid: Rebus.Writable.#ctor
+  name: Writable()
+  href: api/Rebus.Writable.html#Rebus_Writable__ctor
+  commentId: M:Rebus.Writable.#ctor
+  fullName: Rebus.Writable.Writable()
+  nameWithType: Writable.Writable()
+- uid: Rebus.Writable.#ctor*
+  name: Writable
+  href: api/Rebus.Writable.html#Rebus_Writable__ctor_
+  commentId: Overload:Rebus.Writable.#ctor
+  isSpec: "True"
+  fullName: Rebus.Writable.Writable
+  nameWithType: Writable.Writable
 - uid: Rebus.Writable.ToString
   name: ToString()
   href: api/Rebus.Writable.html#Rebus_Writable_ToString

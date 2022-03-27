@@ -7,12 +7,21 @@ using System.Xml;
 
 namespace Rebus.Expressions
 {
+    /// <summary>
+    /// Represents a noun expression.
+    /// </summary>
     public class NounExpression : Expression
     {
         private readonly IToken? _article;
         private readonly IReadOnlyCollection<IToken> _adjectives;
         private readonly IToken _substantive;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NounExpression"/> class.	
+        /// </summary>
+        /// <param name="article">The article.</param>
+        /// <param name="adjectives">The adjective.</param>
+        /// <param name="substantive">The substantive.</param>
         public NounExpression(IToken? article, IReadOnlyCollection<IToken> adjectives, IToken substantive)
         {
             _article = article;
@@ -20,11 +29,13 @@ namespace Rebus.Expressions
             _substantive = substantive;
         }
 
+        /// <inheritdoc/>
         public override void Interpret(ICommandBuilder context)
         {
             context.Add(_adjectives, _substantive);
         }
 
+        /// <inheritdoc/>
         public override void WriteXml(XmlWriter writer)
         {
             if (_article is not null)

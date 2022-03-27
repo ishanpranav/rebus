@@ -73,7 +73,8 @@
   
   <h1 id="Rebus_Expression" data-uid="Rebus.Expression" class="text-break">Class Expression
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>Defines the core behavior of an abstract syntax tree and provides a base for derived classes.</p>
+</div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
@@ -121,6 +122,24 @@
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public abstract class Expression : IXmlSerializable</code></pre>
   </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_Expression__ctor.md&amp;value=---%0Auid%3A%20Rebus.Expression.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/Expression.cs/#L20">View Source</a>
+  </span>
+  <a id="Rebus_Expression__ctor_" data-uid="Rebus.Expression.#ctor*"></a>
+  <h4 id="Rebus_Expression__ctor" data-uid="Rebus.Expression.#ctor">Expression()</h4>
+  <div class="markdown level1 summary"><p>Called from constructors in derived classes to initialize the <a class="xref" href="Rebus.Expression.html">Expression</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected Expression()</code></pre>
+  </div>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
@@ -128,11 +147,12 @@
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_Expression_Interpret_Rebus_ICommandBuilder_.md&amp;value=---%0Auid%3A%20Rebus.Expression.Interpret(Rebus.ICommandBuilder)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/Expression.cs/#L14">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/Expression.cs/#L26">View Source</a>
   </span>
   <a id="Rebus_Expression_Interpret_" data-uid="Rebus.Expression.Interpret*"></a>
   <h4 id="Rebus_Expression_Interpret_Rebus_ICommandBuilder_" data-uid="Rebus.Expression.Interpret(Rebus.ICommandBuilder)">Interpret(ICommandBuilder)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Interprets the expression.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -151,7 +171,8 @@
       <tr>
         <td><a class="xref" href="Rebus.ICommandBuilder.html">ICommandBuilder</a></td>
         <td><span class="parametername">context</span></td>
-        <td></td>
+        <td><p>The interpretation context.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -160,7 +181,7 @@
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_Expression_WriteXml_System_Xml_XmlWriter_.md&amp;value=---%0Auid%3A%20Rebus.Expression.WriteXml(System.Xml.XmlWriter)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/Expression.cs/#L26">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/Expression.cs/#L43">View Source</a>
   </span>
   <a id="Rebus_Expression_WriteXml_" data-uid="Rebus.Expression.WriteXml*"></a>
   <h4 id="Rebus_Expression_WriteXml_System_Xml_XmlWriter_" data-uid="Rebus.Expression.WriteXml(System.Xml.XmlWriter)">WriteXml(XmlWriter)</h4>
@@ -194,7 +215,7 @@
     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_Expression_System_Xml_Serialization_IXmlSerializable_ReadXml_System_Xml_XmlReader_.md&amp;value=---%0Auid%3A%20Rebus.Expression.System%23Xml%23Serialization%23IXmlSerializable%23ReadXml(System.Xml.XmlReader)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/Expression.cs/#L21">View Source</a>
+    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/Expression.cs/#L37">View Source</a>
   </span>
   <a id="Rebus_Expression_System_Xml_Serialization_IXmlSerializable_ReadXml_" data-uid="Rebus.Expression.System#Xml#Serialization#IXmlSerializable#ReadXml*"></a>
   <h4 id="Rebus_Expression_System_Xml_Serialization_IXmlSerializable_ReadXml_System_Xml_XmlReader_" data-uid="Rebus.Expression.System#Xml#Serialization#IXmlSerializable#ReadXml(System.Xml.XmlReader)">IXmlSerializable.ReadXml(XmlReader)</h4>
@@ -221,6 +242,22 @@
       </tr>
     </tbody>
   </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.notimplementedexception">NotImplementedException</a></td>
+        <td><p>In all cases.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.xml.serialization.ixmlserializable">System.Xml.Serialization.IXmlSerializable</a>
@@ -236,7 +273,7 @@
                     <a href="https://github.com/ishanpranav/Rebus/new/master/apiSpec/new?filename=Rebus_Expression.md&amp;value=---%0Auid%3A%20Rebus.Expression%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/Expression.cs/#L12" class="contribution-link">View Source</a>
+                    <a href="https://github.com/ishanpranav/Rebus/blob/master/src/Rebus/Expression.cs/#L15" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

@@ -20,7 +20,7 @@ namespace Rebus.Server
             _contextFactory = contextFactory;
         }
 
-        protected override IEnumerable<HexPoint> Neighbors(HexPoint value)
+        protected override IEnumerable<HexPoint> GetNeighbors(HexPoint value)
         {
             using (RebusDbContext context = _contextFactory.CreateDbContext())
             {

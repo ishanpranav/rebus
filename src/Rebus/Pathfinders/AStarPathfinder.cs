@@ -8,24 +8,43 @@ using System.Collections.Generic;
 namespace Rebus.Pathfinders
 {
     /// <summary>
-    /// An <see cref="IPathfinder{T}"/> used to find a path between two graph nodes.
+    /// Performs the A* search algorithm to find paths between graph nodes.
     /// </summary>
     /// <remarks>
     /// The implementation of this class was inspired by and based on <see href="https://en.wikipedia.org/wiki/A*_search_algorithm">this</see> Wikipedia article.
     /// </remarks>
     /// <seealso href="https://en.wikipedia.org/wiki/A*_search_algorithm">A* search algorithm - Wikipedia</seealso>
+    /// <typeparam name="T">The type of each node in the graph.</typeparam>
     public abstract class AStarPathfinder<T> : IPathfinder<T> where T : notnull, IEquatable<T>
     {
+        /// <summary>
+        /// Performs the heuristic function.
+        /// </summary>
+        /// <param name="source">The source node.</param>
+        /// <param name="destination">The destination node.</param>
+        /// <returns>The estimated distance from the <paramref name="source"/> to the <paramref name="destination"/>.</returns>
         protected abstract int Heuristic(T source, T destination);
 
-        protected abstract IEnumerable<T> Neighbors(T value);
-
-        protected virtual int Cost(T source, T neighbor)
+        /// <summary>
+        /// Performs the cost function.
+        /// </summary>
+        /// <param name="value">The source node.</param>
+        /// <param name="neighbor">The neighbor.</param>
+        /// <returns>The cost of traveling from the specified <paramref name="value"/> to its specified <paramref name="neighbor"/>.</returns>
+        protected virtual int Cost(T value, T neighbor)
         {
             return 1;
         }
 
-        public Stack<T> GetSteps(T source, T destination)
+        /// <summary>
+        /// Gets the neighbors of a node.
+        /// </summary>
+        /// <param name="value">The source node.</param>
+        /// <returns>The neighbors of the specified <paramref name="value"/>.</returns>
+        protected abstract IEnumerable<T> GetNeighbors(T value);
+
+        /// <inheritdoc/>
+        public Stack<T> Search(T source, T destination)
         {
             // function A_Star(start, goal, h)
 
@@ -49,7 +68,7 @@ namespace Rebus.Pathfinders
             // gScore := map with default value of Infinity
             // gScore[start] := 0
 
-            Dictionary<T, int> gScores = new Dictionary<T, int>()
+            Dictionary<T, int> cumulativeCosts = new Dictionary<T, int>()
             {
                 { source, 0 }
             };
@@ -91,15 +110,15 @@ namespace Rebus.Pathfinders
                 {
                     // for each neighbor of current
 
-                    foreach (T neighbor in Neighbors(current))
+                    foreach (T neighbor in GetNeighbors(current))
                     {
                         // tentative_gScore := gScore[current] + d(current, neighbor)
 
-                        int tentativeGScore = gScores[current] + Cost(current, neighbor);
+                        int tenativeCumulativeCost = cumulativeCosts[current] + Cost(current, neighbor);
 
                         // if tentative_gScore < gScore[neighbor]
 
-                        if (!gScores.ContainsKey(neighbor) || tentativeGScore < gScores[neighbor])
+                        if (!cumulativeCosts.ContainsKey(neighbor) || tenativeCumulativeCost < cumulativeCosts[neighbor])
                         {
                             // cameFrom[neighbor] := current
 
@@ -107,13 +126,13 @@ namespace Rebus.Pathfinders
 
                             // gScore[neighbor] := tentative_gScore
 
-                            gScores[neighbor] = tentativeGScore;
+                            cumulativeCosts[neighbor] = tenativeCumulativeCost;
 
                             // fScore[neighbor] := tentative_gScore + h(neighbor)
                             // if neighbor not in openSet
                             //   openSet.add(neighbor)
 
-                            openSet.Enqueue(neighbor, tentativeGScore + Heuristic(neighbor, destination));
+                            openSet.Enqueue(neighbor, tenativeCumulativeCost + Heuristic(neighbor, destination));
                         }
                     }
                 }

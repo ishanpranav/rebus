@@ -122,7 +122,7 @@ namespace Rebus
                 default:
                     Stack<HexPoint> steps = _pathfinderFactory
                         .CreatePathfinder(spacecraft.PlayerId)
-                        .GetSteps(spacecraft.Region, destination);
+                        .Search(spacecraft.Region, destination);
 
                     while (steps.TryPop(out HexPoint step))
                     {

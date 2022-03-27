@@ -1,4 +1,4 @@
-﻿// Ishan Pranav's REBUS: 
+﻿// Ishan Pranav's REBUS: INamer.cs
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 

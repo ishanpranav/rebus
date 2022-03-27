@@ -6,8 +6,12 @@ using System;
 
 namespace Rebus
 {
+    /// <summary>
+    /// Supports custom formatting of objects using an <see cref="ExpressionWriter"/>.
+    /// </summary>
     public class ExpressionFormatProvider : ICustomFormatter, IFormatProvider
     {
+        /// <inheritdoc/>
         public string Format(string? format, object? arg, IFormatProvider? formatProvider)
         {
             ExpressionWriter writer = new ExpressionWriter()
@@ -20,6 +24,7 @@ namespace Rebus
             return writer.ToString();
         }
 
+        /// <inheritdoc/>
         public object? GetFormat(Type? formatType)
         {
             if (formatType == typeof(ICustomFormatter))

@@ -11,7 +11,7 @@ using Rebus.Expressions;
 namespace Rebus
 {
     /// <summary>
-    /// Provides a recursive descent parser that constructs an abstract syntax tree of <see cref="Expression"/> instances from a set of <see cref="IToken"/> instances.
+    /// Represents a recursive descent parser that constructs an abstract syntax tree of <see cref="Expression"/> instances from a set of <see cref="IToken"/> instances.
     /// </summary>
     /// <remarks>
     /// The implementation of this class was inspired by and based on <see href="https://en.wikipedia.org/wiki/Recursive_descent_parser">this</see> Wikipedia article.
@@ -22,12 +22,23 @@ namespace Rebus
         private readonly IEnumerable<IToken> _tokens;
         private readonly IStringLocalizer _localizer;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Parser"/> class.
+        /// </summary>
+        /// <param name="tokens">The input tokens.</param>
+        /// <param name="localizer">The string localizer.</param>
         public Parser(IEnumerable<IToken> tokens, IStringLocalizer localizer)
         {
             _tokens = tokens;
             _localizer = localizer;
         }
 
+        /// <summary>
+        /// Constructs an abstract syntax tree.
+        /// </summary>
+        /// <returns>The abstract syntax tree as an <see cref="Expression"/> instance.</returns>
+        /// <exception cref="RebusSpellingException">A spelling error was encountered.</exception>
+        /// <exception cref="RebusException">An error occured while parsing.</exception>
         public Expression Parse()
         {
             using (IEnumerator<IToken> enumerator = _tokens.GetEnumerator())

@@ -7,15 +7,23 @@ using System;
 namespace Rebus.EditDistances
 {
     /// <summary>
-    /// An <see cref="IEditDistance"/> used to calculate the edit distance between two strings using the Levenshtein algorithm.
+    /// Computes the Levenshtein edit distance using the Wagner–Fischer algorithm.
     /// </summary>
     /// <remarks>
     /// The implementation of this class was inspired by and based on <see href="https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance">this</see> Wikipedia article.
     /// </remarks>
+    /// <seealso href="https://en.wikipedia.org/wiki/Wagner%E2%80%93Fischer_algorithm">Wagner–Fischer algorithm - Wikipedia</seealso>
+    /// <seealso href="https://en.wikipedia.org/wiki/Levenshtein_distance">Levenshtein distance - Wikipedia</seealso>
     /// <seealso href="https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance">Damerau–Levenshtein distance - Wikipedia</seealso>
     public class LevenshteinEditDistance : IEditDistance
     {
-        public int Calculate(string a, string b)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LevenshteinEditDistance"/> class.
+        /// </summary>
+        public LevenshteinEditDistance() { }
+
+        /// <inheritdoc/>
+        public int Compute(string a, string b)
         {
             // algorithm OSA-distance is
             // input: strings a[1..length(a)], b[1..length(b)]
@@ -60,18 +68,24 @@ namespace Rebus.EditDistances
             return matrix[a.Length, b.Length];
         }
 
-        protected virtual void RestrictedDistance(int[,] matrix, int i, int j, string value1, string value2)
+        /// <summary>
+        /// Performs the restricted distance function.
+        /// </summary>
+        /// <param name="matrix">The matrix.</param>
+        /// <param name="i">The index in the first dimension.</param>
+        /// <param name="j">The index in the second dimension.</param>
+        /// <param name="a">The first string.</param>
+        /// <param name="b">The second string.</param>
+        protected virtual void RestrictedDistance(int[,] matrix, int i, int j, string a, string b)
         {
             // if a[i] = b[j] then
             //   cost := 0
             // else
             //   cost := 1
 
-            int cost = Convert.ToInt32(value1[i - 1] != value2[j - 1]);
-
             // d[i, j] := minimum(d[i-1, j] + 1, d[i, j-1] + 1, d[i-1, j-1] + cost)
 
-            matrix[i, j] = Math.Min(matrix[i - 1, j] + 1, Math.Min(matrix[i, j - 1] + 1, matrix[i - 1, j - 1] + cost));
+            matrix[i, j] = Math.Min(matrix[i - 1, j] + 1, Math.Min(matrix[i, j - 1] + 1, matrix[i - 1, j - 1] + Convert.ToInt32(a[i - 1] != b[j - 1])));
         }
     }
 }

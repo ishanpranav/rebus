@@ -1,4 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿// Ishan Pranav's REBUS: 20220326052725_NavigationMigration.cs
+// Copyright (c) Ishan Pranav. All rights reserved.
+// Licensed under the MIT License.
+
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 

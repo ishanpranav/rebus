@@ -80,13 +80,17 @@
       <h4><a class="xref" href="Rebus.Controller.html">Controller</a></h4>
       <section></section>
       <h4><a class="xref" href="Rebus.Executor.html">Executor</a></h4>
-      <section></section>
+      <section><p>Provides the execute, re-execute, undo, and redo functionality for <a class="xref" href="Rebus.IExecutable.html">IExecutable</a> and <a class="xref" href="Rebus.IUnexecutable.html">IUnexecutable</a> commands.</p>
+</section>
       <h4><a class="xref" href="Rebus.Expression.html">Expression</a></h4>
-      <section></section>
+      <section><p>Defines the core behavior of an abstract syntax tree and provides a base for derived classes.</p>
+</section>
       <h4><a class="xref" href="Rebus.ExpressionFormatProvider.html">ExpressionFormatProvider</a></h4>
-      <section></section>
+      <section><p>Supports custom formatting of objects using an <a class="xref" href="Rebus.ExpressionWriter.html">ExpressionWriter</a>.</p>
+</section>
       <h4><a class="xref" href="Rebus.ExpressionWriter.html">ExpressionWriter</a></h4>
-      <section></section>
+      <section><p>Represents an expression writer that formats objects as well-formed English sentences.</p>
+</section>
       <h4><a class="xref" href="Rebus.Generator.html">Generator</a></h4>
       <section></section>
       <h4><a class="xref" href="Rebus.Map.html">Map</a></h4>
@@ -94,61 +98,76 @@
       <h4><a class="xref" href="Rebus.Namer.html">Namer</a></h4>
       <section></section>
       <h4><a class="xref" href="Rebus.Parser.html">Parser</a></h4>
-      <section><p>Provides a recursive descent parser that constructs an abstract syntax tree of <a class="xref" href="Rebus.Expression.html">Expression</a> instances from a set of <a class="xref" href="Rebus.IToken.html">IToken</a> instances.</p>
+      <section><p>Represents a recursive descent parser that constructs an abstract syntax tree of <a class="xref" href="Rebus.Expression.html">Expression</a> instances from a set of <a class="xref" href="Rebus.IToken.html">IToken</a> instances.</p>
 </section>
       <h4><a class="xref" href="Rebus.Tokenizer.html">Tokenizer</a></h4>
-      <section></section>
+      <section><p>Represents a lexer or lexical tokenizer.</p>
+</section>
       <h4><a class="xref" href="Rebus.Writable.html">Writable</a></h4>
-      <section></section>
+      <section><p>Defines the core behavior of a writable object and provides a base for derived classes.</p>
+</section>
     <h3 id="structs">Structs
   </h3>
       <h4><a class="xref" href="Rebus.HexPoint.html">HexPoint</a></h4>
-      <section><p>Represents a cubic coordinate used to identify tiles in a grid of hexagons.</p>
+      <section><p>Represents a cubic coordinate in three dimensions (Q, R, and S) used to identify tiles in a grid of hexagons.</p>
 </section>
     <h3 id="interfaces">Interfaces
   </h3>
       <h4><a class="xref" href="Rebus.ICommandBuilder.html">ICommandBuilder</a></h4>
       <section></section>
       <h4><a class="xref" href="Rebus.IEditDistance.html">IEditDistance</a></h4>
-      <section></section>
+      <section><p>Defines a method for calcuating the edit distance between strings.</p>
+</section>
       <h4><a class="xref" href="Rebus.IEngine-1.html">IEngine&lt;T&gt;</a></h4>
       <section></section>
       <h4><a class="xref" href="Rebus.IExecutable.html">IExecutable</a></h4>
-      <section></section>
+      <section><p>Defines a method for asynchronously executing an operation.</p>
+</section>
       <h4><a class="xref" href="Rebus.IExecutorProvider.html">IExecutorProvider</a></h4>
-      <section></section>
+      <section><p>Defines a method for retrieving an <a class="xref" href="Rebus.Executor.html">Executor</a>.</p>
+</section>
       <h4><a class="xref" href="Rebus.IFeature.html">IFeature</a></h4>
       <section></section>
       <h4><a class="xref" href="Rebus.INamer.html">INamer</a></h4>
       <section></section>
       <h4><a class="xref" href="Rebus.IPathfinder-1.html">IPathfinder&lt;T&gt;</a></h4>
-      <section></section>
+      <section><p>Defines a method for finding paths between graph nodes.</p>
+</section>
       <h4><a class="xref" href="Rebus.IPathfinderFactory-1.html">IPathfinderFactory&lt;T&gt;</a></h4>
-      <section></section>
+      <section><p>Defines a method for creating a <a class="xref" href="Rebus.IPathfinder-1.html">IPathfinder&lt;T&gt;</a>.</p>
+</section>
       <h4><a class="xref" href="Rebus.IRepository.html">IRepository</a></h4>
       <section></section>
       <h4><a class="xref" href="Rebus.ISpacecraft.html">ISpacecraft</a></h4>
       <section></section>
       <h4><a class="xref" href="Rebus.IToken.html">IToken</a></h4>
-      <section></section>
+      <section><p>Defines a lexical token.</p>
+</section>
       <h4><a class="xref" href="Rebus.ITokenFactory.html">ITokenFactory</a></h4>
-      <section></section>
+      <section><p>Defines a method for asynchronously creating a token.</p>
+</section>
       <h4><a class="xref" href="Rebus.IUnexecutable.html">IUnexecutable</a></h4>
-      <section></section>
+      <section><p>Defines a method for asynchronously un-executing an operation.</p>
+</section>
       <h4><a class="xref" href="Rebus.IWrapper.html">IWrapper</a></h4>
-      <section></section>
+      <section><p>Defines a method for wrapping text contained in a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.text.stringbuilder">StringBuilder</a>.</p>
+</section>
       <h4><a class="xref" href="Rebus.IWritable.html">IWritable</a></h4>
-      <section></section>
+      <section><p>Defines a method for writing an object to an expression writer.</p>
+</section>
     <h3 id="enums">Enums
   </h3>
       <h4><a class="xref" href="Rebus.Argument.html">Argument</a></h4>
-      <section></section>
+      <section><p>Specifies the noun argument of a verb.</p>
+</section>
       <h4><a class="xref" href="Rebus.RegionType.html">RegionType</a></h4>
       <section></section>
       <h4><a class="xref" href="Rebus.TokenTypes.html">TokenTypes</a></h4>
-      <section></section>
+      <section><p>Specifies the types of tokens.</p>
+</section>
       <h4><a class="xref" href="Rebus.WritingState.html">WritingState</a></h4>
-      <section></section>
+      <section><p>Specifies the writing states of an expression.</p>
+</section>
 </article>
           </div>
           

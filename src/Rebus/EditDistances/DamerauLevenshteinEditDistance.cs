@@ -7,7 +7,7 @@ using System;
 namespace Rebus.EditDistances
 {
     /// <summary>
-    /// An <see cref="IEditDistance"/> used to calculate the edit distance between two strings using the Damerau–Levenshtein algorithm.
+    /// Computes the Damerau–Levenshtein edit distance.
     /// </summary>
     /// <remarks>
     /// The implementation of this class was inspired by and based on <see href="https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance">this</see> Wikipedia article.
@@ -15,6 +15,12 @@ namespace Rebus.EditDistances
     /// <seealso href="https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance">Damerau–Levenshtein distance - Wikipedia</seealso>
     public class DamerauLevenshteinEditDistance : LevenshteinEditDistance
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DamerauLevenshteinEditDistance"/> class.
+        /// </summary>
+        public DamerauLevenshteinEditDistance() { }
+
+        /// <inheritdoc/>
         protected override void RestrictedDistance(int[,] matrix, int i, int j, string a, string b)
         {
             base.RestrictedDistance(matrix, i, j, a, b);

@@ -7,13 +7,16 @@ using System.Runtime.Serialization;
 
 namespace Rebus.Exceptions
 {
+    /// <summary>
+    /// The exception that is thrown when the engine encounters an error.
+    /// </summary>
     [Serializable]
     public class RebusException : Exception
     {
-        public RebusException(string? message) : base(message)
-        {
-        }
+        /// <inheritdoc/>
+        public RebusException(string? message) : base(message) { }
 
+        /// <inheritdoc/>
         protected RebusException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

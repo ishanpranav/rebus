@@ -10,12 +10,23 @@ using System.Text;
 
 namespace Rebus
 {
+    /// <summary>
+    /// Represents an expression writer that formats objects as well-formed English sentences.
+    /// </summary>
     public class ExpressionWriter
     {
         private readonly StringBuilder _stringBuilder = new StringBuilder();
 
+        /// <summary>
+        /// Gets or sets the writing state.
+        /// </summary>
+        /// <value>The writing state. The default is <see cref="WritingState.Initial"/>.</value>
         public WritingState State { get; set; }
 
+        /// <summary>
+        /// Writes the well-formed string representation of a character literal.
+        /// </summary>
+        /// <param name="value">The character.</param>
         public void Write(char value)
         {
             switch (State)
@@ -89,11 +100,18 @@ namespace Rebus
             }
         }
 
+        /// <summary>
+        /// Writes the well-formed string representation of an object.
+        /// </summary>
+        /// <param name="value">The object.</param>
         public void Write(object? value)
         {
             Write(value, format: null);
         }
 
+        /// <inheritdoc cref="Write(object)"/>
+        /// <param name="value">The object.</param>
+        /// <param name="format">The format string.</param>
         public void Write(object? value, string? format)
         {
             if (value is not null)
@@ -140,15 +158,20 @@ namespace Rebus
             }
         }
 
-        public void Write(int value, string? word)
+        /// <summary>
+        /// Writes the well-formed string representation of a number.
+        /// </summary>
+        /// <param name="value">The number.</param>
+        /// <param name="format">The format string.</param>
+        public void Write(int value, string? format)
         {
-            if (word is null)
+            if (format is null)
             {
                 Write(value.ToString("n0"));
             }
-            else
+            else if (format.Contains(','))
             {
-                string[] substrings = word.Split(',');
+                string[] substrings = format.Split(',');
 
                 if (substrings.Length > 1)
                 {
@@ -166,8 +189,16 @@ namespace Rebus
                     Write(substrings[0]);
                 }
             }
+            else
+            {
+                Write(value.ToString(format));
+            }
         }
 
+        /// <summary>
+        /// Writes the well-formed string representation of an enumeration value.
+        /// </summary>
+        /// <param name="value">The enumeration value.</param>
         public void Write(Enum value)
         {
             Write(value
@@ -175,6 +206,11 @@ namespace Rebus
                 .ToLower());
         }
 
+        /// <summary>
+        /// Writes the well-formed string representation of a collection.
+        /// </summary>
+        /// <param name="values">The collection.</param>
+        /// <param name="conjunction">The conjunction.</param>
         public void Write<T>(IReadOnlyList<T> values, string? conjunction)
         {
             int count = values.Count;
@@ -209,6 +245,10 @@ namespace Rebus
             }
         }
 
+        /// <summary>
+        /// Writes the well-formed string representation of a string literal.
+        /// </summary>
+        /// <param name="value">The string.</param>
         public void Write(string value)
         {
             foreach (char @char in value)
@@ -217,6 +257,10 @@ namespace Rebus
             }
         }
 
+        /// <summary>
+        /// Writes the well-formed string representation of a string builder.
+        /// </summary>
+        /// <param name="value">The string builder.</param>
         public void Write(StringBuilder value)
         {
             for (int i = 0; i < value.Length; i++)
@@ -225,6 +269,9 @@ namespace Rebus
             }
         }
 
+        /// <summary>
+        /// Writes a line terminator.
+        /// </summary>
         public void WriteLine()
         {
             _stringBuilder.AppendLine();
@@ -232,11 +279,16 @@ namespace Rebus
             State = WritingState.Initial;
         }
 
+        /// <summary>
+        /// Wraps the text in the writer using a wrapper.
+        /// </summary>
+        /// <param name="wrapper">The wrapper.</param>
         public void Wrap(IWrapper wrapper)
         {
             wrapper.Wrap(_stringBuilder);
         }
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             return _stringBuilder.ToString();
