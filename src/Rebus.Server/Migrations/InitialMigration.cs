@@ -1,15 +1,11 @@
-﻿// Ishan Pranav's REBUS: InitialMigration.cs
-// Copyright (c) Ishan Pranav. All rights reserved.
-// Licensed under the MIT License.
-
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Rebus.Server.Migrations
 {
-    internal partial class InitialMigration : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -22,7 +18,7 @@ namespace Rebus.Server.Migrations
                     UserId = table.Column<string>(type: "TEXT", nullable: false, defaultValue: "", collation: "NOCASE"),
                     Credential = table.Column<string>(type: "TEXT", nullable: false, defaultValue: "", collation: "NOCASE"),
                     Sequence = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 1),
-                    Wealth = table.Column<int>(type: "INTEGER", nullable: false)
+                    Wealth = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 100)
                 },
                 constraints: table =>
                 {
@@ -49,7 +45,8 @@ namespace Rebus.Server.Migrations
                 columns: table => new
                 {
                     Value = table.Column<string>(type: "TEXT", nullable: false, collation: "NOCASE"),
-                    Type = table.Column<int>(type: "INTEGER", nullable: false)
+                    Type = table.Column<int>(type: "INTEGER", nullable: false),
+                    NameType = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -245,9 +242,14 @@ namespace Rebus.Server.Migrations
                 column: "SubstantiveValue");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Navigation_PlayerId_Q_R",
+                name: "IX_Navigation_PlayerId",
                 table: "Navigation",
-                columns: new[] { "PlayerId", "Q", "R" },
+                column: "PlayerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Navigation_Q_R_PlayerId",
+                table: "Navigation",
+                columns: new[] { "Q", "R", "PlayerId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(

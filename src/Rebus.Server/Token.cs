@@ -18,6 +18,8 @@ namespace Rebus.Server
         public string Value { get; set; }
 #nullable enable
 
+        public NameTypes NameType { get; set; }
+
         public ICollection<Adjective> Adjectives { get; set; } = new HashSet<Adjective>();
 
         public override void Write(ExpressionWriter writer)

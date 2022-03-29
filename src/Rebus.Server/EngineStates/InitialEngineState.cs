@@ -6,6 +6,7 @@ using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Rebus.Server.EngineStates.Credential;
 
 namespace Rebus.Server.EngineStates
 {

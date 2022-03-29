@@ -15,15 +15,15 @@ namespace Rebus.Server.Commands
     internal sealed class VisionCommand : Command
     {
         private readonly Controller _controller;
-        private readonly Repository _repository;
+        private readonly DbRepository _repository;
 
-        public VisionCommand(Controller controller, Repository repository)
+        public VisionCommand(Controller controller, DbRepository repository)
         {
             _controller = controller;
             _repository = repository;
         }
 
-        private VisionCommand(ArgumentSet arguments, Controller controller, Repository repository) : base(arguments)
+        private VisionCommand(ArgumentSet arguments, Controller controller, DbRepository repository) : base(arguments)
         {
             _controller = controller;
             _repository = repository;

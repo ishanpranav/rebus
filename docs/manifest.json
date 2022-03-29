@@ -1,6 +1,6 @@
 {
   "homepages": [],
-  "source_base_path": "C:/Users/ishan/OneDrive/Software/Rebus/src/rebus.documentation",
+  "source_base_path": "C:/Users/ishan/OneDrive/Software/Rebus/src/Rebus.Documentation",
   "xrefmap": "xrefmap.yml",
   "files": [
     {
@@ -21,7 +21,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Rebus.Controller.html",
-          "hash": "PyBqU5/yP5Z4Ok04b/M6Dec9UVKf7pKgHz408qbDpAw="
+          "hash": "LDTM1eYbVtP6yq5lOKV+WRRKC9MnIuMt+FPrs496yq8="
         }
       },
       "is_incremental": false,
@@ -129,7 +129,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Rebus.ExpressionFormatProvider.html",
-          "hash": "n2Yk+T1LqYJ5yAAPuxywqvY1NCnqHz7Iu2rrneE7kkA="
+          "hash": "zxRzEtu89C+6JGtJIXLd3DNSGcj81L6ijsNox03QvGo="
         }
       },
       "is_incremental": false,
@@ -249,7 +249,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Rebus.Generator.html",
-          "hash": "fFSim8o0daVVE7CKBuhPdCpcjq7TBGzBKyQHXxBJTKY="
+          "hash": "Ym8IcQxnKGTMjx2biD+fRl64q3Apy/AVi5mWmT0VyL4="
         }
       },
       "is_incremental": false,
@@ -257,11 +257,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/Rebus.Generators.SatelliteGenerator.yml",
+      "source_relative_path": "api/Rebus.Generators.PlanetGenerator.yml",
       "output": {
         ".html": {
-          "relative_path": "api/Rebus.Generators.SatelliteGenerator.html",
-          "hash": "Ue+GR5zq3cPkHzQP0q1qd3+2WhzmXXpXb4fo6OliOrY="
+          "relative_path": "api/Rebus.Generators.PlanetGenerator.html",
+          "hash": "0pMXTEK1rRmRGjLY01SQjQzIySUQCd1aQU0g234PYX0="
         }
       },
       "is_incremental": false,
@@ -273,7 +273,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Rebus.Generators.html",
-          "hash": "+1rQguVryNXsx9IecKbt+B9d2ZsOgYvB6rTu4a1YILU="
+          "hash": "uQj16KX/iRtDikwYsjcRHQBh0FLYzTHxKqS93UrlH8Q="
         }
       },
       "is_incremental": false,
@@ -365,18 +365,6 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/Rebus.INamer.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Rebus.INamer.html",
-          "hash": "ZE0zIXY13gWgxxLJVnYa5Vl+IYS+ymoqWUtr1X4vgIM="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/Rebus.IPathfinder-1.yml",
       "output": {
         ".html": {
@@ -401,11 +389,23 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Rebus.IPlanetNamer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Rebus.IPlanetNamer.html",
+          "hash": "yz8i5dWToxMsBhZBgAj+viCoDIf3DfS5MhzmSqzm8Oo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Rebus.IRepository.yml",
       "output": {
         ".html": {
           "relative_path": "api/Rebus.IRepository.html",
-          "hash": "B3PLGfoIGhaEhqiDX5V+LoA4iJV1HGmNoBTUn4l5bLE="
+          "hash": "SVJD19TG5aG9GXindhxHVTvHyomNdDmHmj3JtToWnyI="
         }
       },
       "is_incremental": false,
@@ -418,6 +418,30 @@
         ".html": {
           "relative_path": "api/Rebus.ISpacecraft.html",
           "hash": "rAXONiFlWlIi6UQteSyOT+Yafnl6NE1xtM2q9VvHIRQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Rebus.ISpacecraftNamer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Rebus.ISpacecraftNamer.html",
+          "hash": "AAVS6UEJw+bN8oF2iqTUCIpgSCatHz4NpByAw6gt3ag="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Rebus.IStarNamer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Rebus.IStarNamer.html",
+          "hash": "78czARHr2m5YAOoEaj7HjVRegvtAzxbrSMXAMaf02iU="
         }
       },
       "is_incremental": false,
@@ -441,7 +465,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Rebus.ITokenFactory.html",
-          "hash": "4yeRWxhT0CuBjX+UCynxEPApM+IkdiWo/N1WU6ialG8="
+          "hash": "Jpw6+hwU/Lgw2Buuol53sArQw8bdCGFvu/vqrypPSUQ="
         }
       },
       "is_incremental": false,
@@ -490,18 +514,6 @@
         ".html": {
           "relative_path": "api/Rebus.Map.html",
           "hash": "XdP6Uhj/fSkeK2e2acY9Ad4G+/5ewwl3JxZjl8TkqdU="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Rebus.Namer.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Rebus.Namer.html",
-          "hash": "QC4OQ5y7HRpVId7kHb+c4PdjLYneiReA8oeRmMTvt9I="
         }
       },
       "is_incremental": false,
@@ -581,6 +593,30 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Rebus.Server.Migrations.NameTypeMigration.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Rebus.Server.Migrations.NameTypeMigration.html",
+          "hash": "axHuEb74yNC69LwP5Fd8ktpc/IerZAdi84XC22FUk7E="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Rebus.Server.Migrations.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Rebus.Server.Migrations.html",
+          "hash": "QNzOpEif8+OEYAOf7fNU3I8g4ZHHt98mnviBgMi+vYo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Rebus.Server.ServiceCollectionExtensions.yml",
       "output": {
         ".html": {
@@ -621,7 +657,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Rebus.Tokenizer.html",
-          "hash": "dTqAGP1XRG4T3rLILNNFOVnJ7uRNhTqu5zK32ClDCFc="
+          "hash": "fI84CA1+aCcX/+0b+G7X2bi/zLTptX7mTp5e3gl9cS8="
         }
       },
       "is_incremental": false,
@@ -705,7 +741,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Rebus.html",
-          "hash": "T50thdXPC3BUjKDQCxrTUJ5naXnX/pKkwBKfmWmZhAw="
+          "hash": "MppJzb9yTFT9K2kx3UMBczg7HwAVfd9FViBNU1cwwVs="
         }
       },
       "is_incremental": false,
@@ -717,7 +753,7 @@
       "output": {
         ".html": {
           "relative_path": "api/index.html",
-          "hash": "y6LMlXTbfMLNKRyASbSNVxp/Lq7tubWktEuYsx09Lj8="
+          "hash": "vTS5QzfOtyKZjgrAT9xXjQE5zH7wk2Q9M0gnRqDc6wM="
         }
       },
       "is_incremental": false,
@@ -729,7 +765,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "6U9Gx2JkaYqW8nKh0PfgHLDGr8UquUfYu5DJK04lqH8="
+          "hash": "XJhxb83cliPC0uPX+cbg8XZ7fM3PmjoYU+97aqV3+fo="
         }
       },
       "is_incremental": false,
@@ -744,7 +780,7 @@
           "hash": "j2axoVDWkYdWJ8XDFBzC8dNQLmixv4zH9nbwlug2OTo="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -765,7 +801,7 @@
       "output": {
         ".html": {
           "relative_path": "index.html",
-          "hash": "Bog0k1IyXVVlZdFaZLGjkcTJSDfv+8vVZxDQ7QT8tnc="
+          "hash": "d+h6QUoi0UnB//pDGxurNMjrpHbawAzepjbU6w0OW4o="
         }
       },
       "is_incremental": false,
@@ -787,23 +823,25 @@
   "incremental_info": [
     {
       "status": {
-        "can_incremental": true,
+        "can_incremental": false,
+        "details": "Disable incremental build by force rebuild option.",
         "incrementalPhase": "build",
         "total_file_count": 0,
-        "skipped_file_count": 0
+        "skipped_file_count": 0,
+        "full_build_reason_code": "ForceRebuild"
       },
       "processors": {
         "ConceptualDocumentProcessor": {
-          "can_incremental": true,
+          "can_incremental": false,
           "incrementalPhase": "build",
           "total_file_count": 3,
-          "skipped_file_count": 1
+          "skipped_file_count": 0
         },
         "ManagedReferenceDocumentProcessor": {
-          "can_incremental": true,
+          "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 59,
-          "skipped_file_count": 56
+          "total_file_count": 62,
+          "skipped_file_count": 0
         },
         "TocDocumentProcessor": {
           "can_incremental": false,
@@ -816,8 +854,8 @@
     },
     {
       "status": {
-        "can_incremental": true,
-        "details": "Can support incremental post processing.",
+        "can_incremental": false,
+        "details": "Cannot support incremental post processing, the reason is: it's disabled.",
         "incrementalPhase": "postProcessing",
         "total_file_count": 0,
         "skipped_file_count": 0

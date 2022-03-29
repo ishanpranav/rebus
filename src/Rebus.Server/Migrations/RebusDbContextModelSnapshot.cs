@@ -10,7 +10,7 @@ using Rebus.Server;
 namespace Rebus.Server.Migrations
 {
     [DbContext(typeof(RebusDbContext))]
-    internal partial class RebusDbContextModelSnapshot : ModelSnapshot
+    partial class RebusDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -130,7 +130,9 @@ namespace Rebus.Server.Migrations
                         .UseCollation("NOCASE");
 
                     b.Property<int>("Wealth")
-                        .HasColumnType("INTEGER");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(100);
 
                     b.HasKey("Id");
 
@@ -175,6 +177,9 @@ namespace Rebus.Server.Migrations
                     b.Property<string>("Value")
                         .HasColumnType("TEXT")
                         .UseCollation("NOCASE");
+
+                    b.Property<int>("NameType")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("Type")
                         .HasColumnType("INTEGER");

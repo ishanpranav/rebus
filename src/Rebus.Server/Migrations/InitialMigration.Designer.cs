@@ -11,7 +11,7 @@ using Rebus.Server;
 namespace Rebus.Server.Migrations
 {
     [DbContext(typeof(RebusDbContext))]
-    [Migration("20220322182304_InitialMigration")]
+    [Migration("20220328203928_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -98,7 +98,9 @@ namespace Rebus.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PlayerId", "Q", "R")
+                    b.HasIndex("PlayerId");
+
+                    b.HasIndex("Q", "R", "PlayerId")
                         .IsUnique();
 
                     b.ToTable("Navigation");
@@ -130,7 +132,9 @@ namespace Rebus.Server.Migrations
                         .UseCollation("NOCASE");
 
                     b.Property<int>("Wealth")
-                        .HasColumnType("INTEGER");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(100);
 
                     b.HasKey("Id");
 
@@ -175,6 +179,9 @@ namespace Rebus.Server.Migrations
                     b.Property<string>("Value")
                         .HasColumnType("TEXT")
                         .UseCollation("NOCASE");
+
+                    b.Property<int>("NameType")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("Type")
                         .HasColumnType("INTEGER");

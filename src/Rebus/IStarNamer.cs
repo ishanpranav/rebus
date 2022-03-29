@@ -1,11 +1,11 @@
-﻿// Ishan Pranav's REBUS: INamer.cs
+﻿// Ishan Pranav's REBUS: IStarNamer.cs
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
 namespace Rebus
 {
-    public interface INamer
+    public interface IStarNamer
     {
-        string Name(int degree);
+        string NameStar(HexPoint region);
     }
 }

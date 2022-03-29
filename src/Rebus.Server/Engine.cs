@@ -26,12 +26,13 @@ namespace Rebus.Server
         private readonly ILogger<Engine<T>> _logger;
         private readonly IEnumerable<Command> _commands;
         private readonly ITokenFactory _tokenFactory;
+        private readonly IEditDistance _editDistance;
 
-        public Repository Repository { get; }
+        public DbRepository Repository { get; }
         public Controller Controller { get; }
         public IStringLocalizer Localizer { get; }
 
-        public Engine(ILogger<Engine<T>> logger, Repository repository, Controller controller, IEnumerable<Command> commands, ITokenFactory tokenFactory, IStringLocalizer localizer)
+        public Engine(ILogger<Engine<T>> logger, DbRepository repository, Controller controller, IEnumerable<Command> commands, ITokenFactory tokenFactory, IStringLocalizer localizer, IEditDistance editDistance)
         {
             _logger = logger;
             Repository = repository;
@@ -39,6 +40,7 @@ namespace Rebus.Server
             _commands = commands;
             _tokenFactory = tokenFactory;
             Localizer = localizer;
+            _editDistance = editDistance;
         }
 
         public async Task InterpretAsync(T user, string value, ExpressionWriter writer)
@@ -69,7 +71,7 @@ namespace Rebus.Server
                 }
                 else
                 {
-                    IEnumerable<Token>? suggestions = Repository.GetSuggestions(rebusSpellingException.ExpectedType, rebusSpellingException.ActualValue);
+                    IEnumerable<Token>? suggestions = Repository.GetSuggestions(_editDistance, rebusSpellingException.ExpectedType, rebusSpellingException.ActualValue);
 
                     if (rebusSpellingException.ExpectedType is null)
                     {
@@ -112,7 +114,7 @@ namespace Rebus.Server
             List<IToken> tokens = new List<IToken>();
             ExpressionWriter tokenWriter = new ExpressionWriter();
 
-            await foreach (IToken token in new Tokenizer(_tokenFactory, value).TokenizeAsync())
+            foreach (IToken token in new Tokenizer(_tokenFactory, value).Tokenize())
             {
                 tokenWriter.Write('(');
                 tokenWriter.Write(token.Type

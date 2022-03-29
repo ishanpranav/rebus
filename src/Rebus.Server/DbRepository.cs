@@ -1,4 +1,4 @@
-﻿// Ishan Pranav's REBUS: Repository.cs
+﻿// Ishan Pranav's REBUS: DbRepository.cs
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
@@ -7,29 +7,136 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Rebus.Server.Concepts;
 using Rebus.Tokens;
 
 namespace Rebus.Server
 {
-    internal sealed class Repository : IRepository
+    internal sealed class DbRepository : IPathfinderFactory<HexPoint>, IPlanetNamer, IRepository, ISpacecraftNamer, IStringLocalizer, ITokenFactory
     {
         private readonly IDbContextFactory<RebusDbContext> _contextFactory;
-        private readonly IEditDistance _editDistance;
-        private readonly Generator _generator;
 
-        public Repository(IDbContextFactory<RebusDbContext> contextFactory, IEditDistance editDistance, Generator generator)
+        public LocalizedString this[string name]
+        {
+            get
+            {
+                string? resource = GetResource(name, arguments: 0);
+
+                if (resource is null)
+                {
+                    return new LocalizedString(name, name, resourceNotFound: true);
+                }
+                else
+                {
+                    return new LocalizedString(name, resource);
+                }
+            }
+        }
+
+        public LocalizedString this[string name, params object[] arguments]
+        {
+            get
+            {
+                string? resource = GetResource(name, arguments.Length);
+
+                if (resource is null)
+                {
+                    return new LocalizedString(name, name, resourceNotFound: true);
+                }
+                else
+                {
+                    return new LocalizedString(name, string.Format(new ExpressionFormatProvider(), resource, arguments));
+                }
+            }
+        }
+
+        public DbRepository(IDbContextFactory<RebusDbContext> contextFactory)
         {
             _contextFactory = contextFactory;
-            _editDistance = editDistance;
-            _generator = generator;
+        }
+
+        public string NameSpacecraft()
+        {
+            return Name(NameTypes.Spacecraft);
+        }
+
+        public string NamePlanet(HexPoint region)
+        {
+            return Name(NameTypes.Planet);
+        }
+
+        private string Name(NameTypes type)
+        {
+            using (RebusDbContext context = _contextFactory.CreateDbContext())
+            {
+                return context.Tokens
+                    .Where(x => x.NameType.HasFlag(type))
+                    .Select(x => x.Value)
+                    .OrderBy(x => EF.Functions.Random())
+                    .First();
+            }
+        }
+
+        public IToken CreateToken(string value)
+        {
+            using (RebusDbContext context = _contextFactory.CreateDbContext())
+            {
+                return context.Tokens.Find(value) ?? new Token()
+                {
+                    Value = value
+                };
+            }
+        }
+
+        public IPathfinder<HexPoint> CreatePathfinder(int playerId)
+        {
+            return new DbPathfinder(playerId, _contextFactory);
+        }
+
+        private string? GetResource(string name, int arguments)
+        {
+            using (RebusDbContext context = _contextFactory.CreateDbContext())
+            {
+                return context.Resources
+                    .Where(x => x.Key == name && x.Arguments == arguments)
+                    .Select(x => x.Value)
+                    .OrderBy(x => EF.Functions.Random())
+                    .FirstOrDefault();
+            }
+        }
+
+        public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures)
+        {
+            using (RebusDbContext context = _contextFactory.CreateDbContext())
+            {
+                return context.Resources
+                    .AsEnumerable()
+                    .Select(x => new LocalizedString(x.Key, x.Value))
+                    .ToArray();
+            }
+        }
+
+        public async Task SetCredentialAsync(Player player, string value)
+        {
+            await using (RebusDbContext context = await _contextFactory.CreateDbContextAsync())
+            {
+                player.Credential = value;
+
+                context.Update(player);
+
+                await context.SaveChangesAsync();
+            }
         }
 
         public async Task<Player> CreatePlayerAsync(string userId)
         {
+            Player? result;
+            Spacecraft? spacecraft = null;
+
             await using (RebusDbContext context = await _contextFactory.CreateDbContextAsync())
             {
-                Player? result = await context.Players.SingleOrDefaultAsync(x => x.UserId == userId);
+                result = await context.Players.SingleOrDefaultAsync(x => x.UserId == userId);
 
                 if (result is null)
                 {
@@ -44,26 +151,22 @@ namespace Rebus.Server
 
                 if (!await context.Spacecraft.AnyAsync(x => x.PlayerId == result.Id))
                 {
-                    Spacecraft spacecraft = new Spacecraft()
+                    spacecraft = new Spacecraft()
                     {
-                        Player = result,
-                        Article = await CreateTokenAsync(context, TokenTypes.Article, "the"),
-                        Substantive = await CreateTokenAsync(context, TokenTypes.Substantive, "spacecraft")
+                        Player = result
                     };
-
-                    spacecraft.Adjectives.Add(new Adjective()
-                    {
-                        Token = await CreateTokenAsync(context, TokenTypes.Adjective, $"N{result.Sequence}")
-                    });
-
-                    result.Sequence++;
 
                     await context.Spacecraft.AddAsync(spacecraft);
                     await context.SaveChangesAsync();
                 }
-
-                return result;
             }
+
+            if (spacecraft is not null)
+            {
+                await RenameAsync(spacecraft, NameSpacecraft());
+            }
+
+            return result;
         }
 
         public IEnumerable<Fleet> GetFleets(int playerId)
@@ -183,7 +286,7 @@ namespace Rebus.Server
             }
         }
 
-        public async Task AddNavigationAsync(int playerId, HexPoint region)
+        public async Task AddNavigationAsync(int playerId, HexPoint region, Generator generator)
         {
             Dictionary<Concept, string> concepts = new Dictionary<Concept, string>();
 
@@ -202,7 +305,7 @@ namespace Rebus.Server
                 {
                     Map map = new Map();
 
-                    foreach (HexPoint point in _generator.CreateRange(region))
+                    foreach (HexPoint point in generator.CreateRange(region))
                     {
                         if (await context.Planets.AnyAsync(x => x.Q == point.Q && x.R == point.R))
                         {
@@ -222,7 +325,7 @@ namespace Rebus.Server
                         }
                     }
 
-                    _generator.Generate(region, map);
+                    generator.Generate(region, map);
 
                     foreach (HexPoint discovery in map.Discoveries)
                     {
@@ -231,7 +334,6 @@ namespace Rebus.Server
                             case RegionType.Planetary:
                                 Planet planet = new Planet()
                                 {
-                                    SubstantiveValue = "planet",
                                     Q = discovery.Q,
                                     R = discovery.R
                                 };
@@ -239,12 +341,12 @@ namespace Rebus.Server
                                 concepts.Add(planet, map.GetName(discovery));
 
                                 await context.Planets.AddAsync(planet);
+                                await context.SaveChangesAsync();
                                 break;
 
                             case RegionType.Stellar:
                                 Star star = new Star()
                                 {
-                                    SubstantiveValue = "star",
                                     Q = discovery.Q,
                                     R = discovery.R
                                 };
@@ -252,6 +354,7 @@ namespace Rebus.Server
                                 concepts.Add(star, map.GetName(discovery));
 
                                 await context.Stars.AddAsync(star);
+                                await context.SaveChangesAsync();
                                 break;
                         }
                     }
@@ -277,15 +380,7 @@ namespace Rebus.Server
             }
         }
 
-        public async Task<Player?> GetPlayerAsync(int id)
-        {
-            await using (RebusDbContext context = await _contextFactory.CreateDbContextAsync())
-            {
-                return await context.Players.FindAsync(id);
-            }
-        }
-
-        public IEnumerable<Token>? GetSuggestions(TokenTypes? expectedType, string actualValue)
+        public IEnumerable<Token>? GetSuggestions(IEditDistance editDistance, TokenTypes? expectedType, string actualValue)
         {
             using (RebusDbContext context = _contextFactory.CreateDbContext())
             {
@@ -300,35 +395,10 @@ namespace Rebus.Server
 
                 return results
                     .AsEnumerable()
-                    .GroupBy(x => _editDistance.Compute(x.Value, actualValue))
+                    .GroupBy(x => editDistance.Compute(x.Value, actualValue))
                     .Where(x => x.Key < 3)
                     .MinBy(x => x.Key);
             }
-        }
-
-        private static async Task<Token> CreateTokenAsync(RebusDbContext context, TokenTypes type, string value)
-        {
-            Token? token = await context.Tokens.FindAsync(value);
-
-            if (token is null)
-            {
-                token = new Token()
-                {
-                    Type = type,
-                    Value = value
-                };
-
-                await context.Tokens.AddAsync(token);
-                await context.SaveChangesAsync();
-            }
-            else if (!token.Type.HasFlag(type))
-            {
-                token.Type |= type;
-
-                await context.SaveChangesAsync();
-            }
-
-            return token;
         }
 
         public IEnumerable<Concept> GetConcepts(Argument argument, int playerId, IReadOnlyCollection<IToken> adjectives, IToken substantive)
@@ -380,7 +450,9 @@ namespace Rebus.Server
         {
             await using (RebusDbContext context = await _contextFactory.CreateDbContextAsync())
             {
-                return await context.Stars.SingleOrDefaultAsync(x => x.Q == region.Q && x.R == region.R);
+                return await context.Stars
+                    .AsWritable()
+                    .SingleOrDefaultAsync(x => x.Q == region.Q && x.R == region.R);
             }
         }
 
@@ -388,7 +460,9 @@ namespace Rebus.Server
         {
             await using (RebusDbContext context = await _contextFactory.CreateDbContextAsync())
             {
-                return await context.Planets.SingleOrDefaultAsync(x => x.Q == region.Q && x.R == region.R);
+                return await context.Planets
+                    .AsWritable()
+                    .SingleOrDefaultAsync(x => x.Q == region.Q && x.R == region.R);
             }
         }
     }

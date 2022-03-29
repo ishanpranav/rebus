@@ -8,18 +8,7 @@ namespace Rebus
 {
     public abstract class Generator
     {
-        protected abstract int Radius { get; }
-        protected INamer Namer { get; }
-
-        protected Generator(INamer namer)
-        {
-            Namer = namer;
-        }
-
-        public virtual IEnumerable<HexPoint> CreateRange(HexPoint center)
-        {
-            return center.Range(Radius);
-        }
+        public abstract IEnumerable<HexPoint> CreateRange(HexPoint center);
 
         public abstract void Generate(HexPoint center, Map map);
     }

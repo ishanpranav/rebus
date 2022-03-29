@@ -20,10 +20,10 @@ namespace Rebus.Server
 #nullable disable
         [Required]
         public Token Substantive { get; set; }
+#nullable enable
 
         [Required]
-        public string SubstantiveValue { get; set; }
-#nullable enable
+        public string SubstantiveValue { get; set; } = string.Empty;
 
         public ICollection<Adjective> Adjectives { get; set; } = new HashSet<Adjective>();
 

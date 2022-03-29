@@ -11,6 +11,11 @@ namespace Rebus
     /// </summary>
     public class ExpressionFormatProvider : ICustomFormatter, IFormatProvider
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExpressionFormatProvider"/> class.
+        /// </summary>
+        public ExpressionFormatProvider() { }
+
         /// <inheritdoc/>
         public string Format(string? format, object? arg, IFormatProvider? formatProvider)
         {

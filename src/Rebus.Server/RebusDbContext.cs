@@ -80,7 +80,11 @@ namespace Rebus.Server
 
                 player
                     .Property(x => x.Sequence)
-                    .HasDefaultValue(1);
+                    .HasDefaultValue(Player.DefaultSequence);
+
+                player
+                    .Property(x => x.Wealth)
+                    .HasDefaultValue(Player.DefaultWealth);
             });
 
             modelBuilder.Entity<Resource>(resource =>

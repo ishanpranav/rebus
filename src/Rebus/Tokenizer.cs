@@ -28,10 +28,10 @@ namespace Rebus
         }
 
         /// <summary>
-        /// Asynchronously retrieves a set of tokens.
+        /// Tokenizes the input string.
         /// </summary>
-        /// <returns>An <see cref="IAsyncEnumerable{IToken}"/> representation of the input string.</returns>
-        public async IAsyncEnumerable<IToken> TokenizeAsync()
+        /// <returns>A set of tokens.</returns>
+        public IEnumerable<IToken> Tokenize()
         {
             foreach (Match match in _matches)
             {
@@ -55,7 +55,7 @@ namespace Rebus
                     }
                     else
                     {
-                        yield return await _tokenFactory.CreateTokenAsync(lexeme);
+                        yield return _tokenFactory.CreateToken(lexeme);
                     }
                 }
             }

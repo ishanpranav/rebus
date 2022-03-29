@@ -14,6 +14,6 @@ namespace Rebus
         Task<int> GetWealthAsync(int playerId);
         Task SetWealthAsync(int playerId, int value);
 
-        Task AddNavigationAsync(int playerId, HexPoint region);
+        Task AddNavigationAsync(int playerId, HexPoint region, Generator generator);
     }
 }

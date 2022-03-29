@@ -43,15 +43,15 @@ references:
   commentId: T:Rebus.Controller
   fullName: Rebus.Controller
   nameWithType: Controller
-- uid: Rebus.Controller.#ctor(Microsoft.Extensions.Localization.IStringLocalizer,Rebus.IRepository,Rebus.IPathfinderFactory{Rebus.HexPoint})
-  name: Controller(IStringLocalizer, IRepository, IPathfinderFactory<HexPoint>)
-  href: api/Rebus.Controller.html#Rebus_Controller__ctor_Microsoft_Extensions_Localization_IStringLocalizer_Rebus_IRepository_Rebus_IPathfinderFactory_Rebus_HexPoint__
-  commentId: M:Rebus.Controller.#ctor(Microsoft.Extensions.Localization.IStringLocalizer,Rebus.IRepository,Rebus.IPathfinderFactory{Rebus.HexPoint})
-  name.vb: Controller(IStringLocalizer, IRepository, IPathfinderFactory(Of HexPoint))
-  fullName: Rebus.Controller.Controller(Microsoft.Extensions.Localization.IStringLocalizer, Rebus.IRepository, Rebus.IPathfinderFactory<Rebus.HexPoint>)
-  fullName.vb: Rebus.Controller.Controller(Microsoft.Extensions.Localization.IStringLocalizer, Rebus.IRepository, Rebus.IPathfinderFactory(Of Rebus.HexPoint))
-  nameWithType: Controller.Controller(IStringLocalizer, IRepository, IPathfinderFactory<HexPoint>)
-  nameWithType.vb: Controller.Controller(IStringLocalizer, IRepository, IPathfinderFactory(Of HexPoint))
+- uid: Rebus.Controller.#ctor(Microsoft.Extensions.Localization.IStringLocalizer,Rebus.IRepository,Rebus.IPathfinderFactory{Rebus.HexPoint},Rebus.Generator)
+  name: Controller(IStringLocalizer, IRepository, IPathfinderFactory<HexPoint>, Generator)
+  href: api/Rebus.Controller.html#Rebus_Controller__ctor_Microsoft_Extensions_Localization_IStringLocalizer_Rebus_IRepository_Rebus_IPathfinderFactory_Rebus_HexPoint__Rebus_Generator_
+  commentId: M:Rebus.Controller.#ctor(Microsoft.Extensions.Localization.IStringLocalizer,Rebus.IRepository,Rebus.IPathfinderFactory{Rebus.HexPoint},Rebus.Generator)
+  name.vb: Controller(IStringLocalizer, IRepository, IPathfinderFactory(Of HexPoint), Generator)
+  fullName: Rebus.Controller.Controller(Microsoft.Extensions.Localization.IStringLocalizer, Rebus.IRepository, Rebus.IPathfinderFactory<Rebus.HexPoint>, Rebus.Generator)
+  fullName.vb: Rebus.Controller.Controller(Microsoft.Extensions.Localization.IStringLocalizer, Rebus.IRepository, Rebus.IPathfinderFactory(Of Rebus.HexPoint), Rebus.Generator)
+  nameWithType: Controller.Controller(IStringLocalizer, IRepository, IPathfinderFactory<HexPoint>, Generator)
+  nameWithType.vb: Controller.Controller(IStringLocalizer, IRepository, IPathfinderFactory(Of HexPoint), Generator)
 - uid: Rebus.Controller.#ctor*
   name: Controller
   href: api/Rebus.Controller.html#Rebus_Controller__ctor_
@@ -414,6 +414,19 @@ references:
   commentId: T:Rebus.ExpressionFormatProvider
   fullName: Rebus.ExpressionFormatProvider
   nameWithType: ExpressionFormatProvider
+- uid: Rebus.ExpressionFormatProvider.#ctor
+  name: ExpressionFormatProvider()
+  href: api/Rebus.ExpressionFormatProvider.html#Rebus_ExpressionFormatProvider__ctor
+  commentId: M:Rebus.ExpressionFormatProvider.#ctor
+  fullName: Rebus.ExpressionFormatProvider.ExpressionFormatProvider()
+  nameWithType: ExpressionFormatProvider.ExpressionFormatProvider()
+- uid: Rebus.ExpressionFormatProvider.#ctor*
+  name: ExpressionFormatProvider
+  href: api/Rebus.ExpressionFormatProvider.html#Rebus_ExpressionFormatProvider__ctor_
+  commentId: Overload:Rebus.ExpressionFormatProvider.#ctor
+  isSpec: "True"
+  fullName: Rebus.ExpressionFormatProvider.ExpressionFormatProvider
+  nameWithType: ExpressionFormatProvider.ExpressionFormatProvider
 - uid: Rebus.ExpressionFormatProvider.Format(System.String,System.Object,System.IFormatProvider)
   name: Format(String, Object, IFormatProvider)
   href: api/Rebus.ExpressionFormatProvider.html#Rebus_ExpressionFormatProvider_Format_System_String_System_Object_System_IFormatProvider_
@@ -892,19 +905,6 @@ references:
   commentId: T:Rebus.Generator
   fullName: Rebus.Generator
   nameWithType: Generator
-- uid: Rebus.Generator.#ctor(Rebus.INamer)
-  name: Generator(INamer)
-  href: api/Rebus.Generator.html#Rebus_Generator__ctor_Rebus_INamer_
-  commentId: M:Rebus.Generator.#ctor(Rebus.INamer)
-  fullName: Rebus.Generator.Generator(Rebus.INamer)
-  nameWithType: Generator.Generator(INamer)
-- uid: Rebus.Generator.#ctor*
-  name: Generator
-  href: api/Rebus.Generator.html#Rebus_Generator__ctor_
-  commentId: Overload:Rebus.Generator.#ctor
-  isSpec: "True"
-  fullName: Rebus.Generator.Generator
-  nameWithType: Generator.Generator
 - uid: Rebus.Generator.CreateRange(Rebus.HexPoint)
   name: CreateRange(HexPoint)
   href: api/Rebus.Generator.html#Rebus_Generator_CreateRange_Rebus_HexPoint_
@@ -931,83 +931,57 @@ references:
   isSpec: "True"
   fullName: Rebus.Generator.Generate
   nameWithType: Generator.Generate
-- uid: Rebus.Generator.Namer
-  name: Namer
-  href: api/Rebus.Generator.html#Rebus_Generator_Namer
-  commentId: P:Rebus.Generator.Namer
-  fullName: Rebus.Generator.Namer
-  nameWithType: Generator.Namer
-- uid: Rebus.Generator.Namer*
-  name: Namer
-  href: api/Rebus.Generator.html#Rebus_Generator_Namer_
-  commentId: Overload:Rebus.Generator.Namer
-  isSpec: "True"
-  fullName: Rebus.Generator.Namer
-  nameWithType: Generator.Namer
-- uid: Rebus.Generator.Radius
-  name: Radius
-  href: api/Rebus.Generator.html#Rebus_Generator_Radius
-  commentId: P:Rebus.Generator.Radius
-  fullName: Rebus.Generator.Radius
-  nameWithType: Generator.Radius
-- uid: Rebus.Generator.Radius*
-  name: Radius
-  href: api/Rebus.Generator.html#Rebus_Generator_Radius_
-  commentId: Overload:Rebus.Generator.Radius
-  isSpec: "True"
-  fullName: Rebus.Generator.Radius
-  nameWithType: Generator.Radius
 - uid: Rebus.Generators
   name: Rebus.Generators
   href: api/Rebus.Generators.html
   commentId: N:Rebus.Generators
   fullName: Rebus.Generators
   nameWithType: Rebus.Generators
-- uid: Rebus.Generators.SatelliteGenerator
-  name: SatelliteGenerator
-  href: api/Rebus.Generators.SatelliteGenerator.html
-  commentId: T:Rebus.Generators.SatelliteGenerator
-  fullName: Rebus.Generators.SatelliteGenerator
-  nameWithType: SatelliteGenerator
-- uid: Rebus.Generators.SatelliteGenerator.#ctor(Rebus.INamer)
-  name: SatelliteGenerator(INamer)
-  href: api/Rebus.Generators.SatelliteGenerator.html#Rebus_Generators_SatelliteGenerator__ctor_Rebus_INamer_
-  commentId: M:Rebus.Generators.SatelliteGenerator.#ctor(Rebus.INamer)
-  fullName: Rebus.Generators.SatelliteGenerator.SatelliteGenerator(Rebus.INamer)
-  nameWithType: SatelliteGenerator.SatelliteGenerator(INamer)
-- uid: Rebus.Generators.SatelliteGenerator.#ctor*
-  name: SatelliteGenerator
-  href: api/Rebus.Generators.SatelliteGenerator.html#Rebus_Generators_SatelliteGenerator__ctor_
-  commentId: Overload:Rebus.Generators.SatelliteGenerator.#ctor
+- uid: Rebus.Generators.PlanetGenerator
+  name: PlanetGenerator
+  href: api/Rebus.Generators.PlanetGenerator.html
+  commentId: T:Rebus.Generators.PlanetGenerator
+  fullName: Rebus.Generators.PlanetGenerator
+  nameWithType: PlanetGenerator
+- uid: Rebus.Generators.PlanetGenerator.#ctor(Rebus.IPlanetNamer)
+  name: PlanetGenerator(IPlanetNamer)
+  href: api/Rebus.Generators.PlanetGenerator.html#Rebus_Generators_PlanetGenerator__ctor_Rebus_IPlanetNamer_
+  commentId: M:Rebus.Generators.PlanetGenerator.#ctor(Rebus.IPlanetNamer)
+  fullName: Rebus.Generators.PlanetGenerator.PlanetGenerator(Rebus.IPlanetNamer)
+  nameWithType: PlanetGenerator.PlanetGenerator(IPlanetNamer)
+- uid: Rebus.Generators.PlanetGenerator.#ctor*
+  name: PlanetGenerator
+  href: api/Rebus.Generators.PlanetGenerator.html#Rebus_Generators_PlanetGenerator__ctor_
+  commentId: Overload:Rebus.Generators.PlanetGenerator.#ctor
   isSpec: "True"
-  fullName: Rebus.Generators.SatelliteGenerator.SatelliteGenerator
-  nameWithType: SatelliteGenerator.SatelliteGenerator
-- uid: Rebus.Generators.SatelliteGenerator.Generate(Rebus.HexPoint,Rebus.Map)
+  fullName: Rebus.Generators.PlanetGenerator.PlanetGenerator
+  nameWithType: PlanetGenerator.PlanetGenerator
+- uid: Rebus.Generators.PlanetGenerator.CreateRange(Rebus.HexPoint)
+  name: CreateRange(HexPoint)
+  href: api/Rebus.Generators.PlanetGenerator.html#Rebus_Generators_PlanetGenerator_CreateRange_Rebus_HexPoint_
+  commentId: M:Rebus.Generators.PlanetGenerator.CreateRange(Rebus.HexPoint)
+  fullName: Rebus.Generators.PlanetGenerator.CreateRange(Rebus.HexPoint)
+  nameWithType: PlanetGenerator.CreateRange(HexPoint)
+- uid: Rebus.Generators.PlanetGenerator.CreateRange*
+  name: CreateRange
+  href: api/Rebus.Generators.PlanetGenerator.html#Rebus_Generators_PlanetGenerator_CreateRange_
+  commentId: Overload:Rebus.Generators.PlanetGenerator.CreateRange
+  isSpec: "True"
+  fullName: Rebus.Generators.PlanetGenerator.CreateRange
+  nameWithType: PlanetGenerator.CreateRange
+- uid: Rebus.Generators.PlanetGenerator.Generate(Rebus.HexPoint,Rebus.Map)
   name: Generate(HexPoint, Map)
-  href: api/Rebus.Generators.SatelliteGenerator.html#Rebus_Generators_SatelliteGenerator_Generate_Rebus_HexPoint_Rebus_Map_
-  commentId: M:Rebus.Generators.SatelliteGenerator.Generate(Rebus.HexPoint,Rebus.Map)
-  fullName: Rebus.Generators.SatelliteGenerator.Generate(Rebus.HexPoint, Rebus.Map)
-  nameWithType: SatelliteGenerator.Generate(HexPoint, Map)
-- uid: Rebus.Generators.SatelliteGenerator.Generate*
+  href: api/Rebus.Generators.PlanetGenerator.html#Rebus_Generators_PlanetGenerator_Generate_Rebus_HexPoint_Rebus_Map_
+  commentId: M:Rebus.Generators.PlanetGenerator.Generate(Rebus.HexPoint,Rebus.Map)
+  fullName: Rebus.Generators.PlanetGenerator.Generate(Rebus.HexPoint, Rebus.Map)
+  nameWithType: PlanetGenerator.Generate(HexPoint, Map)
+- uid: Rebus.Generators.PlanetGenerator.Generate*
   name: Generate
-  href: api/Rebus.Generators.SatelliteGenerator.html#Rebus_Generators_SatelliteGenerator_Generate_
-  commentId: Overload:Rebus.Generators.SatelliteGenerator.Generate
+  href: api/Rebus.Generators.PlanetGenerator.html#Rebus_Generators_PlanetGenerator_Generate_
+  commentId: Overload:Rebus.Generators.PlanetGenerator.Generate
   isSpec: "True"
-  fullName: Rebus.Generators.SatelliteGenerator.Generate
-  nameWithType: SatelliteGenerator.Generate
-- uid: Rebus.Generators.SatelliteGenerator.Radius
-  name: Radius
-  href: api/Rebus.Generators.SatelliteGenerator.html#Rebus_Generators_SatelliteGenerator_Radius
-  commentId: P:Rebus.Generators.SatelliteGenerator.Radius
-  fullName: Rebus.Generators.SatelliteGenerator.Radius
-  nameWithType: SatelliteGenerator.Radius
-- uid: Rebus.Generators.SatelliteGenerator.Radius*
-  name: Radius
-  href: api/Rebus.Generators.SatelliteGenerator.html#Rebus_Generators_SatelliteGenerator_Radius_
-  commentId: Overload:Rebus.Generators.SatelliteGenerator.Radius
-  isSpec: "True"
-  fullName: Rebus.Generators.SatelliteGenerator.Radius
-  nameWithType: SatelliteGenerator.Radius
+  fullName: Rebus.Generators.PlanetGenerator.Generate
+  nameWithType: PlanetGenerator.Generate
 - uid: Rebus.HexPoint
   name: HexPoint
   href: api/Rebus.HexPoint.html
@@ -1522,25 +1496,6 @@ references:
   isSpec: "True"
   fullName: Rebus.IFeature.Region
   nameWithType: IFeature.Region
-- uid: Rebus.INamer
-  name: INamer
-  href: api/Rebus.INamer.html
-  commentId: T:Rebus.INamer
-  fullName: Rebus.INamer
-  nameWithType: INamer
-- uid: Rebus.INamer.Name(System.Int32)
-  name: Name(Int32)
-  href: api/Rebus.INamer.html#Rebus_INamer_Name_System_Int32_
-  commentId: M:Rebus.INamer.Name(System.Int32)
-  fullName: Rebus.INamer.Name(System.Int32)
-  nameWithType: INamer.Name(Int32)
-- uid: Rebus.INamer.Name*
-  name: Name
-  href: api/Rebus.INamer.html#Rebus_INamer_Name_
-  commentId: Overload:Rebus.INamer.Name
-  isSpec: "True"
-  fullName: Rebus.INamer.Name
-  nameWithType: INamer.Name
 - uid: Rebus.IPathfinder`1
   name: IPathfinder<T>
   href: api/Rebus.IPathfinder-1.html
@@ -1593,18 +1548,37 @@ references:
   fullName.vb: Rebus.IPathfinderFactory(Of T).CreatePathfinder
   nameWithType: IPathfinderFactory<T>.CreatePathfinder
   nameWithType.vb: IPathfinderFactory(Of T).CreatePathfinder
+- uid: Rebus.IPlanetNamer
+  name: IPlanetNamer
+  href: api/Rebus.IPlanetNamer.html
+  commentId: T:Rebus.IPlanetNamer
+  fullName: Rebus.IPlanetNamer
+  nameWithType: IPlanetNamer
+- uid: Rebus.IPlanetNamer.NamePlanet(Rebus.HexPoint)
+  name: NamePlanet(HexPoint)
+  href: api/Rebus.IPlanetNamer.html#Rebus_IPlanetNamer_NamePlanet_Rebus_HexPoint_
+  commentId: M:Rebus.IPlanetNamer.NamePlanet(Rebus.HexPoint)
+  fullName: Rebus.IPlanetNamer.NamePlanet(Rebus.HexPoint)
+  nameWithType: IPlanetNamer.NamePlanet(HexPoint)
+- uid: Rebus.IPlanetNamer.NamePlanet*
+  name: NamePlanet
+  href: api/Rebus.IPlanetNamer.html#Rebus_IPlanetNamer_NamePlanet_
+  commentId: Overload:Rebus.IPlanetNamer.NamePlanet
+  isSpec: "True"
+  fullName: Rebus.IPlanetNamer.NamePlanet
+  nameWithType: IPlanetNamer.NamePlanet
 - uid: Rebus.IRepository
   name: IRepository
   href: api/Rebus.IRepository.html
   commentId: T:Rebus.IRepository
   fullName: Rebus.IRepository
   nameWithType: IRepository
-- uid: Rebus.IRepository.AddNavigationAsync(System.Int32,Rebus.HexPoint)
-  name: AddNavigationAsync(Int32, HexPoint)
-  href: api/Rebus.IRepository.html#Rebus_IRepository_AddNavigationAsync_System_Int32_Rebus_HexPoint_
-  commentId: M:Rebus.IRepository.AddNavigationAsync(System.Int32,Rebus.HexPoint)
-  fullName: Rebus.IRepository.AddNavigationAsync(System.Int32, Rebus.HexPoint)
-  nameWithType: IRepository.AddNavigationAsync(Int32, HexPoint)
+- uid: Rebus.IRepository.AddNavigationAsync(System.Int32,Rebus.HexPoint,Rebus.Generator)
+  name: AddNavigationAsync(Int32, HexPoint, Generator)
+  href: api/Rebus.IRepository.html#Rebus_IRepository_AddNavigationAsync_System_Int32_Rebus_HexPoint_Rebus_Generator_
+  commentId: M:Rebus.IRepository.AddNavigationAsync(System.Int32,Rebus.HexPoint,Rebus.Generator)
+  fullName: Rebus.IRepository.AddNavigationAsync(System.Int32, Rebus.HexPoint, Rebus.Generator)
+  nameWithType: IRepository.AddNavigationAsync(Int32, HexPoint, Generator)
 - uid: Rebus.IRepository.AddNavigationAsync*
   name: AddNavigationAsync
   href: api/Rebus.IRepository.html#Rebus_IRepository_AddNavigationAsync_
@@ -1696,6 +1670,44 @@ references:
   isSpec: "True"
   fullName: Rebus.ISpacecraft.Region
   nameWithType: ISpacecraft.Region
+- uid: Rebus.ISpacecraftNamer
+  name: ISpacecraftNamer
+  href: api/Rebus.ISpacecraftNamer.html
+  commentId: T:Rebus.ISpacecraftNamer
+  fullName: Rebus.ISpacecraftNamer
+  nameWithType: ISpacecraftNamer
+- uid: Rebus.ISpacecraftNamer.NameSpacecraft
+  name: NameSpacecraft()
+  href: api/Rebus.ISpacecraftNamer.html#Rebus_ISpacecraftNamer_NameSpacecraft
+  commentId: M:Rebus.ISpacecraftNamer.NameSpacecraft
+  fullName: Rebus.ISpacecraftNamer.NameSpacecraft()
+  nameWithType: ISpacecraftNamer.NameSpacecraft()
+- uid: Rebus.ISpacecraftNamer.NameSpacecraft*
+  name: NameSpacecraft
+  href: api/Rebus.ISpacecraftNamer.html#Rebus_ISpacecraftNamer_NameSpacecraft_
+  commentId: Overload:Rebus.ISpacecraftNamer.NameSpacecraft
+  isSpec: "True"
+  fullName: Rebus.ISpacecraftNamer.NameSpacecraft
+  nameWithType: ISpacecraftNamer.NameSpacecraft
+- uid: Rebus.IStarNamer
+  name: IStarNamer
+  href: api/Rebus.IStarNamer.html
+  commentId: T:Rebus.IStarNamer
+  fullName: Rebus.IStarNamer
+  nameWithType: IStarNamer
+- uid: Rebus.IStarNamer.NameStar(Rebus.HexPoint)
+  name: NameStar(HexPoint)
+  href: api/Rebus.IStarNamer.html#Rebus_IStarNamer_NameStar_Rebus_HexPoint_
+  commentId: M:Rebus.IStarNamer.NameStar(Rebus.HexPoint)
+  fullName: Rebus.IStarNamer.NameStar(Rebus.HexPoint)
+  nameWithType: IStarNamer.NameStar(HexPoint)
+- uid: Rebus.IStarNamer.NameStar*
+  name: NameStar
+  href: api/Rebus.IStarNamer.html#Rebus_IStarNamer_NameStar_
+  commentId: Overload:Rebus.IStarNamer.NameStar
+  isSpec: "True"
+  fullName: Rebus.IStarNamer.NameStar
+  nameWithType: IStarNamer.NameStar
 - uid: Rebus.IToken
   name: IToken
   href: api/Rebus.IToken.html
@@ -1734,19 +1746,19 @@ references:
   commentId: T:Rebus.ITokenFactory
   fullName: Rebus.ITokenFactory
   nameWithType: ITokenFactory
-- uid: Rebus.ITokenFactory.CreateTokenAsync(System.String)
-  name: CreateTokenAsync(String)
-  href: api/Rebus.ITokenFactory.html#Rebus_ITokenFactory_CreateTokenAsync_System_String_
-  commentId: M:Rebus.ITokenFactory.CreateTokenAsync(System.String)
-  fullName: Rebus.ITokenFactory.CreateTokenAsync(System.String)
-  nameWithType: ITokenFactory.CreateTokenAsync(String)
-- uid: Rebus.ITokenFactory.CreateTokenAsync*
-  name: CreateTokenAsync
-  href: api/Rebus.ITokenFactory.html#Rebus_ITokenFactory_CreateTokenAsync_
-  commentId: Overload:Rebus.ITokenFactory.CreateTokenAsync
+- uid: Rebus.ITokenFactory.CreateToken(System.String)
+  name: CreateToken(String)
+  href: api/Rebus.ITokenFactory.html#Rebus_ITokenFactory_CreateToken_System_String_
+  commentId: M:Rebus.ITokenFactory.CreateToken(System.String)
+  fullName: Rebus.ITokenFactory.CreateToken(System.String)
+  nameWithType: ITokenFactory.CreateToken(String)
+- uid: Rebus.ITokenFactory.CreateToken*
+  name: CreateToken
+  href: api/Rebus.ITokenFactory.html#Rebus_ITokenFactory_CreateToken_
+  commentId: Overload:Rebus.ITokenFactory.CreateToken
   isSpec: "True"
-  fullName: Rebus.ITokenFactory.CreateTokenAsync
-  nameWithType: ITokenFactory.CreateTokenAsync
+  fullName: Rebus.ITokenFactory.CreateToken
+  nameWithType: ITokenFactory.CreateToken
 - uid: Rebus.IUnexecutable
   name: IUnexecutable
   href: api/Rebus.IUnexecutable.html
@@ -1875,25 +1887,6 @@ references:
   isSpec: "True"
   fullName: Rebus.Map.Set
   nameWithType: Map.Set
-- uid: Rebus.Namer
-  name: Namer
-  href: api/Rebus.Namer.html
-  commentId: T:Rebus.Namer
-  fullName: Rebus.Namer
-  nameWithType: Namer
-- uid: Rebus.Namer.Name(System.Int32)
-  name: Name(Int32)
-  href: api/Rebus.Namer.html#Rebus_Namer_Name_System_Int32_
-  commentId: M:Rebus.Namer.Name(System.Int32)
-  fullName: Rebus.Namer.Name(System.Int32)
-  nameWithType: Namer.Name(Int32)
-- uid: Rebus.Namer.Name*
-  name: Name
-  href: api/Rebus.Namer.html#Rebus_Namer_Name_
-  commentId: Overload:Rebus.Namer.Name
-  isSpec: "True"
-  fullName: Rebus.Namer.Name
-  nameWithType: Namer.Name
 - uid: Rebus.Parser
   name: Parser
   href: api/Rebus.Parser.html
@@ -2106,6 +2099,57 @@ references:
   commentId: N:Rebus.Server
   fullName: Rebus.Server
   nameWithType: Rebus.Server
+- uid: Rebus.Server.Migrations
+  name: Rebus.Server.Migrations
+  href: api/Rebus.Server.Migrations.html
+  commentId: N:Rebus.Server.Migrations
+  fullName: Rebus.Server.Migrations
+  nameWithType: Rebus.Server.Migrations
+- uid: Rebus.Server.Migrations.NameTypeMigration
+  name: NameTypeMigration
+  href: api/Rebus.Server.Migrations.NameTypeMigration.html
+  commentId: T:Rebus.Server.Migrations.NameTypeMigration
+  fullName: Rebus.Server.Migrations.NameTypeMigration
+  nameWithType: NameTypeMigration
+- uid: Rebus.Server.Migrations.NameTypeMigration.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)
+  name: BuildTargetModel(ModelBuilder)
+  href: api/Rebus.Server.Migrations.NameTypeMigration.html#Rebus_Server_Migrations_NameTypeMigration_BuildTargetModel_Microsoft_EntityFrameworkCore_ModelBuilder_
+  commentId: M:Rebus.Server.Migrations.NameTypeMigration.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)
+  fullName: Rebus.Server.Migrations.NameTypeMigration.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)
+  nameWithType: NameTypeMigration.BuildTargetModel(ModelBuilder)
+- uid: Rebus.Server.Migrations.NameTypeMigration.BuildTargetModel*
+  name: BuildTargetModel
+  href: api/Rebus.Server.Migrations.NameTypeMigration.html#Rebus_Server_Migrations_NameTypeMigration_BuildTargetModel_
+  commentId: Overload:Rebus.Server.Migrations.NameTypeMigration.BuildTargetModel
+  isSpec: "True"
+  fullName: Rebus.Server.Migrations.NameTypeMigration.BuildTargetModel
+  nameWithType: NameTypeMigration.BuildTargetModel
+- uid: Rebus.Server.Migrations.NameTypeMigration.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)
+  name: Down(MigrationBuilder)
+  href: api/Rebus.Server.Migrations.NameTypeMigration.html#Rebus_Server_Migrations_NameTypeMigration_Down_Microsoft_EntityFrameworkCore_Migrations_MigrationBuilder_
+  commentId: M:Rebus.Server.Migrations.NameTypeMigration.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)
+  fullName: Rebus.Server.Migrations.NameTypeMigration.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)
+  nameWithType: NameTypeMigration.Down(MigrationBuilder)
+- uid: Rebus.Server.Migrations.NameTypeMigration.Down*
+  name: Down
+  href: api/Rebus.Server.Migrations.NameTypeMigration.html#Rebus_Server_Migrations_NameTypeMigration_Down_
+  commentId: Overload:Rebus.Server.Migrations.NameTypeMigration.Down
+  isSpec: "True"
+  fullName: Rebus.Server.Migrations.NameTypeMigration.Down
+  nameWithType: NameTypeMigration.Down
+- uid: Rebus.Server.Migrations.NameTypeMigration.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)
+  name: Up(MigrationBuilder)
+  href: api/Rebus.Server.Migrations.NameTypeMigration.html#Rebus_Server_Migrations_NameTypeMigration_Up_Microsoft_EntityFrameworkCore_Migrations_MigrationBuilder_
+  commentId: M:Rebus.Server.Migrations.NameTypeMigration.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)
+  fullName: Rebus.Server.Migrations.NameTypeMigration.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)
+  nameWithType: NameTypeMigration.Up(MigrationBuilder)
+- uid: Rebus.Server.Migrations.NameTypeMigration.Up*
+  name: Up
+  href: api/Rebus.Server.Migrations.NameTypeMigration.html#Rebus_Server_Migrations_NameTypeMigration_Up_
+  commentId: Overload:Rebus.Server.Migrations.NameTypeMigration.Up
+  isSpec: "True"
+  fullName: Rebus.Server.Migrations.NameTypeMigration.Up
+  nameWithType: NameTypeMigration.Up
 - uid: Rebus.Server.ServiceCollectionExtensions
   name: ServiceCollectionExtensions
   href: api/Rebus.Server.ServiceCollectionExtensions.html
@@ -2144,19 +2188,19 @@ references:
   isSpec: "True"
   fullName: Rebus.Tokenizer.Tokenizer
   nameWithType: Tokenizer.Tokenizer
-- uid: Rebus.Tokenizer.TokenizeAsync
-  name: TokenizeAsync()
-  href: api/Rebus.Tokenizer.html#Rebus_Tokenizer_TokenizeAsync
-  commentId: M:Rebus.Tokenizer.TokenizeAsync
-  fullName: Rebus.Tokenizer.TokenizeAsync()
-  nameWithType: Tokenizer.TokenizeAsync()
-- uid: Rebus.Tokenizer.TokenizeAsync*
-  name: TokenizeAsync
-  href: api/Rebus.Tokenizer.html#Rebus_Tokenizer_TokenizeAsync_
-  commentId: Overload:Rebus.Tokenizer.TokenizeAsync
+- uid: Rebus.Tokenizer.Tokenize
+  name: Tokenize()
+  href: api/Rebus.Tokenizer.html#Rebus_Tokenizer_Tokenize
+  commentId: M:Rebus.Tokenizer.Tokenize
+  fullName: Rebus.Tokenizer.Tokenize()
+  nameWithType: Tokenizer.Tokenize()
+- uid: Rebus.Tokenizer.Tokenize*
+  name: Tokenize
+  href: api/Rebus.Tokenizer.html#Rebus_Tokenizer_Tokenize_
+  commentId: Overload:Rebus.Tokenizer.Tokenize
   isSpec: "True"
-  fullName: Rebus.Tokenizer.TokenizeAsync
-  nameWithType: Tokenizer.TokenizeAsync
+  fullName: Rebus.Tokenizer.Tokenize
+  nameWithType: Tokenizer.Tokenize
 - uid: Rebus.Tokens
   name: Rebus.Tokens
   href: api/Rebus.Tokens.html

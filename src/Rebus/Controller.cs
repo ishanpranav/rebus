@@ -15,12 +15,14 @@ namespace Rebus
         private readonly IStringLocalizer _localizer;
         private readonly IRepository _repository;
         private readonly IPathfinderFactory<HexPoint> _pathfinderFactory;
+        private readonly Generator _generator;
 
-        public Controller(IStringLocalizer localizer, IRepository repository, IPathfinderFactory<HexPoint> pathfinderFactory)
+        public Controller(IStringLocalizer localizer, IRepository repository, IPathfinderFactory<HexPoint> pathfinderFactory, Generator generator)
         {
             _localizer = localizer;
             _repository = repository;
             _pathfinderFactory = pathfinderFactory;
+            _generator = generator;
         }
 
         public void Report(ExpressionWriter writer, ISpacecraft spacecraft)
@@ -33,7 +35,7 @@ namespace Rebus
             writer.Write(_localizer["WealthBalance", wealth]);
         }
 
-        private async Task<bool> AddWealthAsync(ExpressionWriter writer, int playerId, int value)
+        private async Task AddWealthAsync(ExpressionWriter writer, int playerId, int value)
         {
             int wealth = await _repository.GetWealthAsync(playerId);
 
@@ -61,8 +63,6 @@ namespace Rebus
             await _repository.SetWealthAsync(playerId, wealth);
 
             Report(writer, wealth);
-
-            return wealth > 0;
         }
 
         public async Task ViewWealthAsync(ExpressionWriter writer, int playerId)
@@ -114,9 +114,9 @@ namespace Rebus
                     throw new RebusException(_localizer["NavigationFailure"]);
 
                 case 1:
-                    await enterAsync(destination);
-
-                    await _repository.AddNavigationAsync(spacecraft.PlayerId, destination);
+                    await AddWealthAsync(writer, spacecraft.PlayerId, value: -1);
+                    await _repository.AddNavigationAsync(spacecraft.PlayerId, destination, _generator);
+                    await ViewRegionAsync(writer, destination);
                     break;
 
                 default:
@@ -126,16 +126,10 @@ namespace Rebus
 
                     while (steps.TryPop(out HexPoint step))
                     {
-                        await enterAsync(step);
+                        await AddWealthAsync(writer, spacecraft.PlayerId, value: -1);
+                        await ViewRegionAsync(writer, step);
                     }
                     break;
-
-                    async Task<bool> enterAsync(HexPoint region)
-                    {
-                        await ViewRegionAsync(writer, region);
-
-                        return !await AddWealthAsync(writer, spacecraft.PlayerId, value: -1);
-                    }
             }
         }
     }

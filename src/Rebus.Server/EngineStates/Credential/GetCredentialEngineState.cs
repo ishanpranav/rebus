@@ -5,7 +5,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Rebus.Server.EngineStates
+namespace Rebus.Server.EngineStates.Credential
 {
     internal sealed class GetCredentialEngineState : CredentialEngineState
     {

@@ -12,7 +12,7 @@ namespace Rebus.Server
 {
     internal sealed class CommandBuilder : ICommandBuilder
     {
-        private readonly Repository _repository;
+        private readonly DbRepository _repository;
         private readonly IStringLocalizer _localizer;
         private readonly List<Command> _commands = new List<Command>();
         private readonly Dictionary<Guid, Command> _commandsByGuid;
@@ -23,7 +23,7 @@ namespace Rebus.Server
         public IToken? Adverb { get; set; }
         public Argument Argument { get; set; }
 
-        public CommandBuilder(int playerId, Repository repository, IEnumerable<Command> commands, IStringLocalizer localizer)
+        public CommandBuilder(int playerId, DbRepository repository, IEnumerable<Command> commands, IStringLocalizer localizer)
         {
             _repository = repository;
             _localizer = localizer;

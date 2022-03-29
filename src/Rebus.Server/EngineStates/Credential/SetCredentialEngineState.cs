@@ -4,17 +4,16 @@
 
 using System.Threading.Tasks;
 
-namespace Rebus.Server.EngineStates
+namespace Rebus.Server.EngineStates.Credential
 {
     internal sealed class SetCredentialEngineState : CredentialEngineState
     {
         public SetCredentialEngineState(Player player) : base(player) { }
 
-        public override Task InterpretAsync(EngineContext context, string value, ExpressionWriter writer)
+        public override async Task InterpretAsync(EngineContext context, string value, ExpressionWriter writer)
         {
-            Player.Credential = value;
-
-            return IntroduceAsync(context, writer);
+            await context.Engine.Repository.SetCredentialAsync(Player, value);
+            await IntroduceAsync(context, writer);
         }
     }
 }

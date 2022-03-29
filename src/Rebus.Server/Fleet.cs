@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Rebus.Server.Concepts;
 
-namespace Rebus
+namespace Rebus.Server
 {
     internal sealed class Fleet : IEnumerable<ISpacecraft>, ISpacecraft
     {

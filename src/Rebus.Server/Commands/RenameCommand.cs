@@ -14,14 +14,14 @@ namespace Rebus.Server.Commands
     [Guid("45DA897D-68E8-47D5-A946-76FDE16B826B")]
     internal sealed class RenameCommand : Command
     {
-        private readonly Repository _repository;
+        private readonly DbRepository _repository;
 
-        public RenameCommand(Repository repository)
+        public RenameCommand(DbRepository repository)
         {
             _repository = repository;
         }
 
-        private RenameCommand(ArgumentSet arguments, Repository repository) : base(arguments)
+        private RenameCommand(ArgumentSet arguments, DbRepository repository) : base(arguments)
         {
             _repository = repository;
         }
@@ -31,14 +31,22 @@ namespace Rebus.Server.Commands
             return arguments.IsPlayer(Argument.Subject) && arguments.IsQuotation(Argument.DirectObject) && arguments.TryGetConcepts(Argument.IndirectObject, out IReadOnlyCollection<Concept>? indirectObjects) && indirectObjects.Count == 1;
         }
 
-        public override Task ExecuteAsync(ExpressionWriter writer)
+        public override async Task ExecuteAsync(ExpressionWriter writer)
         {
-            return _repository.RenameAsync(
-                Arguments
-                    .GetConcepts(Argument.IndirectObject)
-                    .OfType<Spacecraft>()
-                    .First(x => x.PlayerId == Arguments.PlayerId),
-                Arguments.GetQuotation(Argument.DirectObject));
+            Concept concept = Arguments
+                .GetConcepts(Argument.IndirectObject)
+                .OfType<Spacecraft>()
+                .First(x => x.PlayerId == Arguments.PlayerId);
+
+            concept.Write(writer);
+
+            await _repository.RenameAsync(concept, Arguments.GetQuotation(Argument.DirectObject));
+
+            writer.Write(_repository["Rename"]);
+
+            concept.Write(writer);
+
+            writer.Write('.');
         }
 
         public override Command CreateCommand(ArgumentSet arguments)

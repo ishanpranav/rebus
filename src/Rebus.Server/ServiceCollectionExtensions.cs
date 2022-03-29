@@ -2,7 +2,6 @@
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
-using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
@@ -28,18 +27,19 @@ namespace Rebus.Server
                 .AddLocalization()
                 .AddDbContextFactory<RebusDbContext, RebusDbContextFactory>()
                 .AddSingleton(typeof(IEngine<>), typeof(Engine<>))
-                .AddSingleton<IFormatProvider, ExpressionFormatProvider>()
-                .AddSingleton<IStringLocalizer, DbStringLocalizer>()
+                .AddSingleton<DbRepository>()
+                .AddSingleton<IPathfinderFactory<HexPoint>>(x => x.GetRequiredService<DbRepository>())
+                .AddSingleton<IPlanetNamer>(x => x.GetRequiredService<DbRepository>())
+                .AddSingleton<ISpacecraftNamer>(x => x.GetRequiredService<DbRepository>())
+                .AddSingleton<IStringLocalizer>(x => x.GetRequiredService<DbRepository>())
+                .AddSingleton<ITokenFactory>(x => x.GetRequiredService<DbRepository>())
                 .AddSingleton<IConfiguration>(configurationRoot)
                 .AddSingleton<Parser>()
-                .AddSingleton<Repository>()
-                .AddSingleton<IRepository>(x => x.GetRequiredService<Repository>())
+                .AddSingleton<DbRepository>()
+                .AddSingleton<IRepository>(x => x.GetRequiredService<DbRepository>())
                 .AddSingleton<Controller>()
-                .AddSingleton<ITokenFactory, TokenFactory>()
                 .AddSingleton<IEditDistance, DamerauLevenshteinEditDistance>()
-                .AddSingleton<IPathfinderFactory<HexPoint>, DbPathfinderFactory>()
-                .AddSingleton<INamer, Namer>()
-                .AddSingleton<Generator, SatelliteGenerator>()
+                .AddSingleton<Generator, PlanetGenerator>()
                 .AddSingleton<Command, BankCommand>()
                 .AddSingleton<Command, NavigationCommand>()
                 .AddSingleton<Command, RedoCommand>()

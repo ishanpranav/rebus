@@ -9,7 +9,7 @@ namespace Rebus.Server
 {
     internal interface IEngine
     {
-        Repository Repository { get; }
+        DbRepository Repository { get; }
         Controller Controller { get; }
         IStringLocalizer Localizer { get; }
 
