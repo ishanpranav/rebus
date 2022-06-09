@@ -47,7 +47,7 @@ namespace Rebus.Server.Discord
                         }
                         else
                         {
-                            return;
+                            return Task.CompletedTask;
                         }
 
                         SocketCommandContext context = new SocketCommandContext(_discordSocketClient, socketUserMessage);

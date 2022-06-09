@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace Rebus.Server.Tcp
 {
-    internal sealed class Wrapper : IWrapper
+    internal sealed class Wrapper
     {
         public int Width { get; set; } = 80;
 

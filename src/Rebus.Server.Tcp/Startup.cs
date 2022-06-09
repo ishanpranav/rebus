@@ -14,9 +14,9 @@ namespace Rebus.Server.Tcp
     {
         private readonly ILogger<Startup> _logger;
         private readonly TcpOptions _options;
-        private readonly IWrapper _wrapper;
+        private readonly Wrapper _wrapper;
 
-        public Startup(ILogger<Startup> logger, TcpOptions options,  IWrapper wrapper)
+        public Startup(ILogger<Startup> logger, TcpOptions options, Wrapper wrapper)
         {
             _logger = logger;
             _options = options;

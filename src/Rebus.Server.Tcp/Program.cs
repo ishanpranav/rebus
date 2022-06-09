@@ -14,16 +14,16 @@ namespace Rebus.Server.Tcp
             using (ServiceProvider serviceProvider = new ServiceCollection()
                  .AddRebus()
                  .AddSingleton<Startup>()
-                 .AddSingleton<IWrapper, Wrapper>()
+                 .AddSingleton<Wrapper>()
                  .AddSingleton(x => x
                     .GetRequiredService<IConfiguration>()
                     .GetRequiredSection(nameof(TcpOptions))
                     .Get<TcpOptions>())
                  .BuildServiceProvider())
             {
-                 serviceProvider
-                    .GetRequiredService<Startup>()
-                    .Start();
+                serviceProvider
+                   .GetRequiredService<Startup>()
+                   .Start();
             }
         }
     }
