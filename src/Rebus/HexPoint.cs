@@ -16,7 +16,7 @@ namespace Rebus
     /// </remarks>
     /// <seealso href="https://www.redblobgames.com/grids/hexagons/">Red Blob Games - Hexagonal Grids</seealso>
     /// <seealso href="http://www-cs-students.stanford.edu/~amitp/">Amit Patel&apos;s Home Page</seealso>
-    public readonly struct HexPoint : IEquatable<HexPoint>, IWritable
+    public readonly struct HexPoint : IEquatable<HexPoint>
     {
         /// <summary>
         /// Specifies the coordinate whose three axes are zero.
@@ -313,36 +313,6 @@ namespace Rebus
             result = Zero;
 
             return false;
-        }
-
-        /// <inheritdoc/>
-        public void Write(ExpressionWriter writer)
-        {
-            StringBuilder result = new StringBuilder();
-            int q = Math.Abs(Q);
-            int ones;
-
-            do
-            {
-                ones = q % 26;
-
-                if (ones == 0)
-                {
-                    result.Insert(index: 0, 'Z');
-                }
-                else
-                {
-                    result.Insert(index: 0, (char)(ones + 'A' - 1));
-                }
-
-                q = (q - ones) / 26;
-            }
-            while (q > 0);
-
-            writer.Write(result
-                .Append('-')
-                .Append(Math.Abs(R))
-                .Append((char)('a' + 4 + Math.Sign(Q) + (3 * Math.Sign(R)))));
         }
 
         /// <summary>

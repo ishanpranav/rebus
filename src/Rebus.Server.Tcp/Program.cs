@@ -2,7 +2,6 @@
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 
-using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,11 +9,9 @@ namespace Rebus.Server.Tcp
 {
     internal static class Program
     {
-        private static async Task Main()
+        private static void Main()
         {
-            ServiceCollection services = new ServiceCollection();
-
-            await using (ServiceProvider serviceProvider = services
+            using (ServiceProvider serviceProvider = new ServiceCollection()
                  .AddRebus()
                  .AddSingleton<Startup>()
                  .AddSingleton<IWrapper, Wrapper>()
@@ -24,9 +21,9 @@ namespace Rebus.Server.Tcp
                     .Get<TcpOptions>())
                  .BuildServiceProvider())
             {
-                await serviceProvider
+                 serviceProvider
                     .GetRequiredService<Startup>()
-                    .StartAsync();
+                    .Start();
             }
         }
     }

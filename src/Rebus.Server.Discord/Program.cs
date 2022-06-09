@@ -14,9 +14,7 @@ namespace Rebus.Server.Discord
     {
         private static async Task Main()
         {
-            ServiceCollection services = new ServiceCollection();
-
-            await using (ServiceProvider serviceProvider = services
+            await using (ServiceProvider serviceProvider = new ServiceCollection()
                 .AddRebus()
                 .AddSingleton(new DiscordSocketClient(new DiscordSocketConfig()
                 {
