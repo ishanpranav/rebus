@@ -1,4 +1,4 @@
-﻿// Ishan Pranav's REBUS: IPathfinder.cs
+﻿// Ishan Pranav's REBUS: ISearch.cs
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 

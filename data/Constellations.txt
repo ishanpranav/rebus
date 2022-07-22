@@ -1,3 +1,14 @@
+# Title: "The Constellations"
+# Creator: Eugène Delporte, IAU Commission 3 (Astronomical Notations)
+# Source: <https://www.iau.org/public/themes/naming_constellations/>
+
+# Modifications: Only genetive constellation names are included.
+
+# "The Constellations" is licensed under a Creative Commons Attribution 4.0
+# International License. You should have received a copy of the license along
+# with this work (THIRD-PARTY-NOTICES.txt). If not, see
+# <http://creativecommons.org/licenses/by/4.0/>.
+
 Andromedae
 Antliae
 Apodis

@@ -1,3 +1,16 @@
+Uranus
+
+# Title: "List of Roman deities - Wikipedia"
+# Creator: Wikipedia contributors
+# Source: <https://en.wikipedia.org/wiki/List_of_Roman_deities>
+
+# Modifications: Only select Roman deity names are included.
+
+# "List of Roman deities - Wikipedia" is licensed under a Creative Commons
+# Attribution-ShareAlike 3.0 Unported License. You should have received a
+# copy of the license along with this work (THIRD-PARTY-NOTICES.txt). If not,
+# see <http://creativecommons.org/licenses/by-sa/3.0/>.
+
 Abundantia
 Achlys
 Acis
@@ -25,7 +38,6 @@ Bellona
 Bubona
 Caca
 Cacus
-Caelus
 Camenae
 Cardea
 Carmenta
@@ -177,7 +189,6 @@ Tibertus
 Titan
 Tranquillitas
 Trivia
-Uranus
 Vacuna
 Vaticanus
 Venilia

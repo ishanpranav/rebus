@@ -1,4 +1,4 @@
-﻿// Ishan Pranav's REBUS: HexPointPathfinder.cs
+﻿// Ishan Pranav's REBUS: HexPointSearch.cs
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 

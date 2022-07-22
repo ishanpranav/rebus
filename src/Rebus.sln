@@ -28,9 +28,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rebus.Server.Tcp", "Rebus.S
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "data", "data", "{AE78976F-EB80-4C84-9B00-37C0041B37ED}"
 	ProjectSection(SolutionItems) = preProject
-		..\data\ConstellationDictionary.txt = ..\data\ConstellationDictionary.txt
-		..\data\PlanetDictionary.txt = ..\data\PlanetDictionary.txt
-		..\data\StarDictionary.txt = ..\data\StarDictionary.txt
+		..\data\Constellations.txt = ..\data\Constellations.txt
+		..\data\Stars.txt = ..\data\Stars.txt
+		..\data\Romans.txt = ..\data\Romans.txt
 	EndProjectSection
 EndProject
 Global

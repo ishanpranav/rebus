@@ -1,3 +1,21 @@
+Sol
+
+# Title: "IAU Catalog of Star Names (IAU-CSN)"
+
+# Creator: IAU Division C Working Group on Star Names (WGSN)
+#  <https://www.iau.org/science/scientific_bodies/working_groups/280/>
+#  WGSN Chair: Susanne Hoffmann
+#  WGSN Secretary: Eric Mamajek
+
+# Source: <https://www.iau.org/public/themes/naming_stars/>
+
+# Modifications: Only star names are included.
+
+# "IAU Catalog of Star Names (IAU-CSN)" is licensed under a Creative Commons
+# Attribution 4.0 International License. You should have received a copy of the
+# license along with this work (THIRD-PARTY-NOTICES.txt). If not, see
+# <http://creativecommons.org/licenses/by/4.0/>.
+
 Absolutno
 Acamar
 Achernar
@@ -382,7 +400,6 @@ Sika
 Sirius
 Situla
 Skat
-Sol
 Solaris
 Spica
 Sterrennacht

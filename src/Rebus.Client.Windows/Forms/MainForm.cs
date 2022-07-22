@@ -24,7 +24,9 @@ namespace Rebus.Client.Windows
         private readonly GraphicsEngine _graphicsEngine;
         private readonly Dictionary<HexPoint, ZoneResult> _zones = new Dictionary<HexPoint, ZoneResult>();
 
-        private HexPoint _origin;
+        //private readonly HexPoint _origin;
+
+        private HexPoint _location;
 
         public MainForm(Credentials credentials, RpcClient<IGameService> gameService)
         {
@@ -59,22 +61,21 @@ namespace Rebus.Client.Windows
 
         private void OnVisionPictureBoxMouseClick(object sender, MouseEventArgs e)
         {
-            _origin += _layout.GetHexPoint(e.Location.X, e.Location.Y);
-
             DrawZones();
+            DrawUnits();
 
-            if (_zones.TryGetValue(_origin, out ZoneResult? zone))
+            _location = _layout.GetHexPoint(e.Location.X, e.Location.Y);
+
+            if (_zones.TryGetValue(_location, out ZoneResult? zone))
             {
                 visionToolTip.ToolTipTitle = zone.Name;
 
-                visionToolTip.Show(_origin.ToString(), visionPictureBox, new System.Drawing.Point(XOffset, YOffset));
+                visionToolTip.Show(_location.ToString(), visionPictureBox, e.Location);
             }
             else
             {
                 visionToolTip.Hide(visionPictureBox);
             }
-
-            DrawUnits();
         }
 
         private void DrawUnits()
@@ -82,7 +83,7 @@ namespace Rebus.Client.Windows
             unitCheckedListBox.Items.Clear();
             nameGroupBox.Enabled = false;
 
-            if (_zones.TryGetValue(_origin, out ZoneResult? zone))
+            if (_zones.TryGetValue(_location, out ZoneResult? zone))
             {
                 foreach (Unit unit in zone.Value.Units)
                 {

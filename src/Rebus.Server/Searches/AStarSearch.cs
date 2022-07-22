@@ -1,4 +1,4 @@
-﻿// Ishan Pranav's REBUS: AStarPathfinder.cs
+﻿// Ishan Pranav's REBUS: AStarSearch.cs
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 

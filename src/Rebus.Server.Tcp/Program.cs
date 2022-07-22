@@ -32,31 +32,34 @@ namespace Rebus.Server.Tcp
                     .Build())
                 .AddSingleton(x => x
                     .GetRequiredService<IConfiguration>()
-                    .GetSection("Rebus"))
+                    .GetSection(key: "Rebus"))
                 .AddSingleton(x =>
                 {
-                    string dataDirectory = x
-                        .GetRequiredService<IConfigurationSection>()
-                        .GetValue<string>(key: "dataDirectory");
+                    IConfigurationSection section = x.GetRequiredService<IConfigurationSection>();
 
-                    List<string> getNames(Depth depth)
+                    List<string> getNames(string key)
                     {
                         List<string> results = new List<string>();
 
-                        using (StreamReader streamReader = new StreamReader(Path.ChangeExtension(Path.Combine(dataDirectory, $"{depth}Dictionary"), "txt")))
+                        using (StreamReader streamReader = new StreamReader(section.GetValue<string>(key)))
                         {
-                            string? line;
-
-                            while ((line = streamReader.ReadLine()) is not null)
+                            while (streamReader.Peek() != -1)
                             {
-                                results.Add(line);
+                                string? line = streamReader
+                                    .ReadLine()?
+                                    .Trim();
+
+                                if (!string.IsNullOrWhiteSpace(line) && line[0] != '#')
+                                {
+                                    results.Add(line);
+                                }
                             }
                         }
 
                         return results;
                     }
 
-                    return new Namer(x.GetRequiredService<FisherYatesShuffle>(), getNames(Depth.Constellation), getNames(Depth.Star), getNames(Depth.Planet));
+                    return new Namer(x.GetRequiredService<FisherYatesShuffle>(), getNames(key: "constellationPath"), getNames(key: "starPath"), getNames(key: "planetPath"));
                 })
                 .AddSingleton(x =>
                 {

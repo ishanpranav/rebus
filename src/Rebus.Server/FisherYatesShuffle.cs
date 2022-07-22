@@ -1,4 +1,4 @@
-﻿// Ishan Pranav's REBUS: FisherYatesShuffler.cs
+﻿// Ishan Pranav's REBUS: FisherYatesShuffle.cs
 // Copyright (c) Ishan Pranav. All rights reserved.
 // Licensed under the MIT License.
 

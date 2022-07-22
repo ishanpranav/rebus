@@ -60,14 +60,18 @@ namespace Rebus.Client
         {
             if (_networkStream is not null)
             {
-                await _networkStream.DisposeAsync().ConfigureAwait(continueOnCapturedContext: false);
+                await _networkStream
+                    .DisposeAsync()
+                    .ConfigureAwait(continueOnCapturedContext: false);
 
                 _networkStream = null;
             }
 
             if (_messageHandler is not null)
             {
-                await _messageHandler.DisposeAsync().ConfigureAwait(continueOnCapturedContext: false);
+                await _messageHandler
+                    .DisposeAsync()
+                    .ConfigureAwait(continueOnCapturedContext: false);
 
                 _messageHandler = null;
             }

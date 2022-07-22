@@ -16,11 +16,13 @@ namespace Rebus.Server
     /// <seealso href="https://en.wikipedia.org/wiki/Julia_set">Julia set - Wikipedia</seealso>
     public class JuliaSet
     {
+        // max_iteration = 1000
+
         /// <summary>
-        /// Gets or sets the maximum depth of iteration.
+        /// Gets or sets the maximum number of iterations.
         /// </summary>
-        /// <value>The maximum depth of iteration. The default is <see cref="int.MaxValue"/>.</value>
-        public int MaxIterations { get; set; } = int.MaxValue;
+        /// <value>The maximum number of iterations. The default is <see cref="1000"/>.</value>
+        public int MaxIterations { get; set; } = 1000;
 
         // R = escape radius  # choose R > 0 such that R**2 - R >= sqrt(cx**2 + cy**2)
 
@@ -64,27 +66,26 @@ namespace Rebus.Server
         /// <param name="width">The width of the fractal map.</param>
         /// <param name="height">The height of the fractal map.</param>
         /// <returns>The intensity of the point.</returns>
-        public double Julia(int x, int y, int width, int height)
+        public double Julia(double x, double y, double width, double height)
         {
             return Julia(x, y, width, height, zoom: 1);
         }
 
-        /// <inheritdoc cref="Julia(int, int, int, int)"/>
+        /// <inheritdoc cref="Julia(double, double, int, int)"/>
         /// <param name="zoom">The zoom factor of the fractal map.</param>
-        public double Julia(int x, int y, int width, int height, double zoom)
+        public double Julia(double x, double y, double width, double height, double zoom)
         {
             // zx = scaled x coordinate of pixel # (scale to be between -R and R)
             // zx represents the real part of z.
             // zy = scaled y coordinate of pixel # (scale to be between -R and R)
             // zy represents the imaginary part of z.
 
-            double halfWidth = width / 2d;
-            double halfHeight = height / 2d;
+            double halfWidth = width * 0.5;
+            double halfHeight = height * 0.5;
 
             Complex z = new Complex(1.5 * (x - halfWidth) / (halfWidth * zoom), (y - halfHeight) / (halfHeight * zoom));
 
             // iteration = 0
-            // max_iteration = 1000
 
             // while (zx * zx + zy * zy < R**2  AND  iteration < max_iteration)
             //   xtemp = zx * zx - zy * zy
