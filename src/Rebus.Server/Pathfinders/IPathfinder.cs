@@ -4,7 +4,7 @@
 
 using System.Collections.Generic;
 
-namespace Rebus
+namespace Rebus.Server.Pathfinders
 {
     /// <summary>
     /// Defines a method for finding paths between graph nodes.

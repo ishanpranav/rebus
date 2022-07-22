@@ -4,25 +4,21 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Rebus
 {
     /// <summary>
-    /// Represents a cubic coordinate in three dimensions (Q, R, and S) used to identify tiles in a grid of hexagons.
+    /// Represents a cubic coordinate in three dimensions (<em>Q</em>, <em>R</em>, and <em>S</em>) used to identify tiles in a grid of hexagons.
     /// </summary>
     /// <remarks>
-    /// The implementation of this structure was inspired by and based on <see href="https://www.redblobgames.com/grids/hexagons/">this</see> article by <see href="http://www-cs-students.stanford.edu/~amitp/">Amit Patel</see>.
+    /// The implementation of this struct was inspired by and based on <see href="https://www.redblobgames.com/grids/hexagons/">this</see> article by <see href="http://www-cs-students.stanford.edu/~amitp/">Amit Patel</see>.
     /// </remarks>
     /// <seealso href="https://www.redblobgames.com/grids/hexagons/">Red Blob Games - Hexagonal Grids</seealso>
     /// <seealso href="http://www-cs-students.stanford.edu/~amitp/">Amit Patel&apos;s Home Page</seealso>
-    public readonly struct HexPoint : IEquatable<HexPoint>
+    [DataContract]
+    public readonly struct HexPoint : IComparable, IComparable<HexPoint>, IEquatable<HexPoint>
     {
-        /// <summary>
-        /// Specifies the coordinate whose three axes are zero.
-        /// </summary>
-        /// <value>The coordinate (0, 0, 0).</value>
-        public static readonly HexPoint Zero;
-
         private static readonly HexPoint[] s_directions = new HexPoint[]
         {
             new HexPoint(1, 0),
@@ -34,21 +30,29 @@ namespace Rebus
         };
 
         /// <summary>
-        /// Gets the Q coordinate.
+        /// Specifies the coordinate whose three axes are zero.
         /// </summary>
-        /// <value>The Q coordinate. The default is 0.</value>
+        /// <value>The coordinate (0, 0, 0).</value>
+        public static readonly HexPoint Empty;
+
+        /// <summary>
+        /// Gets the <em>Q</em> coordinate.
+        /// </summary>
+        /// <value>The <em>Q</em> coordinate. The default is 0.</value>
+        [DataMember(Order = 0)]
         public int Q { get; }
 
         /// <summary>
-        /// Gets the R coordinate.
+        /// Gets the <em>R</em> coordinate.
         /// </summary>
-        /// <value>The R coordinate. The default is 0.</value>
+        /// <value>The <em>R</em> coordinate. The default is 0.</value>
+        [DataMember(Order = 1)]
         public int R { get; }
 
         /// <summary>
-        /// Gets the S coordinate.
+        /// Gets the <em>S</em> coordinate.
         /// </summary>
-        /// <value>The S coordinate. The default is 0.</value>
+        /// <value>The <em>S</em> coordinate. The default is 0.</value>
         public int S
         {
             get
@@ -60,8 +64,8 @@ namespace Rebus
         /// <summary>
         /// Initializes a new instance of the <see cref="HexPoint"/> struct.
         /// </summary>
-        /// <param name="q">The Q coordinate.</param>
-        /// <param name="r">The R coordinate.</param>
+        /// <param name="q">The <em>Q</em> coordinate.</param>
+        /// <param name="r">The <em>R</em> coordinate.</param>
         public HexPoint(int q, int r)
         {
             Q = q;
@@ -132,6 +136,39 @@ namespace Rebus
             }
         }
 
+        public IReadOnlyDictionary<HexPoint, int> Search(int radius, Func<HexPoint, bool> predicate)
+        {
+            Dictionary<HexPoint, int> results = new Dictionary<HexPoint, int>()
+            {
+                { this, 0 }
+            };
+            List<List<HexPoint>> fringes = new List<List<HexPoint>>()
+            {
+                new List<HexPoint>()
+                {
+                    this
+                }
+            };
+
+            for (int k = 1; k <= radius; k++)
+            {
+                fringes.Add(new List<HexPoint>());
+
+                foreach (HexPoint value in fringes[k - 1])
+                {
+                    foreach (HexPoint neighbor in value.Neighbors())
+                    {
+                        if (predicate(neighbor) && results.TryAdd(neighbor, k))
+                        {
+                            fringes[k].Add(neighbor);
+                        }
+                    }
+                }
+            }
+
+            return results;
+        }
+
         /// <summary>
         /// Gets the coordinates within a hexagonal ring.
         /// </summary>
@@ -139,15 +176,15 @@ namespace Rebus
         /// <returns>The coordinates within the ring defined by the given <paramref name="radius"/>.</returns>
         public IEnumerable<HexPoint> Ring(int radius)
         {
-            HexPoint point = this + (s_directions[4] * radius);
+            HexPoint value = this + (s_directions[4] * radius);
 
             foreach (HexPoint direction in s_directions)
             {
                 for (int i = 0; i < radius; i++)
                 {
-                    yield return point;
+                    yield return value;
 
-                    point += direction;
+                    value += direction;
                 }
             }
         }
@@ -163,9 +200,9 @@ namespace Rebus
 
             for (int i = 1; i <= radius; i++)
             {
-                foreach (HexPoint point in Ring(i))
+                foreach (HexPoint value in Ring(i))
                 {
-                    yield return point;
+                    yield return value;
                 }
             }
         }
@@ -206,112 +243,30 @@ namespace Rebus
             return result.ToHashCode();
         }
 
-        /// <summary>
-        /// Converts the string representation of a region specifier to its hexagonal coordinate equivalent. A return value indicates whether the operation succeeded.
-        /// </summary>
-        /// <param name="value">A string containing a region specifier to convert.</param>
-        /// <param name="result">When this method returns, contains the hexagonal coordinate value equivalent of the region specifier contained in <paramref name="value"/>, if the conversion succeeded, or <see cref="Zero"/> if the conversion failed. This parameter is treated as uninitialized.</param>
-        /// <returns><see langword="true"/> if the <paramref name="value"/> was converted successfully; otherwise, <see langword="false"/>.</returns>
-        public static bool TryParse(string value, out HexPoint result)
+        /// <inheritdoc/>
+        public int CompareTo(object? obj)
         {
-            try
+            if (obj is HexPoint other)
             {
-                int state = 0;
-                int qSign = 1;
-                int rSign = 1;
-                int qAbs = 0;
-                int rAbs = 0;
-                int qFactor = 1;
-                int rFactor = 1;
-
-                for (int i = value.Length - 1; i >= 0; i--)
-                {
-                    char current = char.ToUpper(value[i]);
-
-                    switch (state)
-                    {
-                        case 0:
-                            if (current >= 'A' && current <= 'C')
-                            {
-                                rSign = -1;
-                            }
-
-                            switch (current)
-                            {
-                                case 'A':
-                                case 'D':
-                                case 'G':
-                                    qSign = -1;
-                                    break;
-                            }
-
-                            if (i > 0 && char.IsDigit(value[i - 1]))
-                            {
-                                state++;
-
-                                break;
-                            }
-                            else
-                            {
-                                result = Zero;
-
-                                return false;
-                            }
-
-                        case 1:
-                            if (char.IsDigit(current) && i > 0)
-                            {
-                                rAbs += (current - '0') * rFactor;
-                                rFactor *= 10;
-
-                                if (char.IsLetter(value[i - 1]))
-                                {
-                                    state++;
-                                }
-
-                                break;
-                            }
-                            else
-                            {
-                                result = Zero;
-
-                                return false;
-                            }
-
-                        case 2:
-                            if (char.IsLetter(current))
-                            {
-                                if (current != 'Z')
-                                {
-                                    qAbs += (current - 'A' + 1) * qFactor;
-                                }
-
-                                if (i == 0)
-                                {
-                                    result = new HexPoint(qSign * qAbs, rSign * rAbs);
-
-                                    return true;
-                                }
-                                else
-                                {
-                                    qFactor *= 26;
-                                }
-                            }
-                            else
-                            {
-                                result = Zero;
-
-                                return false;
-                            }
-                            break;
-                    }
-                }
+                return CompareTo(other);
             }
-            catch (ArithmeticException) { }
+            else
+            {
+                throw new ArgumentException("Argument is not a HexPoint instance.", nameof(obj));
+            }
+        }
 
-            result = Zero;
+        /// <inheritdoc/>
+        public int CompareTo(HexPoint other)
+        {
+            int result = Q.CompareTo(other.Q);
 
-            return false;
+            if (result == 0)
+            {
+                result = R.CompareTo(R);
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -378,6 +333,50 @@ namespace Rebus
         public static HexPoint operator *(int left, HexPoint right)
         {
             return right.Multiply(left);
+        }
+
+        /// <summary>
+        /// Returns a value that indicates whether a specified value is less than another specified value.
+        /// </summary>
+        /// <param name="left">The first value to compare.</param>
+        /// <param name="right">The second value to compare.</param>
+        /// <returns><see langword="true"/> if <paramref name="left"/> is less than <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
+        public static bool operator <(HexPoint left, HexPoint right)
+        {
+            return left.CompareTo(right) < 0;
+        }
+
+        /// <summary>
+        /// Returns a value that indicates whether a specified value is less than or equal to another specified value.
+        /// </summary>
+        /// <param name="left">The first value to compare.</param>
+        /// <param name="right">The second value to compare.</param>
+        /// <returns><see langword="true"/> if <paramref name="left"/> is less than or equal to <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
+        public static bool operator <=(HexPoint left, HexPoint right)
+        {
+            return left.CompareTo(right) <= 0;
+        }
+
+        /// <summary>
+        /// Returns a value that indicates whether a specified value is greater than another specified value.
+        /// </summary>
+        /// <param name="left">The first value to compare.</param>
+        /// <param name="right">The second value to compare.</param>
+        /// <returns><see langword="true"/> if <paramref name="left"/> is greater than <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
+        public static bool operator >(HexPoint left, HexPoint right)
+        {
+            return left.CompareTo(right) > 0;
+        }
+
+        /// <summary>
+        /// Returns a value that indicates whether a specified value is greater than or equal to another specified value.
+        /// </summary>
+        /// <param name="left">The first value to compare.</param>
+        /// <param name="right">The second value to compare.</param>
+        /// <returns><see langword="true"/> if <paramref name="left"/> is greater than or equal to <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
+        public static bool operator >=(HexPoint left, HexPoint right)
+        {
+            return left.CompareTo(right) >= 0;
         }
     }
 }

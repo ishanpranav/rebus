@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Rebus.Pathfinders
+namespace Rebus.Server.Pathfinders
 {
     /// <summary>
     /// Performs Dijkstra&apos;s algorithm to find paths between graph nodes.

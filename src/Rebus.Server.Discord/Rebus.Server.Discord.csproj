@@ -24,8 +24,4 @@
     <PackageReference Include="Discord.Net.WebSocket" Version="3.4.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Rebus.Server\Rebus.Server.csproj" />
-  </ItemGroup>
-
 </Project>

@@ -5,7 +5,7 @@ All spacecraft are functionally identical.
 
 Each has the _capacity_ to carry at most one unit of _cargo_  at any moment.
 
-A player may order a spacecraft to _jettison_ its cargo at any time. Jettisoned units of cargo are destroyed.
+A player may order a group of spacecraft (_fleet_) to _jettison_ its cargo at any time. Jettisoned units of cargo are destroyed.
 
 Although each type of cargo is uniquely identified by its _mass_, this property does not affect a spacecraft\'s ability to carry it.
 ## Navigation
@@ -44,7 +44,7 @@ If the sanctuary region is occupied by the same or another adversary, then the a
 ### Protective stance
 Spacecraft ordered to protect their region attempt to prevent adversaries from entering it.
 
-The _sizes_ of the _occupying_ and _entering_ fleets are given by the number of spacecraft they contain. The fleet with fewer is the _minor fleet_; the other is the _major fleet_.
+The _sizes_ of the _occupying_ and _entering_ fleets are given by the number of spacecraft they contain. The fleet with fewer is the _minor_ fleet; the other is the _major_ fleet.
 
 #### Standoff
 If the occupying fleet and the entering fleet are of the same size, a _standoff_ occurs: The entering fleet holds its position and may not enter the adversary-occupied region.

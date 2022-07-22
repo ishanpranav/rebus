@@ -1,0 +1,88 @@
+Andromedae
+Antliae
+Apodis
+Aquarii
+Aquilae
+Arae
+Arietis
+Aurigae
+Bootis
+Caeli
+Camelopardalis
+Cancri
+Canis Majoris
+Canis Minoris
+Canum Venaticorum
+Capricorni
+Carinae
+Cassiopeiae
+Centauri
+Cephei
+Ceti
+Chamaeleontis
+Circini
+Columbae
+Comae Berenices
+Coronae Australis
+Coronae Borealis
+Corvi
+Crateris
+Crucis
+Cygni
+Delphini
+Doradus
+Draconis
+Equulei
+Eridani
+Fornacis
+Geminorum
+Gruis
+Herculis
+Horologii
+Hydrae
+Hydri
+Indi
+Lacertae
+Leonis
+Leonis Minoris
+Leporis
+Librae
+Lupi
+Lyncis
+Lyrae
+Mensae
+Microscopii
+Monocerotis
+Muscae
+Normae
+Octantis
+Ophiuchi
+Orionis
+Pavonis
+Pegasi
+Persei
+Phoenicis
+Pictoris
+Piscis Austrini
+Piscium
+Puppis
+Pyxidis
+Reticuli
+Sagittae
+Sagittarii
+Scorpii
+Sculptoris
+Scuti
+Serpentis
+Sextantis
+Tauri
+Telescopii
+Trianguli
+Trianguli Australis
+Tucanae
+Ursae Majoris
+Ursae Minoris
+Velorum
+Virginis
+Volantis
+Vulpeculae

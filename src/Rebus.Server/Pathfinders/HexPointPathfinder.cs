@@ -4,7 +4,7 @@
 
 using System.Collections.Generic;
 
-namespace Rebus.Pathfinders
+namespace Rebus.Server.Pathfinders
 {
     /// <summary>
     /// Performs the A* search algorithm to find paths between <see cref="HexPoint"/> values.
