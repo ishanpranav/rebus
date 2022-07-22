@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Rebus.Server.Pathfinders
+namespace Rebus.Server.Searches
 {
     /// <summary>
     /// Performs Dijkstra&apos;s algorithm to find paths between graph nodes.
@@ -15,7 +15,7 @@ namespace Rebus.Server.Pathfinders
     /// <seealso href="https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm">Dijkstra&apos;s algorithm - Wikipedia</seealso>
     /// <seealso href="https://en.wikipedia.org/wiki/A*_search_algorithm">A* search algorithm - Wikipedia</seealso>
     /// <typeparam name="T">The type of each node in the graph.</typeparam>
-    public abstract class DijkstraPathfinder<T> : AStarPathfinder<T> where T : notnull, IEquatable<T>
+    public abstract class DijkstraSearch<T> : AStarSearch<T> where T : notnull, IEquatable<T>
     {
         /// <inheritdoc/>
         protected override int Heuristic(T source, T destination)

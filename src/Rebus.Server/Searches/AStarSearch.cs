@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Rebus.Server.Pathfinders
+namespace Rebus.Server.Searches
 {
     /// <summary>
     /// Performs the A* search algorithm to find paths between graph nodes.
@@ -15,7 +15,7 @@ namespace Rebus.Server.Pathfinders
     /// </remarks>
     /// <seealso href="https://en.wikipedia.org/wiki/A*_search_algorithm">A* search algorithm - Wikipedia</seealso>
     /// <typeparam name="T">The type of each node in the graph.</typeparam>
-    public abstract class AStarPathfinder<T> : IPathfinder<T> where T : notnull, IEquatable<T>
+    public abstract class AStarSearch<T> : ISearch<T> where T : notnull, IEquatable<T>
     {
         /// <summary>
         /// Performs the heuristic function.

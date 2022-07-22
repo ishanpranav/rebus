@@ -21,7 +21,7 @@ namespace Rebus.Server
 
         private int _starIndex;
 
-        public Namer(FisherYatesShuffler shuffler, IList<string> constellations, IList<string> stars, IList<string> planets)
+        public Namer(FisherYatesShuffle shuffler, IList<string> constellations, IList<string> stars, IList<string> planets)
         {
             shuffler.Shuffle(constellations);
             shuffler.Shuffle(stars);

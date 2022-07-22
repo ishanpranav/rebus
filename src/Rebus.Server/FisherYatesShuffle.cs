@@ -14,15 +14,15 @@ namespace Rebus.Server
     /// The implementation of this class was inspired by and based on <see href="https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle">this</see> Wikipedia article.
     /// </remarks>
     /// <seealso href="https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle">Fisher-Yates shuffle - Wikipedia</seealso>
-    public class FisherYatesShuffler
+    public class FisherYatesShuffle
     {
         private readonly Random _random;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FisherYatesShuffler"/> class.
+        /// Initializes a new instance of the <see cref="FisherYatesShuffle"/> class.
         /// </summary>
         /// <param name="random">The random number generator.</param>
-        public FisherYatesShuffler(Random random)
+        public FisherYatesShuffle(Random random)
         {
             _random = random;
         }

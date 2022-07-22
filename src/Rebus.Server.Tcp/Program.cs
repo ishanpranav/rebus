@@ -25,7 +25,7 @@ namespace Rebus.Server.Tcp
                     .GetRequiredService<IConfiguration>()
                     .GetConnectionString(nameof(RebusDbContext))))
                 .AddLogging(x => x.AddConsole())
-                .AddSingleton<FisherYatesShuffler>()
+                .AddSingleton<FisherYatesShuffle>()
                 .AddSingleton<IConfiguration>(x => new ConfigurationBuilder()
                     .AddJsonFile(path: "appsettings.json")
                     .AddUserSecrets(typeof(Program).Assembly)
@@ -56,7 +56,7 @@ namespace Rebus.Server.Tcp
                         return results;
                     }
 
-                    return new Namer(x.GetRequiredService<FisherYatesShuffler>(), getNames(Depth.Constellation), getNames(Depth.Star), getNames(Depth.Planet));
+                    return new Namer(x.GetRequiredService<FisherYatesShuffle>(), getNames(Depth.Constellation), getNames(Depth.Star), getNames(Depth.Planet));
                 })
                 .AddSingleton(x =>
                 {

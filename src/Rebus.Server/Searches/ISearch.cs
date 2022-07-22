@@ -4,13 +4,13 @@
 
 using System.Collections.Generic;
 
-namespace Rebus.Server.Pathfinders
+namespace Rebus.Server.Searches
 {
     /// <summary>
     /// Defines a method for finding paths between graph nodes.
     /// </summary>
     /// <typeparam name="T">The type of each node in the graph.</typeparam>
-    public interface IPathfinder<T>
+    public interface ISearch<T>
     {
         /// <summary>
         /// Performs the search.
